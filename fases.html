@@ -727,14 +727,14 @@
         };
         
         const phasesStructure = [
-            { name: 'Clasificatorias', path: '/data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'] },
-            { name: 'Semifinal', path: '/data/semifinal/', groups: ['SEMIFINAL 1', 'SEMIFINAL 2'], maps: ['M1', 'M2', 'M3'] },
-            { name: 'Final', path: '/data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3', 'M4'] }
+            { name: 'Clasificatorias', path: 'data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'] },
+            { name: 'Semifinal', path: 'data/semifinal/', groups: ['SEMIFINAL 1', 'SEMIFINAL 2'], maps: ['M1', 'M2', 'M3'] },
+            { name: 'Final', path: 'data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3', 'M4'] }
         ];
 
         async function loadUidMap() {
             try {
-                const response = await fetch('/data/uid/uid.csv');
+                const response = await fetch('data/uid/uid.csv');
                 if (!response.ok) return;
                 
                 const csvText = await response.text();
@@ -757,30 +757,30 @@
         }
 
         function getPlayerImageByUid(uid) {
-            if (!uid) return '/data/logos/jugadores/default.png';
-            return `/data/logos/jugadores/${uid}.png`;
+            if (!uid) return 'data/logos/jugadores/default.png';
+            return `data/logos/jugadores/${uid}.png`;
         }
 
         function getTeamLogo(teamName) {
             if (!teamName || !teamName.trim()) {
                 console.warn('Nombre de equipo vacío');
-                return '/data/logos/equipos/default.png';
+                return 'data/logos/equipos/default.png';
             }
             
             const safeName = teamName.replace(/[^\w\s-]/g, "").trim();
             if (!safeName) {
                 console.warn('Nombre sanitizado vacío:', teamName);
-                return '/data/logos/equipos/default.png';
+                return 'data/logos/equipos/default.png';
             }
             
-            const logoPath = `/data/logos/equipos/${safeName}.png`;
+            const logoPath = `data/logos/equipos/${safeName}.png`;
             console.log('Logo generado para', teamName, ':', logoPath);
             return logoPath;
         }
 
         async function loadClasificados() {
             try {
-                const response = await fetch('/data/clasificatorias/clasificados.csv');
+                const response = await fetch('data/clasificatorias/clasificados.csv');
                 if (!response.ok) return;
                 
                 const csvText = await response.text();
@@ -1040,7 +1040,7 @@
                         <div class="mvp-container">
                             <div class="glass-card mvp-card">
                                 <div class="mvp-avatar">
-                                    <img src="${getPlayerImageByUid(groupStats.mvp.general.uid)}" alt="${groupStats.mvp.general.realName}" onerror="this.src='/data/logos/jugadores/default.png'">
+                                    <img src="${getPlayerImageByUid(groupStats.mvp.general.uid)}" alt="${groupStats.mvp.general.realName}" onerror="this.src='data/logos/jugadores/default.png'">
                                 </div>
                                 <div class="mvp-info">
                                     <h3>MVP General</h3>
@@ -1064,7 +1064,7 @@
                             </div>
                             <div class="glass-card mvp-map-card">
                                 <div class="mvp-map-avatar">
-                                    <img src="${getPlayerImageByUid(groupStats.mvp.Erangel.uid)}" alt="${groupStats.mvp.Erangel.realName}" onerror="this.src='/data/logos/jugadores/default.png'">
+                                    <img src="${getPlayerImageByUid(groupStats.mvp.Erangel.uid)}" alt="${groupStats.mvp.Erangel.realName}" onerror="this.src='data/logos/jugadores/default.png'">
                                 </div>
                                 <div class="mvp-map-info">
                                     <h4>MVP Erangel</h4>
@@ -1088,7 +1088,7 @@
                             </div>
                             <div class="glass-card mvp-map-card">
                                 <div class="mvp-map-avatar">
-                                    <img src="${getPlayerImageByUid(groupStats.mvp.Miramar.uid)}" alt="${groupStats.mvp.Miramar.realName}" onerror="this.src='/data/logos/jugadores/default.png'">
+                                    <img src="${getPlayerImageByUid(groupStats.mvp.Miramar.uid)}" alt="${groupStats.mvp.Miramar.realName}" onerror="this.src='data/logos/jugadores/default.png'">
                                 </div>
                                 <div class="mvp-map-info">
                                     <h4>MVP Miramar</h4>
@@ -1112,7 +1112,7 @@
                             </div>
                             <div class="glass-card mvp-map-card">
                                 <div class="mvp-map-avatar">
-                                    <img src="${getPlayerImageByUid(groupStats.mvp.Sanhok.uid)}" alt="${groupStats.mvp.Sanhok.realName}" onerror="this.src='/data/logos/jugadores/default.png'">
+                                    <img src="${getPlayerImageByUid(groupStats.mvp.Sanhok.uid)}" alt="${groupStats.mvp.Sanhok.realName}" onerror="this.src='data/logos/jugadores/default.png'">
                                 </div>
                                 <div class="mvp-map-info">
                                     <h4>MVP Sanhok</h4>
@@ -1145,7 +1145,7 @@
                             <div class="glass-card longest-kill-card">
                                 <h4>General</h4>
                                 <div class="player-info-with-avatar">
-                                    <img src="${getPlayerImageByUid(groupStats.longestKill.general.uid)}" alt="${groupStats.longestKill.general.realName}" class="player-avatar" onerror="this.src='/data/logos/jugadores/default.png'">
+                                    <img src="${getPlayerImageByUid(groupStats.longestKill.general.uid)}" alt="${groupStats.longestKill.general.realName}" class="player-avatar" onerror="this.src='data/logos/jugadores/default.png'">
                                     <div>
                                         <p><strong>${groupStats.longestKill.general.realName}</strong> (${groupStats.longestKill.general.team})</p>
                                         <p>${groupStats.longestKill.general.distance}m</p>
@@ -1155,7 +1155,7 @@
                             <div class="glass-card longest-kill-card">
                                 <h4>Erangel</h4>
                                 <div class="player-info-with-avatar">
-                                    <img src="${getPlayerImageByUid(groupStats.longestKill.Erangel.uid)}" alt="${groupStats.longestKill.Erangel.realName}" class="player-avatar" onerror="this.src='/data/logos/jugadores/default.png'">
+                                    <img src="${getPlayerImageByUid(groupStats.longestKill.Erangel.uid)}" alt="${groupStats.longestKill.Erangel.realName}" class="player-avatar" onerror="this.src='data/logos/jugadores/default.png'">
                                     <div>
                                         <p><strong>${groupStats.longestKill.Erangel.realName}</strong> (${groupStats.longestKill.Erangel.team})</p>
                                         <p>${groupStats.longestKill.Erangel.distance}m</p>
@@ -1165,7 +1165,7 @@
                             <div class="glass-card longest-kill-card">
                                 <h4>Miramar</h4>
                                 <div class="player-info-with-avatar">
-                                    <img src="${getPlayerImageByUid(groupStats.longestKill.Miramar.uid)}" alt="${groupStats.longestKill.Miramar.realName}" class="player-avatar" onerror="this.src='/data/logos/jugadores/default.png'">
+                                    <img src="${getPlayerImageByUid(groupStats.longestKill.Miramar.uid)}" alt="${groupStats.longestKill.Miramar.realName}" class="player-avatar" onerror="this.src='data/logos/jugadores/default.png'">
                                     <div>
                                         <p><strong>${groupStats.longestKill.Miramar.realName}</strong> (${groupStats.longestKill.Miramar.team})</p>
                                         <p>${groupStats.longestKill.Miramar.distance}m</p>
@@ -1175,7 +1175,7 @@
                             <div class="glass-card longest-kill-card">
                                 <h4>Sanhok</h4>
                                 <div class="player-info-with-avatar">
-                                    <img src="${getPlayerImageByUid(groupStats.longestKill.Sanhok.uid)}" alt="${groupStats.longestKill.Sanhok.realName}" class="player-avatar" onerror="this.src='/data/logos/jugadores/default.png'">
+                                    <img src="${getPlayerImageByUid(groupStats.longestKill.Sanhok.uid)}" alt="${groupStats.longestKill.Sanhok.realName}" class="player-avatar" onerror="this.src='data/logos/jugadores/default.png'">
                                     <div>
                                         <p><strong>${groupStats.longestKill.Sanhok.realName}</strong> (${groupStats.longestKill.Sanhok.team})</p>
                                         <p>${groupStats.longestKill.Sanhok.distance}m</p>
@@ -1450,7 +1450,7 @@
                 
                 row.innerHTML = `
                     <td>${index + 1}</td>
-                    <td><img src="${team.logo}" alt="${team.name}" class="team-logo" onerror="this.onerror=null; this.src='/data/logos/equipos/default.png?v=' + Date.now()"></td>
+                    <td><img src="${team.logo}" alt="${team.name}" class="team-logo" onerror="this.onerror=null; this.src='data/logos/equipos/default.png?v=' + Date.now()"></td>
                     <td>${team.name}</td>
                     <td>${team.positionPoints}</td>
                     <td>${team.eliminationPoints}</td>
@@ -1592,7 +1592,7 @@
                 }
                 
                 row.innerHTML = `
-                    <td><img src="${team.logo}" alt="${team.name}" class="team-logo" onerror="this.onerror=null; this.src='/data/logos/equipos/default.png?v=' + Date.now()"></td>
+                    <td><img src="${team.logo}" alt="${team.name}" class="team-logo" onerror="this.onerror=null; this.src='data/logos/equipos/default.png?v=' + Date.now()"></td>
                     <td>${team.name}</td>
                     <td>${team.rank}</td>
                     <td>${team.kills}</td>
@@ -1617,7 +1617,7 @@
                 const row = document.createElement('tr');
                 const playerImage = getPlayerImageByUid(player.uid);
                 row.innerHTML = `
-                    <td><img src="${playerImage}" alt="${player.realName}" class="team-logo" onerror="this.src='/data/logos/jugadores/default.png'"></td>
+                    <td><img src="${playerImage}" alt="${player.realName}" class="team-logo" onerror="this.src='data/logos/jugadores/default.png'"></td>
                     <td>${player.realName}</td>
                     <td>${player['Nombre del Equipo']}</td>
                     <td>${player.kills}</td>
