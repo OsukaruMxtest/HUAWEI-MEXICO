@@ -245,9 +245,9 @@ function parseCSV(csvText) {
 }
 
 const phasesConfig = {
-    'Clasificatorias': { path: '/data/clasificatorias/', groups: ['GRUPO A','GRUPO B','GRUPO C','GRUPO D'], maps: ['M1','M2','M3','M4','M5','M6','M7','M8','M9'] },
-    'Semifinal': { path: '/data/semifinal/', groups: ['SEMIFINAL 1','SEMIFINAL 2'], maps: ['M1','M2','M3'] },
-    'Final': { path: '/data/final/', groups: ['FINAL'], maps: ['M1','M2','M3'] }
+    'Clasificatorias': { path: 'data/clasificatorias/', groups: ['GRUPO A','GRUPO B','GRUPO C','GRUPO D'], maps: ['M1','M2','M3','M4','M5','M6','M7','M8','M9'] },
+    'Semifinal': { path: 'data/semifinal/', groups: ['SEMIFINAL 1','SEMIFINAL 2'], maps: ['M1','M2','M3'] },
+    'Final': { path: 'data/final/', groups: ['FINAL'], maps: ['M1','M2','M3'] }
 };
 
 const mapNames = { 'M1':'Erangel','M2':'Miramar','M3':'Sanhok','M4':'Erangel','M5':'Miramar','M6':'Sanhok','M7':'Erangel','M8':'Miramar','M9':'Sanhok' };
@@ -279,7 +279,7 @@ async function fetchCsv(path){
 }
 
 async function loadUIDs(){
-    const rows = await fetchCsv('/data/uid/uid.csv');
+    const rows = await fetchCsv('data/uid/uid.csv');
     if(!rows || rows.length < 2) return;
     const header = rows[0].map(h=>h.toLowerCase());
     const uidIdx = header.indexOf('uid');
@@ -294,9 +294,9 @@ async function loadUIDs(){
 
 const imageExistCache = {};
 async function playerImageForUid(uid){
-    if(!uid) return '/data/logos/jugadores/default.png';
+    if(!uid) return 'data/logos/jugadores/default.png';
     if(imageExistCache[uid]) return imageExistCache[uid];
-    const paths = [`/data/logos/jugadores/${uid}.png`,`/data/logos/jugadores/${uid}.jpg`,`/data/logos/jugadores/${uid}.webp`];
+    const paths = [`data/logos/jugadores/${uid}.png`,`data/logos/jugadores/${uid}.jpg`,`data/logos/jugadores/${uid}.webp`];
     for(const p of paths){
         try{
             const r = await fetch(p + '?nocache=' + Date.now(), {method:'HEAD'});
@@ -306,7 +306,7 @@ async function playerImageForUid(uid){
             }
         }catch(e){}
     }
-    imageExistCache[uid] = '/data/logos/jugadores/default.png';
+    imageExistCache[uid] = 'data/logos/jugadores/default.png';
     return imageExistCache[uid];
 }
 
@@ -441,7 +441,7 @@ async function renderPositions(phase){
             const tr = document.createElement('tr');
             if(i<32) tr.classList.add('highlight');
             tr.innerHTML = `<td class="center">${i+1}</td>
-                <td class="center"><img class="logo-img" src="/data/logos/equipos/${encodeURIComponent(t.name)}.png" onerror="this.src='/data/logos/equipos/default.png'"></td>
+                <td class="center"><img class="logo-img" src="data/logos/equipos/${encodeURIComponent(t.name)}.png" onerror="this.src='data/logos/equipos/default.png'"></td>
                 <td>${t.name}</td>
                 <td class="center">${t.pointsByPos}</td>
                 <td class="center">${t.pointsByElim}</td>
@@ -450,7 +450,7 @@ async function renderPositions(phase){
             tbody.appendChild(tr);
         });
     } else if(phase==='Final'){
-        const f = await fetchCsv('/data/final/final.csv');
+        const f = await fetchCsv('data/final/final.csv');
         const finalTeams = (f&&f.length>1)? f.slice(1).map(r=>r[0]) : standings.slice(0,16).map(t=>t.name);
         const finalStand = standings.filter(t=>finalTeams.includes(t.name));
         finalStand.forEach((t,i)=>{
@@ -459,7 +459,7 @@ async function renderPositions(phase){
             else if(i===1) tr.classList.add('top3-2'); 
             else if(i===2) tr.classList.add('top3-3');
             tr.innerHTML = `<td class="center">${i+1}</td>
-                <td class="center"><img class="logo-img" src="/data/logos/equipos/${encodeURIComponent(t.name)}.png" onerror="this.src='/data/logos/equipos/default.png'"></td>
+                <td class="center"><img class="logo-img" src="data/logos/equipos/${encodeURIComponent(t.name)}.png" onerror="this.src='data/logos/equipos/default.png'"></td>
                 <td>${t.name}</td>
                 <td class="center">${t.pointsByPos}</td>
                 <td class="center">${t.pointsByElim}</td>
@@ -476,7 +476,7 @@ async function renderSemifinalPositions(group){
     
     const groupName = `SEMIFINAL ${group}`;
     const standings = computeStandings('Semifinal', groupName);
-    const groupFile = await fetchCsv(`/data/semifinal/semifinal${group}.csv`);
+    const groupFile = await fetchCsv(`data/semifinal/semifinal${group}.csv`);
     let groupStand = standings;
     
     if (groupFile && groupFile.length > 1) {
@@ -488,7 +488,7 @@ async function renderSemifinalPositions(group){
         const tr = document.createElement('tr');
         if(i<8) tr.classList.add('highlight');
         tr.innerHTML = `<td class="center">${i+1}</td>
-            <td class="center"><img class="logo-img" src="/data/logos/equipos/${encodeURIComponent(t.name)}.png" onerror="this.src='/data/logos/equipos/default.png'"></td>
+            <td class="center"><img class="logo-img" src="data/logos/equipos/${encodeURIComponent(t.name)}.png" onerror="this.src='data/logos/equipos/default.png'"></td>
             <td>${t.name}</td>
             <td class="center">${t.pointsByPos}</td>
             <td class="center">${t.pointsByElim}</td>
@@ -541,7 +541,7 @@ async function renderMVP(phase){
         const acc = p.totalShots>0? (p.totalHits/p.totalShots*100).toFixed(1) : '0.0';
         const tr = document.createElement('tr');
         tr.innerHTML = `<td class="center">${i+1}</td>
-            <td class="center"><img class="player-img" src="${img}" onerror="this.src='/data/logos/jugadores/default.png'"></td>
+            <td class="center"><img class="player-img" src="${img}" onerror="this.src='data/logos/jugadores/default.png'"></td>
             <td>${p.name}</td>
             <td class="center">${p.team||'-'}</td>
             <td class="center">${p.kills}</td>
@@ -568,7 +568,7 @@ async function renderMVP(phase){
         const t = st[i];
         const tr = document.createElement('tr');
         tr.innerHTML = `<td class="center">${i+1}</td>
-            <td class="center"><img class="logo-img" src="/data/logos/equipos/${encodeURIComponent(t.name)}.png" onerror="this.src='/data/logos/equipos/default.png'"></td>
+            <td class="center"><img class="logo-img" src="data/logos/equipos/${encodeURIComponent(t.name)}.png" onerror="this.src='data/logos/equipos/default.png'"></td>
             <td>${t.name}</td>
             <td class="center">${t.pointsByPos}</td>
             <td class="center">${t.pointsByElim}</td>
