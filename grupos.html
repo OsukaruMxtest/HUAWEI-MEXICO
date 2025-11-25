@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupos - PUBG MOBILE COPA HUAWEI MEXICO</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #BB0215;
+            --primary-bright: #E9072B;
+            --secondary: #00683F;
+            --secondary-deep: #003F1E;
+            --background: #C5C5C5;
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --text: #000000;
+            --text-secondary: #333333;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(197, 197, 197, 0.7);
+            z-index: -1;
+        }
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 15px var(--shadow);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        main {
+            margin-top: 80px;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.8s ease forwards;
+        }
+        
+        .section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+            border-left: 4px solid var(--primary);
+            padding-left: 0.75rem;
+        }
+        
+        .phase-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .phase-btn {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .phase-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .phase-btn.active {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: white;
+        }
+        
+        .video-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .phase-video {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+        
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .group-card {
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .group-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .group-image {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+        
+        .group-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 2rem;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .modal-image {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+        
+        footer {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-deep);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .groups-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .phase-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .phase-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .modal {
+                padding: 1rem;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <video class="background-video" autoplay muted loop playsinline>
+        <source src="https://res.cloudinary.com/dxtvsnw3g/video/upload/v1763772374/fondo_g1hfuz.mp4" type="video/mp4">
+    </video>
+    
+    <header>
+        <nav>
+            <div class="logo">PUBG MOBILE COPA HUAWEI MÉXICO</div>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="grupos.html" style="color: var(--primary);">Grupos</a>
+				<a href="fases.html">Fases</a>
+				<a href="mvp-mvt.html">MVP/MVT</a>
+                <a href="equipos.html">Equipos</a>
+                <a href="jugadores.html">Jugadores</a>
+                <a href="mapas.html">Mapas</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="section fade-in">
+            <h1 class="section-title">Grupos del Torneo</h1>
+            <p>Visualiza los grupos de cada fase del torneo.</p>
+        </div>
+        
+        <div class="section slide-up">
+            <div class="phase-buttons" id="phase-buttons">
+            </div>
+            
+            <div class="section" id="clasificatorias-section">
+                <h2 class="section-title">Clasificatorias</h2>
+                
+                <div class="video-container">
+                    <video class="phase-video" controls>
+                        <source src="https://i.imgur.com/30mMilr.mp4" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                </div>
+                
+                <div class="groups-grid">
+                    <div class="glass-card group-card" data-group="grupo1">
+                        <img src="https://i.imgur.com/Kj8k7Qm.png" alt="Grupo 1" class="group-image">
+                        <div class="group-title">Grupo 1</div>
+                    </div>
+                    <div class="glass-card group-card" data-group="grupo2">
+                        <img src="https://i.imgur.com/yZfYBeL.png" alt="Grupo 2" class="group-image">
+                        <div class="group-title">Grupo 2</div>
+                    </div>
+                    <div class="glass-card group-card" data-group="grupo3">
+                        <img src="https://i.imgur.com/gG1ZqoK.png" alt="Grupo 3" class="group-image">
+                        <div class="group-title">Grupo 3</div>
+                    </div>
+                    <div class="glass-card group-card" data-group="grupo4">
+                        <img src="https://i.imgur.com/WVVtKCB.png" alt="Grupo 4" class="group-image">
+                        <div class="group-title">Grupo 4</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section hidden" id="semifinales-section">
+                <h2 class="section-title">Semifinales</h2>
+                
+                <div class="video-container">
+                    <video class="phase-video" controls>
+                        <source src="https://i.imgur.com/30mMilr.mp4" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                </div>
+                
+                <div class="groups-grid">
+                    <div class="glass-card group-card" data-group="semifinal1">
+                        <img src="" alt="Semifinal 1" class="group-image">
+                        <div class="group-title">Semifinal 1</div>
+                    </div>
+                    
+                    <div class="glass-card group-card" data-group="semifinal2">
+                        <img src="" alt="Semifinal 2" class="group-image">
+                        <div class="group-title">Semifinal 2</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section hidden" id="final-section">
+                <h2 class="section-title">Final</h2>
+                
+                <div class="video-container">
+                    <video class="phase-video" controls>
+                        <source src="https://i.imgur.com/30mMilr.mp4" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                </div>
+                
+                <div class="groups-grid">
+                    <div class="glass-card group-card" data-group="final">
+                        <img src="" alt="Final" class="group-image">
+                        <div class="group-title">Final</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <div class="modal-overlay" id="image-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-group-title">Grupo</h2>
+                <button class="close-btn" id="close-image-modal">&times;</button>
+            </div>
+            
+            <img id="modal-image" class="modal-image" src="" alt="Grupo">
+        </div>
+    </div>
+    
+    <script>
+        const fasesHabilitadas = {
+            clasificatorias: true,
+            semifinales: false,
+            final: false
+        };
+
+        let currentPhase = 'clasificatorias';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initPhaseButtons();
+            setupEventListeners();
+            showPhase(currentPhase);
+        });
+
+        function initPhaseButtons() {
+            const phaseButtonsContainer = document.getElementById('phase-buttons');
+            
+            phaseButtonsContainer.innerHTML = '';
+            
+            if (fasesHabilitadas.clasificatorias) {
+                const btn = document.createElement('button');
+                btn.className = 'phase-btn active';
+                btn.textContent = 'Clasificatorias';
+                btn.dataset.phase = 'clasificatorias';
+                phaseButtonsContainer.appendChild(btn);
+            }
+            
+            if (fasesHabilitadas.semifinales) {
+                const btn = document.createElement('button');
+                btn.className = 'phase-btn';
+                btn.textContent = 'Semifinales';
+                btn.dataset.phase = 'semifinales';
+                phaseButtonsContainer.appendChild(btn);
+            }
+            
+            if (fasesHabilitadas.final) {
+                const btn = document.createElement('button');
+                btn.className = 'phase-btn';
+                btn.textContent = 'Final';
+                btn.dataset.phase = 'final';
+                phaseButtonsContainer.appendChild(btn);
+            }
+        }
+
+        function setupEventListeners() {
+            document.getElementById('phase-buttons').addEventListener('click', (e) => {
+                if (e.target.classList.contains('phase-btn')) {
+                    const phase = e.target.dataset.phase;
+                    showPhase(phase);
+                    
+                    document.querySelectorAll('.phase-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
+                }
+            });
+            
+            document.querySelectorAll('.group-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const groupTitle = card.querySelector('.group-title').textContent;
+                    const imageSrc = card.querySelector('.group-image').src;
+                    if (imageSrc) {
+                        showImageModal(groupTitle, imageSrc);
+                    }
+                });
+            });
+            
+            document.getElementById('close-image-modal').addEventListener('click', closeImageModal);
+            document.getElementById('image-modal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) closeImageModal();
+            });
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeImageModal();
+                }
+            });
+        }
+
+        function showPhase(phase) {
+            document.getElementById('clasificatorias-section').classList.add('hidden');
+            document.getElementById('semifinales-section').classList.add('hidden');
+            document.getElementById('final-section').classList.add('hidden');
+            
+            switch(phase) {
+                case 'clasificatorias':
+                    document.getElementById('clasificatorias-section').classList.remove('hidden');
+                    break;
+                case 'semifinales':
+                    document.getElementById('semifinales-section').classList.remove('hidden');
+                    break;
+                case 'final':
+                    document.getElementById('final-section').classList.remove('hidden');
+                    break;
+            }
+            
+            currentPhase = phase;
+        }
+
+        function showImageModal(title, imageSrc) {
+            document.getElementById('modal-group-title').textContent = title;
+            document.getElementById('modal-image').src = imageSrc;
+            document.getElementById('image-modal').classList.add('active');
+        }
+
+        function closeImageModal() {
+            document.getElementById('image-modal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
