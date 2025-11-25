@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapas - PUBG MOBILE COPA HUAWEI MEXICO</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #BB0215;
+            --bright-red: #E9072B;
+            --dark-green: #00683F;
+            --deep-green: #003F1E;
+            --light-gray: #C5C5C5;
+            --background: #F5F7FA;
+            --card-bg: #FFFFFF;
+            --text-primary: #1A1D1F;
+            --text-secondary: #6F767E;
+            --text-light: #9A9FA5;
+            --border: #EFEFEF;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --shadow-hover: rgba(0, 0, 0, 0.12);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            letter-spacing: -0.5px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 0.95rem;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-red);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-red);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        main {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .glass-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--shadow-hover);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.6s ease forwards;
+        }
+        
+        .section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--text-primary);
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--primary-red);
+            border-radius: 2px;
+        }
+        
+        .maps-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 0.5rem;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .map-tab {
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 0.95rem;
+        }
+        
+        .map-tab.active {
+            background: var(--primary-red);
+            color: white;
+            box-shadow: 0 2px 6px rgba(187, 2, 21, 0.3);
+        }
+        
+        .map-tab:hover:not(.active) {
+            background: rgba(187, 2, 21, 0.08);
+            color: var(--primary-red);
+        }
+        
+        .map-content {
+            display: none;
+        }
+        
+        .map-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .map-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 12px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        
+        .map-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+        
+        .map-info h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .map-info p {
+            opacity: 0.9;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+        
+        .map-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .map-stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .map-stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-red);
+        }
+        
+        .map-stat-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+        
+        .map-stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .chart-card {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .chart-title {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px var(--shadow);
+            border: 1px solid var(--border);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        th:hover {
+            background: #f0f2f5;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .maps-comparison {
+            margin-top: 3rem;
+        }
+        
+        .comparison-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-red);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--bright-red);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .maps-tabs {
+                flex-direction: column;
+            }
+            
+            .map-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-charts {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .table-container {
+                font-size: 0.8rem;
+            }
+            
+            th, td {
+                padding: 0.75rem;
+            }
+            
+            main {
+                padding: 1.5rem;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .section p {
+            max-width: 800px;
+        }
+        
+        .map-stat-card:nth-child(2)::before {
+            background: var(--dark-green);
+        }
+        
+        .map-stat-card:nth-child(3)::before {
+            background: var(--bright-red);
+        }
+        
+        .map-stat-card:nth-child(4)::before {
+            background: var(--deep-green);
+        }
+    </style>
+</head>
+<body>
+    <video id="bg-video" autoplay muted loop>
+        <source src="https://res.cloudinary.com/dxtvsnw3g/video/upload/v1763434398/clipfly-ai-20251113170631_qpkfg1.mp4" type="video/mp4">
+    </video>
+    
+    <header>
+        <nav>
+            <div class="logo">PUBG MOBILE COPA HUAWEI MÉXICO</div>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+				<a href="grupos.html">Grupos</a>
+                <a href="fases.html">Fases</a>
+                <a href="mvp-mvt.html">MVP/MVT</a>
+                <a href="equipos.html">Equipos</a>
+                <a href="jugadores.html">Jugadores</a>
+                <a href="mapas.html" style="color: var(--primary-red);">Mapas</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="section fade-in">
+            <h1 class="section-title">Estadísticas por Mapa</h1>
+            <p>Analiza el rendimiento de equipos y jugadores en cada uno de los mapas del torneo.</p>
+        </div>
+        
+        <div class="section slide-up">
+            <div class="maps-tabs">
+                <button class="map-tab active" data-map="Erangel">Erangel</button>
+                <button class="map-tab" data-map="Miramar">Miramar</button>
+                <button class="map-tab" data-map="Sanhok">Sanhok</button>
+            </div>
+            
+            <div class="map-content active" id="erangel-content">
+                <div class="map-header">
+                    <div class="map-icon">
+                        <img src="https://i.imgur.com/aI9zhOA.jpeg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                    </div>
+                    <div class="map-info">
+                        <h2>Erangel</h2>
+                        
+                    </div>
+                </div>
+                
+                <div class="map-stats-grid">
+                    <div class="glass-card map-stat-card">
+                        <div class="map-stat-value" id="erangel-matches">0</div>
+                        <div class="map-stat-label">Partidas Jugadas</div>
+                    </div>
+                    <div class="glass-card map-stat-card">
+                        <div class="map-stat-value" id="erangel-kills">0</div>
+                        <div class="map-stat-label">Bajas Totales</div>
+                    </div>
+                    <div class="glass-card map-stat-card">
+                        <div class="map-stat-value" id="erangel-damage">0</div>
+                        <div class="map-stat-label">Daño Total</div>
+                    </div>
+                    <div class="glass-card map-stat-card">
+                        <div class="map-stat-value" id="erangel-avg-kills">0</div>
+                        <div class="map-stat-label">Promedio de Bajas por Partida</div>
+                    </div>
+                </div>
+                
+                <div class="charts-container">
+                    <div class="glass-card chart-card">
+                        <div class="chart-title">Top Equipos por Bajas</div>
+                        <div class="chart-container">
+                            <canvas id="erangel-teams-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card chart-card">
+                        <div class="chart-title">Top Jugadores por Bajas</div>
+                        <div class="chart-container">
+                            <canvas id="erangel-players-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3 class="section-title">Equipos en Erangel</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Equipo</th>
+                                    <th>Partidas</th>
+                                    <th>Bajas</th>
+                                    <th>Daño</th>
+                                    <th>WWCD</th>
+                                    <th>Promedio Bajas</th>
+                                    <th>Promedio Daño</th>
+                                </tr>
+                            </thead>
+                            <tbody id="erangel-teams-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3 class="section-title">Jugadores en Erangel</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Jugador</th>
+                                    <th>Equipo</th>
+                                    <th>Partidas</th>
+                                    <th>Bajas</th>
+                                    <th>Daño</th>
+                                    <th>Headshots</th>
+                                    <th>Precisión (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="erangel-players-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="map-content" id="miramar-content">
+                <div class="map-header">
+                    <div class="map-icon">
+                        <img src="https://i.imgur.com/xLV60KA.jpeg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                    </div>
+                    <div class="map-info">
+                        <h2>Miramar</h2>
+                        
+                    </div>
+                </div>
+                
+                <div class="map-stats-grid">
+                    <div class="glass-card map-stat-card">
+                        <div class="map-stat-value" id="miramar-matches">0</div>
+                        <div class="map-stat-label">Partidas Jugadas</div>
+                    </div>
+                    <div class="glass-card map-stat-card">
+                        <div class="map-stat-value" id="miramar-kills">0</div>
+                        <div class="map-stat-label">Bajas Totales</div>
+                    </div>
+                    <div class="glass-card map-stat-card">
+                        <div class="map-stat-value" id="miramar-damage">0</div>
+                        <div class="map-stat-label">Daño Total</div>
+                    </div>
+                    <div class="glass-card map-stat-card">
+                        <div class="map-stat-value" id="miramar-avg-kills">0</div>
+                        <div class="map-stat-label">Promedio de Bajas por Partida</div>
+                    </div>
+                </div>
+                
+                <div class="charts-container">
+                    <div class="glass-card chart-card">
+                        <div class="chart-title">Top Equipos por Bajas</div>
+                        <div class="chart-container">
+                            <canvas id="miramar-teams-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card chart-card">
+                        <div class="chart-title">Top Jugadores por Bajas</div>
+                        <div class="chart-container">
+                            <canvas id="miramar-players-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3 class="section-title">Equipos en Miramar</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Equipo</th>
+                                    <th>Partidas</th>
+                                    <th>Bajas</th>
+                                    <th>Daño</th>
+                                    <th>WWCD</th>
+                                    <th>Promedio Bajas</th>
+                                    <th>Promedio Daño</th>
+                                </tr>
+                            </thead>
+                            <tbody id="miramar-teams-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3 class="section-title">Jugadores en Miramar</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Jugador</th>
+                                    <th>Equipo</th>
+                                    <th>Partidas</th>
+                                    <th>Bajas</th>
+                                    <th>Daño</th>
+                                    <th>Headshots</th>
+                                    <th>Precisión (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="miramar-players-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="map-content" id="sanhok-content">
+                <div class="map-header">
+                    <div class="map-icon">
+                        <img src="https://i.imgur.com/bmtNy4e.jpeg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                    </div>
+                    <div class="map-info">
+                        <h2>Sanhok</h2>
+                        
+                    </div>
+                </div>
+                
+                <div class="map-stats-grid">
+                    <div class="glass-card map-stat-card">
+                        <div class="map-stat-value" id="sanhok-matches">0</div>
+                        <div class="map-stat-label">Partidas Jugadas</div>
+                    </div>
+                    <div class="glass-card map-stat-card">
+                        <div class="map-stat-value" id="sanhok-kills">0</div>
+                        <div class="map-stat-label">Bajas Totales</div>
+                    </div>
+                    <div class="glass-card map-stat-card">
+                        <div class="map-stat-value" id="sanhok-damage">0</div>
+                        <div class="map-stat-label">Daño Total</div>
+                    </div>
+                    <div class="glass-card map-stat-card">
+                        <div class="map-stat-value" id="sanhok-avg-kills">0</div>
+                        <div class="map-stat-label">Promedio de Bajas por Partida</div>
+                    </div>
+                </div>
+                
+                <div class="charts-container">
+                    <div class="glass-card chart-card">
+                        <div class="chart-title">Top Equipos por Bajas</div>
+                        <div class="chart-container">
+                            <canvas id="sanhok-teams-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card chart-card">
+                        <div class="chart-title">Top Jugadores por Bajas</div>
+                        <div class="chart-container">
+                            <canvas id="sanhok-players-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3 class="section-title">Equipos en Sanhok</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Equipo</th>
+                                    <th>Partidas</th>
+                                    <th>Bajas</th>
+                                    <th>Daño</th>
+                                    <th>WWCD</th>
+                                    <th>Promedio Bajas</th>
+                                    <th>Promedio Daño</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sanhok-teams-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3 class="section-title">Jugadores en Sanhok</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Jugador</th>
+                                    <th>Equipo</th>
+                                    <th>Partidas</th>
+                                    <th>Bajas</th>
+                                    <th>Daño</th>
+                                    <th>Headshots</th>
+                                    <th>Precisión (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sanhok-players-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section maps-comparison slide-up">
+            <h2 class="section-title">Comparación entre Mapas</h2>
+            
+            <div class="comparison-charts">
+                <div class="glass-card chart-card">
+                    <div class="chart-title">Promedio de Bajas por Partida</div>
+                    <div class="chart-container">
+                        <canvas id="maps-kills-comparison"></canvas>
+                    </div>
+                </div>
+                
+                <div class="glass-card chart-card">
+                    <div class="chart-title">Promedio de Daño por Partida</div>
+                    <div class="chart-container">
+                        <canvas id="maps-damage-comparison"></canvas>
+                    </div>
+                </div>
+                
+                <div class="glass-card chart-card">
+                    <div class="chart-title">Cantidad de Disparos</div>
+                    <div class="chart-container">
+                        <canvas id="maps-shots-comparison"></canvas>
+                    </div>
+                </div>
+                
+                <div class="glass-card chart-card">
+                    <div class="chart-title">Distancia Promedio de Eliminación</div>
+                    <div class="chart-container">
+                        <canvas id="maps-distance-comparison"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mapa</th>
+                            <th>Partidas</th>
+                            <th>Bajas Totales</th>
+                            <th>Daño Total</th>
+                            <th>WWCD</th>
+                            <th>Promedio Bajas/Partida</th>
+                            <th>Promedio Daño/Partida</th>
+                            <th>Total Disparos</th>
+                            <th>Distancia Promedio (m)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="maps-comparison-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>PUBG MOBILE COPA HUAWEI MÉXICO - Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        let mapsData = {
+            'Erangel': { players: [], teams: {}, stats: {} },
+            'Miramar': { players: [], teams: {}, stats: {} },
+            'Sanhok': { players: [], teams: {}, stats: {} }
+        };
+        
+        let erangelTeamsChart = null;
+        let erangelPlayersChart = null;
+        let miramarTeamsChart = null;
+        let miramarPlayersChart = null;
+        let sanhokTeamsChart = null;
+        let sanhokPlayersChart = null;
+        let mapsKillsComparisonChart = null;
+        let mapsDamageComparisonChart = null;
+        let mapsShotsComparisonChart = null;
+        let mapsDistanceComparisonChart = null;
+        
+        const mapNames = {
+            'M1': 'Erangel',
+            'M2': 'Miramar', 
+            'M3': 'Sanhok',
+            'M4': 'Erangel',
+            'M5': 'Miramar',
+            'M6': 'Sanhok',
+            'M7': 'Erangel',
+            'M8': 'Miramar',
+            'M9': 'Sanhok'
+        };
+
+        const phasesStructure = [
+            { name: 'Clasificatorias', path: '/data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1','M2','M3','M4','M5','M6','M7','M8','M9'] },
+            { name: 'Semifinal', path: '/data/semifinal/', groups: ['SEMIFINAL 1','SEMIFINAL 2'], maps: ['M1','M2','M3'] },
+            { name: 'Final', path: '/data/final/', groups: ['FINAL'], maps: ['M1','M2','M3','M4'] }
+        ];
+        
+        async function loadMapsData() {
+            try {
+                for (const phase of phasesStructure) {
+                    for (const group of phase.groups) {
+                        for (const map of phase.maps) {
+                            const csvPath = `${phase.path}${group}/${map}.csv`;
+                            await loadCSVFile(csvPath, phase.name, group, map);
+                        }
+                    }
+                }
+                
+                processMapsData();
+                
+                updateMapsUI();
+                
+                setupEventListeners();
+                
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                showError('Error cargando datos de mapas');
+            }
+        }
+        
+        async function loadCSVFile(filePath, phase, group, map) {
+            try {
+                const response = await fetch(filePath + "?nocache=" + Date.now());
+                if (!response.ok) {
+                    return;
+                }
+                
+                const csvText = await response.text();
+                const lines = csvText.split('\n');
+                
+                const headers = lines[0].split(',');
+
+                
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim() === '') continue;
+                    
+                    const values = lines[i].split(',');
+                    const playerData = {};
+                    
+                    headers.forEach((header, index) => {
+                        playerData[header.trim()] = values[index] ? values[index].trim() : '';
+                    });
+                    
+                    playerData.kills = parseInt(playerData['Número de Bajas']) || 0;
+                    playerData.damage = parseFloat(playerData['Daño']) || 0;
+                    playerData.headshots = parseInt(playerData['Número de Headshots']) || 0;
+                    playerData.assists = parseInt(playerData['Asistencias']) || 0;
+                    playerData.rank = parseInt(playerData['Rango']) || 0;
+                    playerData.maxKillDistance = parseFloat(playerData['Máxima Distancia de Baja']) || 0;
+                    playerData.survivalTime = parseFloat(playerData['Tiempo de Supervivencia']) || 0;
+                    playerData.accuracy = parseFloat(playerData['Accuracy(%)']) || 0;
+                    playerData.totalShots = parseInt(playerData['TotalShots']) || 0;
+                    playerData.totalHits = parseInt(playerData['TotalHits']) || 0;
+                    
+                    playerData.phase = phase;
+                    playerData.group = group;
+                    playerData.map = map;
+                    playerData.mapName = mapNames[map] || map;
+                    
+                    const mapName = playerData.mapName;
+                    if (mapsData[mapName]) {
+                        mapsData[mapName].players.push(playerData);
+                    }
+                }
+                
+            } catch (error) {
+                console.warn(`No se pudo cargar ${filePath}:`, error);
+            }
+        }
+        
+        function processMapsData() {
+            for (const mapName in mapsData) {
+                const mapData = mapsData[mapName];
+                const players = mapData.players;
+                
+                mapData.stats = {
+                    matches: new Set(),
+                    wins: new Set(),
+                    kills: 0,
+                    damage: 0,
+                    headshots: 0,
+                    totalShots: 0,
+                    wwcd: 0,
+                    totalSurvivalTime: 0,
+                    totalMaxKillDistance: 0,
+                    playerCount: 0
+                };
+                
+                mapData.teams = {};
+                
+                players.forEach(player => {
+                    const matchId = `${player.phase}-${player.group}-${player.map}`;
+                    const teamName = player['Nombre del Equipo'];
+                    
+                    mapData.stats.matches.add(matchId);
+                    mapData.stats.kills += player.kills;
+                    mapData.stats.damage += player.damage;
+                    mapData.stats.headshots += player.headshots;
+                    mapData.stats.totalShots += player.totalShots;
+                    mapData.stats.totalSurvivalTime += player.survivalTime;
+                    mapData.stats.totalMaxKillDistance += player.maxKillDistance;
+                    mapData.stats.playerCount += 1;
+                    
+                    if (player.rank === 1) {
+                        mapData.stats.wins.add(matchId);
+                    }
+                    
+                    if (!mapData.teams[teamName]) {
+                        mapData.teams[teamName] = {
+                            name: teamName,
+                            players: {},
+                            kills: 0,
+                            damage: 0,
+                            headshots: 0,
+                            totalShots: 0,
+                            wins: new Set(),
+                            matches: new Set(),
+                            survivalTime: 0,
+                            maxKillDistance: 0
+                        };
+                    }
+                    
+                    mapData.teams[teamName].kills += player.kills;
+                    mapData.teams[teamName].damage += player.damage;
+                    mapData.teams[teamName].headshots += player.headshots;
+                    mapData.teams[teamName].totalShots += player.totalShots;
+                    mapData.teams[teamName].matches.add(matchId);
+                    mapData.teams[teamName].survivalTime += player.survivalTime;
+                    mapData.teams[teamName].maxKillDistance = Math.max(
+                        mapData.teams[teamName].maxKillDistance,
+                        player.maxKillDistance
+                    );
+                    
+                    if (player.rank === 1) {
+                        mapData.teams[teamName].wins.add(matchId);
+                    }
+                    
+                    const playerName = player['Nombre del Jugador'];
+                    if (!mapData.teams[teamName].players[playerName]) {
+                        mapData.teams[teamName].players[playerName] = {
+                            name: playerName,
+                            kills: 0,
+                            damage: 0,
+                            headshots: 0,
+                            assists: 0,
+                            accuracy: 0,
+                            totalShots: 0,
+                            totalHits: 0,
+                            matches: new Set()
+                        };
+                    }
+                    
+                    mapData.teams[teamName].players[playerName].kills += player.kills;
+                    mapData.teams[teamName].players[playerName].damage += player.damage;
+                    mapData.teams[teamName].players[playerName].headshots += player.headshots;
+                    mapData.teams[teamName].players[playerName].assists += player.assists;
+                    mapData.teams[teamName].players[playerName].totalShots += player.totalShots;
+                    mapData.teams[teamName].players[playerName].totalHits += player.totalHits;
+                    mapData.teams[teamName].players[playerName].matches.add(matchId);
+                    
+                    if (mapData.teams[teamName].players[playerName].totalShots > 0) {
+                        mapData.teams[teamName].players[playerName].accuracy = 
+                            (mapData.teams[teamName].players[playerName].totalHits / 
+                             mapData.teams[teamName].players[playerName].totalShots) * 100;
+                    }
+                });
+                
+                mapData.stats.matchCount = mapData.stats.matches.size;
+                mapData.stats.wwcd = mapData.stats.wins.size;
+                mapData.stats.avgKillsPerMatch = mapData.stats.matchCount > 0 ? 
+                    mapData.stats.kills / mapData.stats.matchCount : 0;
+                mapData.stats.avgDamagePerMatch = mapData.stats.matchCount > 0 ? 
+                    mapData.stats.damage / mapData.stats.matchCount : 0;
+                mapData.stats.avgShotsPerMatch = mapData.stats.matchCount > 0 ? 
+                    mapData.stats.totalShots / mapData.stats.matchCount : 0;
+                mapData.stats.avgSurvivalTime = mapData.stats.playerCount > 0 ? 
+                    mapData.stats.totalSurvivalTime / mapData.stats.playerCount : 0;
+                mapData.stats.avgMaxKillDistance = mapData.stats.playerCount > 0 ? 
+                    mapData.stats.totalMaxKillDistance / mapData.stats.playerCount : 0;
+                
+                for (const teamName in mapData.teams) {
+                    const team = mapData.teams[teamName];
+                    team.matchCount = team.matches.size;
+                    team.wwcd = team.wins.size;
+                    team.avgKills = team.matchCount > 0 ? team.kills / team.matchCount : 0;
+                    team.avgDamage = team.matchCount > 0 ? team.damage / team.matchCount : 0;
+                    team.avgShots = team.matchCount > 0 ? team.totalShots / team.matchCount : 0;
+                    team.avgSurvivalTime = team.matchCount > 0 ? team.survivalTime / (team.matchCount * 4) : 0;
+                }
+            }
+        }
+        
+        function updateMapsUI() {
+            updateMapContent('Erangel');
+            updateMapContent('Miramar');
+            updateMapContent('Sanhok');
+            
+            updateMapsComparison();
+        }
+        
+        function updateMapContent(mapName) {
+            const mapData = mapsData[mapName];
+            const stats = mapData.stats;
+            
+            document.getElementById(`${mapName.toLowerCase()}-matches`).textContent = stats.matchCount;
+            document.getElementById(`${mapName.toLowerCase()}-kills`).textContent = stats.kills;
+            document.getElementById(`${mapName.toLowerCase()}-damage`).textContent = Math.round(stats.damage);
+            document.getElementById(`${mapName.toLowerCase()}-avg-kills`).textContent = stats.avgKillsPerMatch.toFixed(1);
+            
+            updateMapTeamsTable(mapName);
+            updateMapPlayersTable(mapName);
+            
+            updateMapCharts(mapName);
+        }
+        
+        function updateMapTeamsTable(mapName) {
+            const tbody = document.getElementById(`${mapName.toLowerCase()}-teams-body`);
+            tbody.innerHTML = '';
+            
+            const mapData = mapsData[mapName];
+            const teams = Object.values(mapData.teams);
+            
+            teams.sort((a, b) => b.kills - a.kills);
+            
+            const topTeams = teams.slice(0, 20);
+            
+            topTeams.forEach(team => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${team.name}</td>
+                    <td>${team.matchCount}</td>
+                    <td>${team.kills}</td>
+                    <td>${Math.round(team.damage)}</td>
+                    <td>${team.wwcd}</td>
+                    <td>${team.avgKills.toFixed(1)}</td>
+                    <td>${Math.round(team.avgDamage)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        function updateMapPlayersTable(mapName) {
+            const tbody = document.getElementById(`${mapName.toLowerCase()}-players-body`);
+            tbody.innerHTML = '';
+            
+            const mapData = mapsData[mapName];
+            
+            const allPlayers = [];
+            for (const teamName in mapData.teams) {
+                const team = mapData.teams[teamName];
+                for (const playerName in team.players) {
+                    const player = team.players[playerName];
+                    player.team = teamName;
+                    player.matchCount = player.matches.size;
+                    allPlayers.push(player);
+                }
+            }
+            
+            allPlayers.sort((a, b) => b.kills - a.kills);
+            
+            const topPlayers = allPlayers.slice(0, 20);
+            
+            topPlayers.forEach(player => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${player.name}</td>
+                    <td>${player.team}</td>
+                    <td>${player.matchCount}</td>
+                    <td>${player.kills}</td>
+                    <td>${Math.round(player.damage)}</td>
+                    <td>${player.headshots}</td>
+                    <td>${player.accuracy.toFixed(1)}%</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        function updateMapCharts(mapName) {
+            const mapData = mapsData[mapName];
+            const teams = Object.values(mapData.teams);
+            const allPlayers = [];
+            
+            for (const teamName in mapData.teams) {
+                const team = mapData.teams[teamName];
+                for (const playerName in team.players) {
+                    const player = team.players[playerName];
+                    player.team = teamName;
+                    allPlayers.push(player);
+                }
+            }
+            
+            teams.sort((a, b) => b.kills - a.kills);
+            allPlayers.sort((a, b) => b.kills - a.kills);
+            
+            const topTeams = teams.slice(0, 10);
+            const topPlayers = allPlayers.slice(0, 10);
+            
+            const teamsCtx = document.getElementById(`${mapName.toLowerCase()}-teams-chart`).getContext('2d');
+            const playersCtx = document.getElementById(`${mapName.toLowerCase()}-players-chart`).getContext('2d');
+            
+            if (mapName === 'Erangel') {
+                if (erangelTeamsChart) erangelTeamsChart.destroy();
+                if (erangelPlayersChart) erangelPlayersChart.destroy();
+            } else if (mapName === 'Miramar') {
+                if (miramarTeamsChart) miramarTeamsChart.destroy();
+                if (miramarPlayersChart) miramarPlayersChart.destroy();
+            } else if (mapName === 'Sanhok') {
+                if (sanhokTeamsChart) sanhokTeamsChart.destroy();
+                if (sanhokPlayersChart) sanhokPlayersChart.destroy();
+            }
+            
+            const teamsChart = new Chart(teamsCtx, {
+                type: 'bar',
+                data: {
+                    labels: topTeams.map(team => team.name),
+                    datasets: [{
+                        label: 'Bajas',
+                        data: topTeams.map(team => team.kills),
+                        backgroundColor: 'rgba(187, 2, 21, 0.7)',
+                        borderColor: 'rgba(187, 2, 21, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Bajas'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            const playersChart = new Chart(playersCtx, {
+                type: 'bar',
+                data: {
+                    labels: topPlayers.map(player => player.name),
+                    datasets: [{
+                        label: 'Bajas',
+                        data: topPlayers.map(player => player.kills),
+                        backgroundColor: 'rgba(0, 104, 63, 0.7)',
+                        borderColor: 'rgba(0, 104, 63, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Bajas'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            if (mapName === 'Erangel') {
+                erangelTeamsChart = teamsChart;
+                erangelPlayersChart = playersChart;
+            } else if (mapName === 'Miramar') {
+                miramarTeamsChart = teamsChart;
+                miramarPlayersChart = playersChart;
+            } else if (mapName === 'Sanhok') {
+                sanhokTeamsChart = teamsChart;
+                sanhokPlayersChart = playersChart;
+            }
+        }
+        
+        function updateMapsComparison() {
+            const tbody = document.getElementById('maps-comparison-body');
+            tbody.innerHTML = '';
+            
+            const mapNames = ['Erangel', 'Miramar', 'Sanhok'];
+            
+            mapNames.forEach(mapName => {
+                const mapData = mapsData[mapName];
+                const stats = mapData.stats;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${mapName}</td>
+                    <td>${stats.matchCount}</td>
+                    <td>${stats.kills}</td>
+                    <td>${Math.round(stats.damage)}</td>
+                    <td>${stats.wwcd}</td>
+                    <td>${stats.avgKillsPerMatch.toFixed(1)}</td>
+                    <td>${Math.round(stats.avgDamagePerMatch)}</td>
+                    <td>${Math.round(stats.totalShots)}</td>
+                    <td>${Math.round(stats.avgMaxKillDistance)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            updateMapsComparisonCharts();
+        }
+        
+        function updateMapsComparisonCharts() {
+            const mapNames = ['Erangel', 'Miramar', 'Sanhok'];
+            const stats = mapNames.map(mapName => mapsData[mapName].stats);
+            
+            const killsCtx = document.getElementById('maps-kills-comparison').getContext('2d');
+            const damageCtx = document.getElementById('maps-damage-comparison').getContext('2d');
+            const shotsCtx = document.getElementById('maps-shots-comparison').getContext('2d');
+            const distanceCtx = document.getElementById('maps-distance-comparison').getContext('2d');
+            
+            if (mapsKillsComparisonChart) mapsKillsComparisonChart.destroy();
+            if (mapsDamageComparisonChart) mapsDamageComparisonChart.destroy();
+            if (mapsShotsComparisonChart) mapsShotsComparisonChart.destroy();
+            if (mapsDistanceComparisonChart) mapsDistanceComparisonChart.destroy();
+            
+            mapsKillsComparisonChart = new Chart(killsCtx, {
+                type: 'bar',
+                data: {
+                    labels: mapNames,
+                    datasets: [{
+                        label: 'Promedio de Bajas por Partida',
+                        data: stats.map(stat => stat.avgKillsPerMatch),
+                        backgroundColor: 'rgba(187, 2, 21, 0.7)',
+                        borderColor: 'rgba(187, 2, 21, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Bajas por Partida'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            mapsDamageComparisonChart = new Chart(damageCtx, {
+                type: 'bar',
+                data: {
+                    labels: mapNames,
+                    datasets: [{
+                        label: 'Promedio de Daño por Partida',
+                        data: stats.map(stat => stat.avgDamagePerMatch),
+                        backgroundColor: 'rgba(0, 104, 63, 0.7)',
+                        borderColor: 'rgba(0, 104, 63, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Daño por Partida'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            mapsShotsComparisonChart = new Chart(shotsCtx, {
+                type: 'bar',
+                data: {
+                    labels: mapNames,
+                    datasets: [{
+                        label: 'Cantidad de Disparos',
+                        data: stats.map(stat => Math.round(stat.totalShots)),
+                        backgroundColor: 'rgba(233, 7, 43, 0.7)',
+                        borderColor: 'rgba(233, 7, 43, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Total Disparos'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            mapsDistanceComparisonChart = new Chart(distanceCtx, {
+                type: 'bar',
+                data: {
+                    labels: mapNames,
+                    datasets: [{
+                        label: 'Distancia Promedio de Eliminación (m)',
+                        data: stats.map(stat => Math.round(stat.avgMaxKillDistance)),
+                        backgroundColor: 'rgba(0, 63, 30, 0.7)',
+                        borderColor: 'rgba(0, 63, 30, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Metros'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function setupEventListeners() {
+            document.querySelectorAll('.map-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const mapName = tab.dataset.map;
+                    
+                    document.querySelectorAll('.map-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.map-content').forEach(c => c.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(`${mapName.toLowerCase()}-content`).classList.add('active');
+                });
+            });
+        }
+        
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'glass-card loading';
+            errorDiv.textContent = message;
+            document.querySelector('main').appendChild(errorDiv);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMapsData();
+        });
+    </script>
+</body>
+</html>
