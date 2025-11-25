@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipos - PUBG MOBILE COPA HUAWEI MEXICO</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #BB0215;
+            --primary-bright: #E9072B;
+            --secondary: #00683F;
+            --secondary-deep: #003F1E;
+            --background: #C5C5C5;
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --text: #000000;
+            --text-secondary: #333333;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 15px var(--shadow);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        main {
+            margin-top: 80px;
+            padding: 2rem;
+        }
+        
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.8s ease forwards;
+        }
+        
+        .section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+            border-left: 4px solid var(--primary);
+            padding-left: 0.75rem;
+        }
+        
+        .filters-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .search-input {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            min-width: 300px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(187, 2, 21, 0.2);
+        }
+        
+        .compare-btn {
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(187, 2, 21, 0.2);
+        }
+        
+        .compare-btn:hover {
+            background: var(--primary-bright);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(233, 7, 43, 0.25);
+        }
+        
+        .compare-btn:disabled {
+            background: #a0a0a0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .group-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .group-btn {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .group-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .group-btn.active {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: white;
+        }
+        
+        .teams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .team-card {
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .team-card.selected {
+            border: 2px solid var(--primary);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .team-card.selectable:hover {
+            transform: translateY(-5px);
+        }
+        
+        .team-checkbox {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--glass-border);
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .team-card.selected .team-checkbox {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .team-card.selected .team-checkbox::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .team-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .team-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .team-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .team-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+            color: var(--text);
+        }
+        
+        .team-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .team-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .team-stat {
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .team-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .team-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .team-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            padding: 0.5rem;
+            color: var(--text);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-1px);
+        }
+        
+        .action-btn.primary {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: white;
+        }
+        
+        .action-btn.primary:hover {
+            background: var(--secondary-deep);
+            transform: translateY(-1px);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 2rem;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .team-details-content {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .team-details-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .team-details-section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            border-left: 3px solid var(--secondary);
+            padding-left: 0.5rem;
+        }
+        
+        .team-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .team-detail-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .team-detail-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .team-detail-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .team-detail-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .player-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .player-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .player-card.mvp {
+            border: 2px solid var(--primary);
+            background: rgba(187, 2, 21, 0.05);
+        }
+        
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .player-name {
+            font-weight: 600;
+        }
+        
+        .mvp-badge {
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .player-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .player-stat {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+            padding: 0.5rem;
+        }
+        
+        .player-stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .player-stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        
+        .phases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        
+        .phase-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .phase-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .phase-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        .maps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .map-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 6px;
+            padding: 0.5rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        
+        .map-card:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .map-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .map-stats {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        
+        .central-comparison-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        
+        .comparison-team {
+            text-align: center;
+        }
+        
+        .comparison-team-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .comparison-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .comparison-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .comparison-team-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .comparison-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 5rem;
+        }
+        
+        .metric-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .metric-row:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .metric-row.winner-left .metric-value-left {
+            background: rgba(0, 104, 63, 0.2);
+            border: 1px solid rgba(0, 104, 63, 0.5);
+        }
+        
+        .metric-row.winner-right .metric-value-right {
+            background: rgba(0, 104, 63, 0.2);
+            border: 1px solid rgba(0, 104, 63, 0.5);
+        }
+        
+        .metric-value {
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-align: center;
+            color: var(--primary);
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-name {
+            font-weight: 500;
+            text-align: center;
+            padding: 0.5rem;
+            color: var(--text);
+        }
+        
+        .vs-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin: 1rem 0;
+        }
+        
+        footer {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 2rem;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-deep);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .teams-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-input {
+                min-width: auto;
+            }
+            
+            .central-comparison-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .comparison-metrics {
+                margin-top: 0;
+                order: 3;
+            }
+            
+            .modal {
+                padding: 1rem;
+            }
+            
+            .team-details-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .players-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .phases-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <video class="background-video" autoplay muted loop playsinline>
+        <source src="https://res.cloudinary.com/dxtvsnw3g/video/upload/v1763772374/fondo_g1hfuz.mp4" type="video/mp4">
+        Tu navegador no soporta videos HTML5.
+    </video>
+    
+    <header>
+        <nav>
+            <div class="logo">PUBG MOBILE COPA HUAWEI MÉXICO</div>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+				        <a href="grupos.html">Grupos</a>
+                <a href="fases.html">Fases</a>
+                <a href="mvp-mvt.html">Tablas</a>
+                <a href="equipos.html" style="color: var(--primary);">Equipos</a>
+                <a href="jugadores.html">Jugadores</a>
+                <a href="mapas.html">Mapas</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="section fade-in">
+            <h1 class="section-title">Equipos del Torneo</h1>
+            <p>Visualiza y compara las estadísticas de todos los equipos participantes.</p>
+        </div>
+        
+        <div class="section slide-up">
+            <div class="filters-container">
+                <input type="text" id="team-search" class="search-input" placeholder="Buscar equipo...">
+                <button id="compare-btn" class="compare-btn" disabled>Comparar Equipos (0/2)</button>
+            </div>
+            
+            <div class="group-filters" id="group-filters">
+            </div>
+            
+            <div class="teams-grid" id="teams-grid">
+                <div class="loading">Cargando equipos...</div>
+            </div>
+        </div>
+    </main>
+    
+    <div class="modal-overlay" id="comparison-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Comparación de Equipos</h2>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            
+            <div class="central-comparison-container" id="comparison-container">
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="team-details-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="team-details-title">Detalles del Equipo</h2>
+                <button class="close-btn" id="close-details-modal">&times;</button>
+            </div>
+            
+            <div class="team-details-content" id="team-details-content">
+            </div>
+        </div>
+    </div>
+    
+
+    <script>
+        let allTeamsData = {};
+        let selectedTeams = [];
+        let currentGroup = null;
+        let teamGroups = {};
+        
+        const phasesStructure = [
+            { name: 'Clasificatorias', path: '/data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'] },
+            { name: 'Semifinal', path: '/data/semifinal/', groups: ['SEMIFINAL 1', 'SEMIFINAL 2'], maps: ['M1', 'M2', 'M3'] },
+            { name: 'Final', path: '/data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3'] }
+        ];
+        
+        const mapNames = {
+            'M1': 'Erangel',
+            'M2': 'Miramar', 
+            'M3': 'Sanhok',
+            'M4': 'Erangel',
+            'M5': 'Miramar', 
+            'M6': 'Sanhok',
+            'M7': 'Erangel',
+            'M8': 'Miramar', 
+            'M9': 'Sanhok'
+        };
+        
+        function calculatePositionPoints(rank) {
+            const pointsMap = { 1: 10, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 2, 8: 1 };
+            return pointsMap[rank] || 0;
+        }
+        
+        function getTeamLogoUrl(teamName) {
+            const basePath = '/data/logos/equipos/';
+            const extensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp'];
+            const normalizedTeamName = teamName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+            
+            for (const ext of extensions) {
+                const logoPath = `${basePath}${normalizedTeamName}${ext}`;
+                if (allTeamsData[teamName]) {
+                    return logoPath;
+                }
+            }
+            
+            return `${basePath}default.png`;
+        }
+        
+        function getCurrentPhase() {
+            if (currentGroup.startsWith('GRUPO')) {
+                return 'Clasificatorias';
+            } else if (currentGroup.startsWith('SEMIFINAL')) {
+                return 'Semifinal';
+            } else if (currentGroup === 'FINAL') {
+                return 'Final';
+            }
+            return 'GENERAL';
+        }
+        
+        async function loadTeamsData() {
+            try {
+                for (const phase of phasesStructure) {
+                    for (const group of phase.groups) {
+                        for (const map of phase.maps) {
+                            const csvPath = `${phase.path}${group}/${map}.csv`;
+                            await loadCSVFile(csvPath, phase.name, group, map);
+                        }
+                    }
+                }
+                
+                processTeamsData();
+                
+                updateGroupFilters();
+                updateTeamsGrid();
+                
+                setupEventListeners();
+                
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                document.getElementById('teams-grid').innerHTML = '<div class="loading">Error cargando datos de equipos</div>';
+            }
+        }
+        
+        async function loadCSVFile(filePath, phase, group, map) {
+            try {
+                const response = await fetch(filePath + "?nocache=" + Date.now());
+                if (!response.ok) {
+                    return;
+                }
+                
+                const csvText = await response.text();
+                const lines = csvText.split('\n');
+                
+                const headers = lines[0].split(',');
+
+                const teamBestRank = {};
+                const teamWWCD = {};
+                
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim() === '') continue;
+                    
+                    const values = lines[i].split(',');
+                    const playerData = {};
+                    
+                    headers.forEach((header, index) => {
+                        playerData[header.trim()] = values[index] ? values[index].trim() : '';
+                    });
+                    
+                    playerData.kills = parseInt(playerData['Número de Bajas']) || 0;
+                    playerData.damage = parseFloat(playerData['Daño']) || 0;
+                    playerData.headshots = parseInt(playerData['Número de Headshots']) || 0;
+                    playerData.assists = parseInt(playerData['Asistencias']) || 0;
+                    playerData.rank = parseInt(playerData['Rango']) || 0;
+                    playerData.maxKillDistance = parseFloat(playerData['Máxima Distancia de Baja']) || 0;
+                    playerData.survivalTime = parseFloat(playerData['Tiempo de Supervivencia']) || 0;
+                    playerData.accuracy = parseFloat(playerData['Accuracy(%)']) || 0;
+                    playerData.totalShots = parseInt(playerData['TotalShots']) || 0;
+                    playerData.totalHits = parseInt(playerData['TotalHits']) || 0;
+                    playerData.headHits = parseInt(playerData['HeadHits']) || 0;
+                    playerData.bodyHits = parseInt(playerData['BodyHits']) || 0;
+                    playerData.handHits = parseInt(playerData['HandHits']) || 0;
+                    playerData.footHits = parseInt(playerData['FootHits']) || 0;
+                    playerData.limbsHits = parseInt(playerData['LimbsHits']) || 0;
+                    playerData.weaponKills = parseInt(playerData['WeaponKills']) || 0;
+                    
+                    playerData.phase = phase;
+                    playerData.group = group;
+                    playerData.map = map;
+                    playerData.mapName = mapNames[map] || map;
+                    
+                    const teamName = playerData['Nombre del Equipo'];
+                    if (!allTeamsData[teamName]) {
+                        allTeamsData[teamName] = {
+                            name: teamName,
+                            players: {},
+                            kills: 0,
+                            damage: 0,
+                            headshots: 0,
+                            wwcd: 0,
+                            matches: new Set(),
+                            maps: {},
+                            phases: {},
+                            bestRank: 99,
+                            lastMatchRank: 0,
+                            totalAssists: 0,
+                            totalSurvivalTime: 0,
+                            totalMaxKillDistance: 0,
+                            totalGrenadeKills: 0,
+                            totalDistanceDriven: 0,
+                            totalDistanceTraveled: 0,
+                            totalRevives: 0,
+                            groups: new Set(),
+                            matchPoints: 0,
+                            matchPositions: {},
+                            phaseData: {}
+                        };
+                    }
+                    
+                    if (!allTeamsData[teamName].phaseData[phase]) {
+                        allTeamsData[teamName].phaseData[phase] = {
+                            kills: 0,
+                            damage: 0,
+                            headshots: 0,
+                            wwcd: 0,
+                            matches: new Set(),
+                            points: 0,
+                            bestRank: 99,
+                            players: {},
+                            maps: {},
+                            totalAssists: 0,
+                            totalSurvivalTime: 0,
+                            totalMaxKillDistance: 0,
+                            totalGrenadeKills: 0,
+                            totalDistanceDriven: 0,
+                            totalDistanceTraveled: 0,
+                            totalRevives: 0
+                        };
+                    }
+                    
+                    allTeamsData[teamName].kills += playerData.kills;
+                    allTeamsData[teamName].damage += playerData.damage;
+                    allTeamsData[teamName].headshots += playerData.headshots;
+                    allTeamsData[teamName].totalAssists += playerData.assists;
+                    allTeamsData[teamName].totalSurvivalTime += playerData.survivalTime;
+                    allTeamsData[teamName].totalMaxKillDistance = Math.max(
+                        allTeamsData[teamName].totalMaxKillDistance, 
+                        playerData.maxKillDistance
+                    );
+                    allTeamsData[teamName].totalGrenadeKills += parseInt(playerData['Bajas con Granada']) || 0;
+                    allTeamsData[teamName].totalDistanceDriven += parseFloat(playerData['Distancia Conducida']) || 0;
+                    allTeamsData[teamName].totalDistanceTraveled += parseFloat(playerData['Distancia Recorrida']) || 0;
+                    allTeamsData[teamName].totalRevives += parseInt(playerData['Rescates']) || 0;
+                    
+                    allTeamsData[teamName].phaseData[phase].kills += playerData.kills;
+                    allTeamsData[teamName].phaseData[phase].damage += playerData.damage;
+                    allTeamsData[teamName].phaseData[phase].headshots += playerData.headshots;
+                    allTeamsData[teamName].phaseData[phase].totalAssists += playerData.assists;
+                    allTeamsData[teamName].phaseData[phase].totalSurvivalTime += playerData.survivalTime;
+                    allTeamsData[teamName].phaseData[phase].totalMaxKillDistance = Math.max(
+                        allTeamsData[teamName].phaseData[phase].totalMaxKillDistance, 
+                        playerData.maxKillDistance
+                    );
+                    allTeamsData[teamName].phaseData[phase].totalGrenadeKills += parseInt(playerData['Bajas con Granada']) || 0;
+                    allTeamsData[teamName].phaseData[phase].totalDistanceDriven += parseFloat(playerData['Distancia Conducida']) || 0;
+                    allTeamsData[teamName].phaseData[phase].totalDistanceTraveled += parseFloat(playerData['Distancia Recorrida']) || 0;
+                    allTeamsData[teamName].phaseData[phase].totalRevives += parseInt(playerData['Rescates']) || 0;
+                    
+                    allTeamsData[teamName].groups.add(group);
+                    
+                    const matchId = `${phase}-${group}-${map}`;
+                    allTeamsData[teamName].matches.add(matchId);
+                    allTeamsData[teamName].phaseData[phase].matches.add(matchId);
+                    
+                    if (!teamBestRank[teamName] || playerData.rank < teamBestRank[teamName]) {
+                        teamBestRank[teamName] = playerData.rank;
+                    }
+                    
+                    if (playerData.rank === 1) {
+                        teamWWCD[teamName] = true;
+                    }
+                    
+                    if (playerData.rank < allTeamsData[teamName].bestRank) {
+                        allTeamsData[teamName].bestRank = playerData.rank;
+                    }
+                    
+                    if (playerData.rank < allTeamsData[teamName].phaseData[phase].bestRank) {
+                        allTeamsData[teamName].phaseData[phase].bestRank = playerData.rank;
+                    }
+                    
+                    allTeamsData[teamName].lastMatchRank = playerData.rank;
+                    
+                    if (!allTeamsData[teamName].maps[playerData.mapName]) {
+                        allTeamsData[teamName].maps[playerData.mapName] = {
+                            kills: 0,
+                            damage: 0
+                        };
+                    }
+                    allTeamsData[teamName].maps[playerData.mapName].kills += playerData.kills;
+                    allTeamsData[teamName].maps[playerData.mapName].damage += playerData.damage;
+                    
+                    if (!allTeamsData[teamName].phaseData[phase].maps[playerData.mapName]) {
+                        allTeamsData[teamName].phaseData[phase].maps[playerData.mapName] = {
+                            kills: 0,
+                            damage: 0
+                        };
+                    }
+                    allTeamsData[teamName].phaseData[phase].maps[playerData.mapName].kills += playerData.kills;
+                    allTeamsData[teamName].phaseData[phase].maps[playerData.mapName].damage += playerData.damage;
+                    
+                    if (!allTeamsData[teamName].phases[phase]) {
+                        allTeamsData[teamName].phases[phase] = {
+                            kills: 0,
+                            damage: 0
+                        };
+                    }
+                    allTeamsData[teamName].phases[phase].kills += playerData.kills;
+                    allTeamsData[teamName].phases[phase].damage += playerData.damage;
+                    
+                    const playerName = playerData['Nombre del Jugador'];
+                    if (!allTeamsData[teamName].players[playerName]) {
+                        allTeamsData[teamName].players[playerName] = {
+                            name: playerName,
+                            kills: 0,
+                            damage: 0,
+                            headshots: 0,
+                            assists: 0
+                        };
+                    }
+                    allTeamsData[teamName].players[playerName].kills += playerData.kills;
+                    allTeamsData[teamName].players[playerName].damage += playerData.damage;
+                    allTeamsData[teamName].players[playerName].headshots += playerData.headshots;
+                    allTeamsData[teamName].players[playerName].assists += playerData.assists;
+                    
+                    if (!allTeamsData[teamName].phaseData[phase].players[playerName]) {
+                        allTeamsData[teamName].phaseData[phase].players[playerName] = {
+                            name: playerName,
+                            kills: 0,
+                            damage: 0,
+                            headshots: 0,
+                            assists: 0
+                        };
+                    }
+                    allTeamsData[teamName].phaseData[phase].players[playerName].kills += playerData.kills;
+                    allTeamsData[teamName].phaseData[phase].players[playerName].damage += playerData.damage;
+                    allTeamsData[teamName].phaseData[phase].players[playerName].headshots += playerData.headshots;
+                    allTeamsData[teamName].phaseData[phase].players[playerName].assists += playerData.assists;
+                }
+                
+                Object.keys(teamBestRank).forEach(teamName => {
+                    if (teamWWCD[teamName]) {
+                        allTeamsData[teamName].wwcd += 1;
+                        allTeamsData[teamName].phaseData[phase].wwcd += 1;
+                    }
+                    
+                    const positionPoints = calculatePositionPoints(teamBestRank[teamName]);
+                    allTeamsData[teamName].matchPoints += positionPoints;
+                    allTeamsData[teamName].phaseData[phase].points += positionPoints;
+                    
+                    const matchId = `${phase}-${group}-${map}`;
+                    if (!allTeamsData[teamName].matchPositions[matchId]) {
+                        allTeamsData[teamName].matchPositions[matchId] = teamBestRank[teamName];
+                    }
+                });
+                
+            } catch (error) {
+                console.warn(`No se pudo cargar ${filePath}:`, error);
+            }
+        }
+        
+        function processTeamsData() {
+            Object.values(allTeamsData).forEach(team => {
+                team.points = team.matchPoints + team.kills;
+                team.matchCount = team.matches.size;
+                
+                Object.keys(team.phaseData).forEach(phase => {
+                    team.phaseData[phase].totalPoints = team.phaseData[phase].points + team.phaseData[phase].kills;
+                    team.phaseData[phase].matchCount = team.phaseData[phase].matches.size;
+                    
+                    team.phaseData[phase].mvp = Object.values(team.phaseData[phase].players).reduce((best, player) => {
+                        return !best || player.kills > best.kills ? player : best;
+                    }, null);
+                    
+                    if (team.phaseData[phase].mvp) {
+                        team.phaseData[phase].mvp.killPercentage = (team.phaseData[phase].mvp.kills / team.phaseData[phase].kills * 100).toFixed(1);
+                        team.phaseData[phase].mvp.damagePercentage = (team.phaseData[phase].mvp.damage / team.phaseData[phase].damage * 100).toFixed(1);
+                    }
+                    
+                    team.phaseData[phase].bestKillsMap = Object.entries(team.phaseData[phase].maps).reduce((best, [map, stats]) => {
+                        return !best || stats.kills > best.kills ? { map, ...stats } : best;
+                    }, null);
+                    
+                    team.phaseData[phase].bestDamageMap = Object.entries(team.phaseData[phase].maps).reduce((best, [map, stats]) => {
+                        return !best || stats.damage > best.damage ? { map, ...stats } : best;
+                    }, null);
+                });
+                
+                team.bestKillsMap = Object.entries(team.maps).reduce((best, [map, stats]) => {
+                    return !best || stats.kills > best.kills ? { map, ...stats } : best;
+                }, null);
+                
+                team.bestDamageMap = Object.entries(team.maps).reduce((best, [map, stats]) => {
+                    return !best || stats.damage > best.damage ? { map, ...stats } : best;
+                }, null);
+                
+                team.mvp = Object.values(team.players).reduce((best, player) => {
+                    return !best || player.kills > best.kills ? player : best;
+                }, null);
+                
+                if (team.mvp) {
+                    team.mvp.killPercentage = (team.mvp.kills / team.kills * 100).toFixed(1);
+                    team.mvp.damagePercentage = (team.mvp.damage / team.damage * 100).toFixed(1);
+                }
+            });
+            
+            prepareTeamGroups();
+        }
+        
+        function prepareTeamGroups() {
+            teamGroups = {};
+            
+            const groupOrder = ['GENERAL', 'GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D', 'SEMIFINAL 1', 'SEMIFINAL 2', 'FINAL'];
+            
+            teamGroups['GENERAL'] = Object.keys(allTeamsData);
+            
+            groupOrder.forEach(group => {
+                if (group !== 'GENERAL') {
+                    teamGroups[group] = Object.keys(allTeamsData).filter(teamName => 
+                        allTeamsData[teamName].groups.has(group)
+                    );
+                }
+            });
+            
+            currentGroup = 'GENERAL';
+        }
+        
+        function updateGroupFilters() {
+            const groupFilters = document.getElementById('group-filters');
+            
+            const groupOrder = ['GENERAL', 'GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D', 'SEMIFINAL 1', 'SEMIFINAL 2', 'FINAL'];
+            
+            const availableGroups = groupOrder.filter(group => 
+                teamGroups[group] && teamGroups[group].length > 0
+            );
+            
+            if (availableGroups.length === 0) {
+                return;
+            }
+            
+            groupFilters.innerHTML = '';
+            
+            availableGroups.forEach(group => {
+                const groupBtn = document.createElement('button');
+                groupBtn.className = `group-btn ${group === currentGroup ? 'active' : ''}`;
+                groupBtn.textContent = group;
+                groupBtn.dataset.group = group;
+                
+                groupBtn.addEventListener('click', () => {
+                    document.querySelectorAll('.group-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    groupBtn.classList.add('active');
+                    
+                    currentGroup = group;
+                    updateTeamsGrid();
+                });
+                
+                groupFilters.appendChild(groupBtn);
+            });
+        }
+        
+        function updateTeamsGrid() {
+            const teamsGrid = document.getElementById('teams-grid');
+            
+            if (Object.keys(allTeamsData).length === 0) {
+                teamsGrid.innerHTML = '<div class="loading">No se encontraron datos de equipos</div>';
+                return;
+            }
+            
+            let teamsToShow;
+            if (currentGroup && teamGroups[currentGroup]) {
+                teamsToShow = teamGroups[currentGroup].map(teamName => {
+                    const team = allTeamsData[teamName];
+                    
+                    if (currentGroup !== 'GENERAL') {
+                        let phaseForGroup = '';
+                        if (currentGroup.startsWith('GRUPO')) {
+                            phaseForGroup = 'Clasificatorias';
+                        } else if (currentGroup.startsWith('SEMIFINAL')) {
+                            phaseForGroup = 'Semifinal';
+                        } else if (currentGroup === 'FINAL') {
+                            phaseForGroup = 'Final';
+                        }
+                        
+                        if (phaseForGroup && team.phaseData[phaseForGroup]) {
+                            const phaseData = team.phaseData[phaseForGroup];
+                            return {
+                                ...team,
+                                kills: phaseData.kills,
+                                damage: phaseData.damage,
+                                headshots: phaseData.headshots,
+                                wwcd: phaseData.wwcd,
+                                points: phaseData.totalPoints,
+                                matchCount: phaseData.matchCount,
+                                bestRank: phaseData.bestRank,
+                                isPhaseSpecific: true,
+                                phaseName: phaseForGroup
+                            };
+                        }
+                    }
+                    
+                    return {
+                        ...team,
+                        isPhaseSpecific: false
+                    };
+                });
+            } else {
+                teamsToShow = Object.values(allTeamsData).map(team => ({
+                    ...team,
+                    isPhaseSpecific: false
+                }));
+            }
+            
+            teamsToShow.sort((a, b) => b.points - a.points);
+            
+            teamsGrid.innerHTML = '';
+            
+            teamsToShow.forEach(team => {
+                const teamCard = document.createElement('div');
+                teamCard.className = `glass-card team-card selectable ${selectedTeams.includes(team.name) ? 'selected' : ''}`;
+                teamCard.dataset.team = team.name;
+                
+                teamCard.innerHTML = `
+                    <div class="team-checkbox"></div>
+                    <div class="team-header">
+                        <div class="team-logo">
+                            <img src="${getTeamLogoUrl(team.name)}" alt="${team.name}" onerror="this.src='/data/logos/equipos/default.png'">
+                        </div>
+                        <div class="team-info">
+                            <h3>${team.name}</h3>
+                            <p>${team.matchCount} partidas</p>
+                            ${team.isPhaseSpecific ? `<small>${team.phaseName}</small>` : ''}
+                        </div>
+                    </div>
+                    <div class="team-stats">
+                        <div class="team-stat">
+                            <div class="team-stat-value">${team.points}</div>
+                            <div class="team-stat-label">Puntos</div>
+                        </div>
+                        <div class="team-stat">
+                            <div class="team-stat-value">${team.wwcd}</div>
+                            <div class="team-stat-label">WWCD</div>
+                        </div>
+                        <div class="team-stat">
+                            <div class="team-stat-value">${team.kills}</div>
+                            <div class="team-stat-label">Bajas</div>
+                        </div>
+                        <div class="team-stat">
+                            <div class="team-stat-value">${Math.round(team.damage)}</div>
+                            <div class="team-stat-label">Daño</div>
+                        </div>
+                    </div>
+                    <div class="team-actions">
+                        <button class="action-btn" data-action="details">Ver Detalles</button>
+                        <button class="action-btn primary" data-action="select">Seleccionar</button>
+                    </div>
+                `;
+                
+                teamsGrid.appendChild(teamCard);
+            });
+        }
+        
+        function setupEventListeners() {
+            document.getElementById('team-search').addEventListener('input', filterTeams);
+            
+            document.getElementById('compare-btn').addEventListener('click', showComparisonModal);
+            
+            document.getElementById('close-modal').addEventListener('click', closeComparisonModal);
+            document.getElementById('close-details-modal').addEventListener('click', closeTeamDetailsModal);
+            
+            document.getElementById('comparison-modal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) {
+                    closeComparisonModal();
+                }
+            });
+            
+            document.getElementById('team-details-modal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) {
+                    closeTeamDetailsModal();
+                }
+            });
+            
+            document.getElementById('teams-grid').addEventListener('click', (e) => {
+                const teamCard = e.target.closest('.team-card');
+                if (!teamCard) return;
+                
+                const teamName = teamCard.dataset.team;
+                const action = e.target.dataset.action;
+                
+                if (action === 'select' || e.target.classList.contains('team-checkbox')) {
+                    toggleTeamSelection(teamName, teamCard);
+                } else if (action === 'details' || e.target.closest('.team-card') === teamCard) {
+                    showTeamDetailsModal(teamName);
+                }
+            });
+        }
+        
+        function filterTeams() {
+            const searchTerm = document.getElementById('team-search').value.toLowerCase();
+            
+            document.querySelectorAll('.team-card').forEach(card => {
+                const teamName = card.querySelector('h3').textContent.toLowerCase();
+                card.style.display = teamName.includes(searchTerm) ? '' : 'none';
+            });
+        }
+        
+        function toggleTeamSelection(teamName, teamCard) {
+            const index = selectedTeams.indexOf(teamName);
+            
+            if (index === -1) {
+                if (selectedTeams.length >= 2) {
+                    const firstTeam = selectedTeams[0];
+                    const firstCard = document.querySelector(`[data-team="${firstTeam}"]`);
+                    if (firstCard) {
+                        firstCard.classList.remove('selected');
+                    }
+                    selectedTeams.shift();
+                }
+                
+                selectedTeams.push(teamName);
+                teamCard.classList.add('selected');
+            } else {
+                selectedTeams.splice(index, 1);
+                teamCard.classList.remove('selected');
+            }
+            
+            updateCompareButton();
+        }
+        
+        function updateCompareButton() {
+            const compareBtn = document.getElementById('compare-btn');
+            const count = selectedTeams.length;
+            
+            compareBtn.textContent = `Comparar Equipos (${count}/2)`;
+            compareBtn.disabled = count !== 2;
+        }
+        
+        function showComparisonModal() {
+            if (selectedTeams.length !== 2) return;
+            
+            const modal = document.getElementById('comparison-modal');
+            const container = document.getElementById('comparison-container');
+            
+            const team1 = allTeamsData[selectedTeams[0]];
+            const team2 = allTeamsData[selectedTeams[1]];
+            
+            container.innerHTML = `
+                <div class="comparison-team">
+                    <div class="comparison-team-header">
+                        <div class="comparison-logo">
+                            <img src="${getTeamLogoUrl(team1.name)}" alt="${team1.name}" onerror="this.src='/data/logos/equipos/default.png'">
+                        </div>
+                        <h3 class="comparison-team-name">${team1.name}</h3>
+                    </div>
+                </div>
+                
+                <div class="comparison-metrics" id="comparison-metrics">
+                    <!-- Las métricas se cargarán dinámicamente aquí -->
+                </div>
+                
+                <div class="comparison-team">
+                    <div class="comparison-team-header">
+                        <div class="comparison-logo">
+                            <img src="${getTeamLogoUrl(team2.name)}" alt="${team2.name}" onerror="this.src='/data/logos/equipos/default.png'">
+                        </div>
+                        <h3 class="comparison-team-name">${team2.name}</h3>
+                    </div>
+                </div>
+            `;
+            
+            fillComparisonStats(team1, team2);
+            
+            modal.classList.add('active');
+        }
+        
+        function fillComparisonStats(team1, team2) {
+            const metricsContainer = document.getElementById('comparison-metrics');
+            
+            const comparisonStats = [
+                { name: 'Puntos Totales', key: 'points', formatter: (v) => v },
+                { name: 'WWCD', key: 'wwcd', formatter: (v) => v },
+                { name: 'Bajas Totales', key: 'kills', formatter: (v) => v },
+                { name: 'Daño Total', key: 'damage', formatter: (v) => Math.round(v) },
+                { name: 'Headshots', key: 'headshots', formatter: (v) => v },
+                { name: 'Asistencias', key: 'totalAssists', formatter: (v) => v },
+                { name: 'Partidas Jugadas', key: 'matchCount', formatter: (v) => v },
+                { name: 'Mejor Posición', key: 'bestRank', formatter: (v) => v === 99 ? 'N/A' : v },
+                { name: 'Posición Última Partida', key: 'lastMatchRank', formatter: (v) => v },
+                { name: 'Eliminación Más Lejana (m)', key: 'totalMaxKillDistance', formatter: (v) => Math.round(v) },
+                { name: 'Bajas con Granada', key: 'totalGrenadeKills', formatter: (v) => v },
+                { name: 'Distancia Conducida (m)', key: 'totalDistanceDriven', formatter: (v) => Math.round(v) },
+                { name: 'Distancia Recorrida (m)', key: 'totalDistanceTraveled', formatter: (v) => Math.round(v) },
+                { name: 'Rescates', key: 'totalRevives', formatter: (v) => v }
+            ];
+            
+            metricsContainer.innerHTML = '';
+            
+            comparisonStats.forEach(stat => {
+                const value1 = team1[stat.key];
+                const value2 = team2[stat.key];
+                
+                let winnerClass = '';
+                
+                if (typeof value1 === 'number' && typeof value2 === 'number') {
+                    if (stat.key === 'bestRank' || stat.key === 'lastMatchRank') {
+                        if (value1 < value2) {
+                            winnerClass = 'winner-left';
+                        } else if (value2 < value1) {
+                            winnerClass = 'winner-right';
+                        }
+                    } else {
+                        if (value1 > value2) {
+                            winnerClass = 'winner-left';
+                        } else if (value2 > value1) {
+                            winnerClass = 'winner-right';
+                        }
+                    }
+                }
+                
+                const metricRow = document.createElement('div');
+                metricRow.className = `metric-row ${winnerClass}`;
+                metricRow.innerHTML = `
+                    <div class="metric-value metric-value-left">${stat.formatter(value1)}</div>
+                    <div class="metric-name">${stat.name}</div>
+                    <div class="metric-value metric-value-right">${stat.formatter(value2)}</div>
+                `;
+                
+                metricsContainer.appendChild(metricRow);
+            });
+        }
+        
+        function closeComparisonModal() {
+            document.getElementById('comparison-modal').classList.remove('active');
+        }
+        
+        function showTeamDetailsModal(teamName) {
+            const modal = document.getElementById('team-details-modal');
+            const title = document.getElementById('team-details-title');
+            const content = document.getElementById('team-details-content');
+            
+            const team = allTeamsData[teamName];
+            if (!team) return;
+            
+            title.textContent = `Detalles de ${team.name}`;
+            
+            content.innerHTML = generateTeamDetailsContent(team);
+            
+            modal.classList.add('active');
+        }
+        
+        function generateTeamDetailsContent(team) {
+            const currentPhase = getCurrentPhase();
+            
+            if (currentGroup === 'GENERAL') {
+                return generateGeneralTeamDetails(team);
+            } 
+            else {
+                return generatePhaseSpecificTeamDetails(team, currentPhase);
+            }
+        }
+        
+        function generateGeneralTeamDetails(team) {
+            const groups = Array.from(team.groups).join(', ');
+            
+            const phases = Object.keys(team.phases).join(', ');
+            
+            return `
+                <div class="team-details-section">
+                    <h3 class="section-subtitle">Datos Generales (Acumulados)</h3>
+                    <div class="team-details-grid">
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${team.matchCount}</div>
+                            <div class="team-detail-label">Partidas Jugadas</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${team.points}</div>
+                            <div class="team-detail-label">Puntos</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${team.kills}</div>
+                            <div class="team-detail-label">Bajas</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${Math.round(team.damage)}</div>
+                            <div class="team-detail-label">Daño</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${team.wwcd}</div>
+                            <div class="team-detail-label">WWCD</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${team.bestRank === 99 ? 'N/A' : team.bestRank}</div>
+                            <div class="team-detail-label">Mejor Posición</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <p><strong>Fases:</strong> ${phases}</p>
+                        <p><strong>Grupos:</strong> ${groups}</p>
+                    </div>
+                </div>
+                
+                <div class="team-details-section">
+                    <h3 class="section-subtitle">Desempeño por Fase</h3>
+                    <div class="team-details-grid">
+                        ${Object.entries(team.phaseData).map(([phase, phaseStats]) => `
+                            <div class="team-detail-card">
+                                <div class="team-detail-value">${phaseStats.totalPoints}</div>
+                                <div class="team-detail-label">${phase}</div>
+                                <div style="font-size: 0.9rem; margin-top: 0.25rem;">
+                                    ${phaseStats.kills} bajas, ${phaseStats.wwcd} WWCD
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="team-details-section">
+                    <h3 class="section-subtitle">Desempeño por Mapa</h3>
+                    <div class="team-details-grid">
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${team.bestKillsMap ? team.bestKillsMap.map : 'N/A'}</div>
+                            <div class="team-detail-label">Mejor Mapa por Bajas</div>
+                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${team.bestKillsMap ? team.bestKillsMap.kills + ' bajas' : ''}</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${team.bestDamageMap ? team.bestDamageMap.map : 'N/A'}</div>
+                            <div class="team-detail-label">Mejor Mapa por Daño</div>
+                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${team.bestDamageMap ? Math.round(team.bestDamageMap.damage) + ' daño' : ''}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-details-section">
+                    <h3 class="section-subtitle">Jugadores</h3>
+                    <div class="players-grid">
+                        ${Object.values(team.players).map(player => `
+                            <div class="player-card ${team.mvp && player.name === team.mvp.name ? 'mvp' : ''}">
+                                <div class="player-header">
+                                    <div class="player-name">${player.name}</div>
+                                    ${team.mvp && player.name === team.mvp.name ? '<div class="mvp-badge">MVP</div>' : ''}
+                                </div>
+                                <div class="player-stats">
+                                    <div class="player-stat">
+                                        <div class="player-stat-value">${player.kills}</div>
+                                        <div class="player-stat-label">Bajas</div>
+                                    </div>
+                                    <div class="player-stat">
+                                        <div class="player-stat-value">${Math.round(player.damage)}</div>
+                                        <div class="player-stat-label">Daño</div>
+                                    </div>
+                                    <div class="player-stat">
+                                        <div class="player-stat-value">${player.headshots}</div>
+                                        <div class="player-stat-label">Headshots</div>
+                                    </div>
+                                    <div class="player-stat">
+                                        <div class="player-stat-value">${player.assists}</div>
+                                        <div class="player-stat-label">Asistencias</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                ${team.mvp ? `
+                <div class="team-details-section">
+                    <h3 class="section-subtitle">Aporte del MVP</h3>
+                    <div class="team-details-grid">
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${team.mvp.killPercentage}%</div>
+                            <div class="team-detail-label">Porcentaje de Bajas</div>
+                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${team.mvp.kills} de ${team.kills} bajas</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${team.mvp.damagePercentage}%</div>
+                            <div class="team-detail-label">Porcentaje de Daño</div>
+                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${Math.round(team.mvp.damage)} de ${Math.round(team.damage)} daño</div>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+        }
+        
+        function generatePhaseSpecificTeamDetails(team, phase) {
+            const phaseData = team.phaseData[phase];
+            
+            if (!phaseData) {
+                return `<div class="loading">No hay datos para este equipo en ${phase}</div>`;
+            }
+            
+            const groupsInPhase = Array.from(team.groups).filter(group => {
+                if (phase === 'Clasificatorias') {
+                    return group.startsWith('GRUPO');
+                } else if (phase === 'Semifinal') {
+                    return group.startsWith('SEMIFINAL');
+                } else if (phase === 'Final') {
+                    return group === 'FINAL';
+                }
+                return false;
+            }).join(', ');
+            
+            return `
+                <div class="team-details-section">
+                    <h3 class="section-subtitle">Datos en ${phase}</h3>
+                    <div class="team-details-grid">
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${phaseData.matchCount}</div>
+                            <div class="team-detail-label">Partidas Jugadas</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${phaseData.totalPoints}</div>
+                            <div class="team-detail-label">Puntos</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${phaseData.kills}</div>
+                            <div class="team-detail-label">Bajas</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${Math.round(phaseData.damage)}</div>
+                            <div class="team-detail-label">Daño</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${phaseData.wwcd}</div>
+                            <div class="team-detail-label">WWCD</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${phaseData.bestRank === 99 ? 'N/A' : phaseData.bestRank}</div>
+                            <div class="team-detail-label">Mejor Posición</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <p><strong>Grupos en ${phase}:</strong> ${groupsInPhase}</p>
+                    </div>
+                </div>
+                
+                <div class="team-details-section">
+                    <h3 class="section-subtitle">Desempeño por Mapa en ${phase}</h3>
+                    <div class="team-details-grid">
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${phaseData.bestKillsMap ? phaseData.bestKillsMap.map : 'N/A'}</div>
+                            <div class="team-detail-label">Mejor Mapa por Bajas</div>
+                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${phaseData.bestKillsMap ? phaseData.bestKillsMap.kills + ' bajas' : ''}</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${phaseData.bestDamageMap ? phaseData.bestDamageMap.map : 'N/A'}</div>
+                            <div class="team-detail-label">Mejor Mapa por Daño</div>
+                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${phaseData.bestDamageMap ? Math.round(phaseData.bestDamageMap.damage) + ' daño' : ''}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-details-section">
+                    <h3 class="section-subtitle">Jugadores en ${phase}</h3>
+                    <div class="players-grid">
+                        ${Object.values(phaseData.players).map(player => `
+                            <div class="player-card ${phaseData.mvp && player.name === phaseData.mvp.name ? 'mvp' : ''}">
+                                <div class="player-header">
+                                    <div class="player-name">${player.name}</div>
+                                    ${phaseData.mvp && player.name === phaseData.mvp.name ? '<div class="mvp-badge">MVP</div>' : ''}
+                                </div>
+                                <div class="player-stats">
+                                    <div class="player-stat">
+                                        <div class="player-stat-value">${player.kills}</div>
+                                        <div class="player-stat-label">Bajas</div>
+                                    </div>
+                                    <div class="player-stat">
+                                        <div class="player-stat-value">${Math.round(player.damage)}</div>
+                                        <div class="player-stat-label">Daño</div>
+                                    </div>
+                                    <div class="player-stat">
+                                        <div class="player-stat-value">${player.headshots}</div>
+                                        <div class="player-stat-label">Headshots</div>
+                                    </div>
+                                    <div class="player-stat">
+                                        <div class="player-stat-value">${player.assists}</div>
+                                        <div class="player-stat-label">Asistencias</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                ${phaseData.mvp ? `
+                <div class="team-details-section">
+                    <h3 class="section-subtitle">Aporte del MVP en ${phase}</h3>
+                    <div class="team-details-grid">
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${phaseData.mvp.killPercentage}%</div>
+                            <div class="team-detail-label">Porcentaje de Bajas</div>
+                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${phaseData.mvp.kills} de ${phaseData.kills} bajas</div>
+                        </div>
+                        <div class="team-detail-card">
+                            <div class="team-detail-value">${phaseData.mvp.damagePercentage}%</div>
+                            <div class="team-detail-label">Porcentaje de Daño</div>
+                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${Math.round(phaseData.mvp.damage)} de ${Math.round(phaseData.damage)} daño</div>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+        }
+        
+        function closeTeamDetailsModal() {
+            document.getElementById('team-details-modal').classList.remove('active');
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTeamsData();
+        });
+    </script>
+</body>
+</html>
