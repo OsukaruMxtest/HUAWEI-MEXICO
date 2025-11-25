@@ -371,11 +371,61 @@
             color: var(--secondary);
         }
         
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            width: 30px;
+            height: 21px;
+            justify-content: space-between;
+        }
+        
+        .hamburger span {
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        /* Mobile optimizations */
         @media (max-width: 768px) {
             .nav-links {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--card-bg);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid var(--card-border);
+                flex-direction: column;
+                align-items: center;
+                padding: 1rem 0;
+                gap: 1rem;
+                box-shadow: 0 4px 10px var(--shadow);
                 display: none;
             }
-            
+        
+            .nav-links.active {
+                display: flex;
+            }
+        
+            .hamburger {
+                display: flex;
+            }
+        
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(6px, 6px);
+            }
+        
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+        
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(6px, -6px);
+            }
+        
             .tournament-logo h1 {
                 font-size: 2rem;
             }
@@ -388,65 +438,65 @@
                 padding: 1.5rem;
                 width: 95%;
             }
+            
+            header {
+                padding: 0.75rem 1rem;
+            }
+            
+            .logo {
+                font-size: 1.2rem;
+            }
+            
+            main {
+                padding: 1.5rem;
+                margin-top: 70px;
+            }
         }
-.hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    width: 30px;
-    height: 21px;
-    justify-content: space-between;
-}
-
-.hamburger span {
-    width: 100%;
-    height: 3px;
-    background-color: var(--primary);
-    border-radius: 2px;
-    transition: all 0.3s ease;
-}
-
-@media (max-width: 768px) {
-    .nav-links {
-        position: absolute;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        background: var(--card-bg);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid var(--card-border);
-        flex-direction: column;
-        align-items: center;
-        padding: 1rem 0;
-        gap: 1rem;
-        box-shadow: 0 4px 10px var(--shadow);
-        display: none;
-    }
-
-    .nav-links.active {
-        display: flex;
-    }
-
-    .hamburger {
-        display: flex;
-    }
-
-    .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(6px, 6px);
-    }
-
-    .hamburger.active span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(6px, -6px);
-    }
-}
+        
+        @media (max-width: 480px) {
+            .stat-value {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+            
+            .modal-title {
+                font-size: 1.3rem;
+            }
+            
+            .top-item {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .player-name {
+                font-size: 0.95rem;
+            }
+            
+            .player-team {
+                font-size: 0.75rem;
+            }
+            
+            .stat-number {
+                font-size: 0.95rem;
+            }
+            
+            .modal-content {
+                padding: 1rem;
+            }
+            
+            .close-modal {
+                width: 28px;
+                height: 28px;
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <video autoplay muted loop id="bg-video">
+    <video autoplay muted loop playsinline id="bg-video">
         <source src="https://res.cloudinary.com/dxtvsnw3g/video/upload/v1763094052/test_a40dtj.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
