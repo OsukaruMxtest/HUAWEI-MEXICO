@@ -895,9 +895,9 @@
         let teamGroups = {};
         
         const phasesStructure = [
-            { name: 'Clasificatorias', path: '/data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'] },
-            { name: 'Semifinal', path: '/data/semifinal/', groups: ['SEMIFINAL 1', 'SEMIFINAL 2'], maps: ['M1', 'M2', 'M3'] },
-            { name: 'Final', path: '/data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3'] }
+            { name: 'Clasificatorias', path: 'data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'] },
+            { name: 'Semifinal', path: 'data/semifinal/', groups: ['SEMIFINAL 1', 'SEMIFINAL 2'], maps: ['M1', 'M2', 'M3'] },
+            { name: 'Final', path: 'data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3'] }
         ];
         
         const mapNames = {
@@ -918,7 +918,7 @@
         }
         
         function getTeamLogoUrl(teamName) {
-            const basePath = '/data/logos/equipos/';
+            const basePath = 'data/logos/equipos/';
             const extensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp'];
             const normalizedTeamName = teamName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
             
@@ -1359,7 +1359,7 @@
                     <div class="team-checkbox"></div>
                     <div class="team-header">
                         <div class="team-logo">
-                            <img src="${getTeamLogoUrl(team.name)}" alt="${team.name}" onerror="this.src='/data/logos/equipos/default.png'">
+                            <img src="${getTeamLogoUrl(team.name)}" alt="${team.name}" onerror="this.src='data/logos/equipos/default.png'">
                         </div>
                         <div class="team-info">
                             <h3>${team.name}</h3>
@@ -1483,7 +1483,7 @@
                 <div class="comparison-team">
                     <div class="comparison-team-header">
                         <div class="comparison-logo">
-                            <img src="${getTeamLogoUrl(team1.name)}" alt="${team1.name}" onerror="this.src='/data/logos/equipos/default.png'">
+                            <img src="${getTeamLogoUrl(team1.name)}" alt="${team1.name}" onerror="this.src='data/logos/equipos/default.png'">
                         </div>
                         <h3 class="comparison-team-name">${team1.name}</h3>
                     </div>
@@ -1496,7 +1496,7 @@
                 <div class="comparison-team">
                     <div class="comparison-team-header">
                         <div class="comparison-logo">
-                            <img src="${getTeamLogoUrl(team2.name)}" alt="${team2.name}" onerror="this.src='/data/logos/equipos/default.png'">
+                            <img src="${getTeamLogoUrl(team2.name)}" alt="${team2.name}" onerror="this.src='data/logos/equipos/default.png'">
                         </div>
                         <h3 class="comparison-team-name">${team2.name}</h3>
                     </div>
