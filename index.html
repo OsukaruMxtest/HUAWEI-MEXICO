@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PUBG MOBILE COPA HUAWEI MEXICO</title>
     <style>
-        /* Importar fuente Poppins */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
-        /* Variables CSS para la nueva paleta de colores */
         :root {
             --primary: #BB0215;
             --primary-bright: #E9072B;
@@ -24,7 +22,6 @@
             --shadow-hover: rgba(0, 0, 0, 0.15);
         }
         
-        /* Estilos base */
         * {
             margin: 0;
             padding: 0;
@@ -40,7 +37,6 @@
             position: relative;
         }
         
-        /* Video de fondo */
         #bg-video {
             position: fixed;
             top: 0;
@@ -51,7 +47,6 @@
             z-index: -1;
         }
         
-        /* Overlay para mejorar legibilidad */
         .video-overlay {
             position: fixed;
             top: 0;
@@ -62,7 +57,6 @@
             z-index: -1;
         }
         
-        /* Header fijo */
         header {
             position: fixed;
             top: 0;
@@ -123,13 +117,11 @@
             width: 100%;
         }
         
-        /* Main content */
         main {
             margin-top: 80px;
             padding: 2rem;
         }
         
-        /* Estilo moderno para tarjetas */
         .glass-card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
@@ -145,7 +137,6 @@
             box-shadow: 0 12px 35px var(--shadow-hover);
         }
         
-        /* Animaciones */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -173,7 +164,6 @@
             animation: blurIn 1s ease forwards;
         }
         
-        /* Logo del torneo */
         .tournament-logo {
             text-align: center;
             margin-bottom: 2rem;
@@ -195,7 +185,6 @@
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
         }
         
-        /* Grid de estadísticas */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -228,7 +217,6 @@
             font-size: 1rem;
         }
         
-        /* Secciones */
         .section {
             margin-bottom: 2rem;
         }
@@ -243,7 +231,6 @@
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
         }
         
-        /* Footer */
         footer {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
@@ -255,7 +242,6 @@
             box-shadow: 0 -2px 15px var(--shadow);
         }
         
-        /* Scroll personalizado */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -274,7 +260,6 @@
             background: var(--primary-bright);
         }
         
-        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -386,7 +371,6 @@
             color: var(--secondary);
         }
         
-        /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -408,7 +392,6 @@
     </style>
 </head>
 <body>
-    <!-- Video de fondo -->
     <video autoplay muted loop id="bg-video">
         <source src="https://res.cloudinary.com/dxtvsnw3g/video/upload/v1763094052/test_a40dtj.mp4" type="video/mp4">
     </video>
@@ -467,7 +450,6 @@
         </div>
     </main>
     
-    <!-- Modales -->
     <div id="modal-total-shots" class="modal">
         <div class="modal-content glass-card">
             <div class="modal-header">
@@ -530,7 +512,6 @@
     
 
     <script>
-        // Variables globales para almacenar datos
         let allPlayersData = [];
         let allTeamsData = {};
         let tournamentStats = {
@@ -545,14 +526,12 @@
             weaponKills: {}
         };
 
-        // Estructura de fases esperadas
         const phasesStructure = [
             { name: 'Clasificatorias', path: 'data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1', 'M2', 'M3','M4','M5','M6','M7','M8','M9'] },
             { name: 'Semifinal', path: 'data/semifinal/', groups: ['SEMIFINAL 1', 'SEMIFINAL 2'], maps: ['M1', 'M2', 'M3'] },
             { name: 'Final', path: 'data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3'] }
         ];
 
-        // Parser seguro de CSV
         function parseCSVLine(line) {
             const result = [];
             let current = '';
@@ -572,7 +551,6 @@
             return result;
         }
 
-        // Función para cargar y procesar datos CSV
         async function loadCSVData() {
             try {
                 for (const phase of phasesStructure) {
@@ -584,10 +562,8 @@
                     }
                 }
 
-                // Procesar datos acumulados
                 processAccumulatedData();
 
-                // Actualizar la UI
                 updateUI();
 
             } catch (error) {
@@ -595,7 +571,6 @@
             }
         }
 
-        // Función para cargar un archivo CSV individual (reemplazo completo)
         async function loadCSVFile(filePath, phase, group, map) {
             try {
                 const response = await fetch(filePath + "?nocache=" + Date.now());
@@ -623,7 +598,6 @@
             }
         }
 
-        // Reemplaza también la función processAccumulatedData
         function processAccumulatedData() {
             tournamentStats = {
                 totalTeams: 0,
@@ -677,9 +651,7 @@
             tournamentStats.totalTeams = Object.keys(allTeamsData).length;
         }
 
-        // Procesar las eliminaciones por arma desde "WeaponKills"
         function processWeaponKills(weaponKillsData) {
-            // Formato: "DP-28:4 / UMP45:1"
             const entries = weaponKillsData.split('/').map(e => e.trim());
             entries.forEach(entry => {
                 const [weaponNameRaw, killsRaw] = entry.split(':');
@@ -693,7 +665,6 @@
             });
         }
 
-        // Actualizar UI
         function updateUI() {
             document.getElementById('total-teams').textContent = tournamentStats.totalTeams;
             document.getElementById('total-shots').textContent = tournamentStats.totalShots.toLocaleString('en-US');
@@ -704,7 +675,6 @@
             document.getElementById('most-kills-weapon').textContent = tournamentStats.mostKillsWeapon;
         }
 
-        // Funciones para mostrar datos en modales
         function showTopPlayersByStat(statKey, modalId, title, formatValue) {
             const playerStats = {};
             
@@ -767,13 +737,11 @@
             });
         }
 
-        // Funciones para manejar modales
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.style.display = 'flex';
                 
-                // Cargar datos específicos según el modal
                 switch(modalId) {
                     case 'modal-total-shots':
                         showTopPlayersByStat('TotalShots', 'total-shots-list', 'Total de Disparos', (value) => value.toLocaleString('en-US'));
@@ -804,9 +772,7 @@
             }
         }
 
-        // Event listeners para modales
         function setupModalEvents() {
-            // Abrir modales al hacer clic en las tarjetas
             document.querySelectorAll('.stat-card[data-modal]').forEach(card => {
                 card.addEventListener('click', (e) => {
                     const modalId = 'modal-' + card.getAttribute('data-modal');
@@ -814,7 +780,6 @@
                 });
             });
             
-            // Cerrar modales al hacer clic en la X
             document.querySelectorAll('.close-modal').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const modal = e.target.closest('.modal');
@@ -824,7 +789,6 @@
                 });
             });
             
-            // Cerrar modal al hacer clic fuera del contenido
             document.querySelectorAll('.modal').forEach(modal => {
                 modal.addEventListener('click', (e) => {
                     if (e.target === modal) {
@@ -833,7 +797,6 @@
                 });
             });
             
-            // Cerrar con tecla Escape
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     document.querySelectorAll('.modal').forEach(modal => {
@@ -843,7 +806,6 @@
             });
         }
 
-        // Animación de contadores
         function animateCounter(element, targetValue, duration = 1500) {
             const startValue = 0;
             const increment = targetValue / (duration / 16); // 60fps
@@ -860,7 +822,6 @@
             }, 16);
         }
 
-        // Cambio 1: Función para mostrar todos los equipos
         function showAllTeams() {
             const listElement = document.getElementById('teams-list');
             listElement.innerHTML = '';
@@ -880,7 +841,6 @@
             });
         }
 
-        // Cambio 4: Función para mostrar top 10 de mayor distancia (no acumulado)
         function showTopLongestKills() {
             const playerMaxDistance = {};
             
@@ -920,19 +880,14 @@
             });
         }
 
-        // Inicializar al cargar la página
         document.addEventListener('DOMContentLoaded', () => {
-            // Aplicar animación inicial al logo
             const logo = document.querySelector('.tournament-logo');
             logo.classList.add('blur-in');
             
-            // Configurar eventos de modales
             setupModalEvents();
             
-            // Cargar datos
             loadCSVData();
             
-            // Animar contadores después de un breve retraso
             setTimeout(() => {
                 const totalShotsElement = document.getElementById('total-shots');
                 const totalHitsElement = document.getElementById('total-hits');
