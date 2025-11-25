@@ -1007,9 +1007,9 @@
         };
         
         const phasesStructure = [
-            { name: 'Clasificatorias', path: '/data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'] },
-            { name: 'Semifinal', path: '/data/semifinal/', groups: ['SEMIFINAL 1', 'SEMIFINAL 2'], maps: ['M1', 'M2', 'M3'] },
-            { name: 'Final', path: '/data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3', 'M4'] }
+            { name: 'Clasificatorias', path: 'data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'] },
+            { name: 'Semifinal', path: 'data/semifinal/', groups: ['SEMIFINAL 1', 'SEMIFINAL 2'], maps: ['M1', 'M2', 'M3'] },
+            { name: 'Final', path: 'data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3', 'M4'] }
         ];
 
 
@@ -1100,7 +1100,7 @@
         }
 
         function getPlayerImage(playerName) {
-            const basePath = '/data/logos/jugadores/';
+            const basePath = 'data/logos/jugadores/';
             const extensions = ['.png', '.jpg', '.jpeg', '.gif'];
             
             return new Promise((resolve) => {
@@ -1137,7 +1137,7 @@
             img.alt = playerName;
             img.className = className;
             img.onerror = function() {
-                this.src = '/data/logos/jugadores/default.png';
+                this.src = 'data/logos/jugadores/default.png';
             };
             return img;
         }
