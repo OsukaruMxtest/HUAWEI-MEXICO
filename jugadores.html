@@ -1,0 +1,2160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jugadores - PUBG MOBILE COPA HUAWEI MEXICO</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #BB0215;
+            --primary-bright: #E9072B;
+            --secondary: #00683F;
+            --secondary-deep: #003F1E;
+            --background: #C5C5C5;
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --text: #000000;
+            --text-secondary: #333333;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(197, 197, 197, 0.7);
+            z-index: -1;
+        }
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 15px var(--shadow);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        main {
+            margin-top: 80px;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.8s ease forwards;
+        }
+        
+        .section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+            border-left: 4px solid var(--primary);
+            padding-left: 0.75rem;
+        }
+        
+        .filters-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .search-input, .filter-select {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-select option {
+            background: var(--card-bg);
+            color: var(--text);
+        }
+        
+        .search-input {
+            min-width: 300px;
+        }
+        
+        .search-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(187, 2, 21, 0.2);
+        }
+        
+        .compare-btn {
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(187, 2, 21, 0.2);
+        }
+        
+        .compare-btn:hover {
+            background: var(--primary-bright);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(233, 7, 43, 0.25);
+        }
+        
+        .compare-btn:disabled {
+            background: #a0a0a0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .view-btn {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .view-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .view-btn.active {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: white;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        th {
+            background: rgba(0, 0, 0, 0.05);
+            font-weight: 600;
+            color: var(--primary);
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s ease;
+        }
+        
+        th:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        tr {
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        tr:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        tr.selected {
+            background: rgba(187, 2, 21, 0.1);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .player-card {
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .player-card.selected {
+            border: 2px solid var(--primary);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .player-card.selectable:hover {
+            transform: translateY(-5px);
+        }
+        
+        .player-checkbox {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--glass-border);
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .player-card.selected .player-checkbox {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .player-card.selected .player-checkbox::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .player-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .player-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .player-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .player-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+            color: var(--text);
+        }
+        
+        .player-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .player-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .player-stat {
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .player-stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .player-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 2rem;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .player-profile {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-info h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        
+        .profile-info p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .profile-stat:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .profile-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-card {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .chart-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+            font-weight: 600;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        .shot-stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .shot-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .shot-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .shot-stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .team-contribution {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .contribution-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .contribution-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .contribution-label {
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .contribution-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        
+        .comparison-player {
+            text-align: center;
+        }
+        
+        .comparison-player-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .comparison-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .comparison-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .comparison-stats {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .comparison-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .comparison-stat:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .comparison-stat.winner {
+            background: rgba(0, 104, 63, 0.2);
+            border: 1px solid rgba(0, 104, 63, 0.5);
+        }
+        
+        .stat-name {
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .vs-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        footer {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-deep);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .players-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-input {
+                min-width: auto;
+            }
+            
+            .player-profile {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .team-contribution {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .modal {
+                padding: 1rem;
+            }
+            
+            .table-container {
+                font-size: 0.8rem;
+            }
+            
+            th, td {
+                padding: 0.5rem;
+            }
+            
+            .shot-stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .player-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .player-table-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .player-table-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .phase-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .phase-btn {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .phase-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .phase-btn.active {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: white;
+        }
+        
+        .phase-btn:disabled {
+            background: #e0e0e0;
+            color: #a0a0a0;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <video class="background-video" autoplay muted loop playsinline>
+        <source src="https://res.cloudinary.com/dxtvsnw3g/video/upload/v1763772374/fondo_g1hfuz.mp4" type="video/mp4">
+    </video>
+    
+    <header>
+        <nav>
+            <div class="logo">PUBG MOBILE COPA HUAWEI MÉXICO</div>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="fases.html">Fases</a>
+				<a href="grupos.html">Gupos</a>
+                <a href="mvp-mvt.html">Tablas</a>
+                <a href="equipos.html">Equipos</a>
+                <a href="jugadores.html" style="color: var(--primary);">Jugadores</a>
+                <a href="mapas.html">Mapas</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="section fade-in">
+            <h1 class="section-title">Jugadores del Torneo</h1>
+            <p>Visualiza y compara las estadísticas de todos los jugadores participantes.</p>
+        </div>
+        
+        <div class="section slide-up">
+            <div class="filters-container">
+                <input type="text" id="player-search" class="search-input" placeholder="Buscar por nombre o UID...">
+                <select id="player-team-filter" class="filter-select">
+                    <option value="">Todos los equipos</option>
+                </select>
+                <select id="player-sort" class="filter-select">
+                    <option value="kills">Ordenar por: Bajas</option>
+                    <option value="damage">Ordenar por: Daño</option>
+                    <option value="headshots">Ordenar por: Headshots</option>
+                    <option value="accuracy">Ordenar por: Precisión</option>
+                    <option value="survivalTime">Ordenar por: Tiempo Supervivencia</option>
+                </select>
+                <button id="compare-btn" class="compare-btn" disabled>Comparar Jugadores (0/2)</button>
+            </div>
+            
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid">Vista Grid</button>
+                <button class="view-btn" data-view="table">Vista Tabla</button>
+            </div>
+            
+            <div class="players-grid" id="players-grid">
+                <div class="loading">Cargando jugadores...</div>
+            </div>
+            
+            <div class="table-container hidden" id="players-table-container">
+                <table id="players-table">
+                    <thead>
+                        <tr>
+                            <th data-sort="name">Jugador</th>
+                            <th data-sort="team">Equipo</th>
+                            <th data-sort="kills">Bajas</th>
+                            <th data-sort="damage">Daño</th>
+                            <th data-sort="headshots">Headshots</th>
+                            <th data-sort="assists">Asistencias</th>
+                            <th data-sort="accuracy">Precisión (%)</th>
+                            <th data-sort="survivalTime">T. Supervivencia</th>
+                        </tr>
+                    </thead>
+                    <tbody id="players-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    <div class="modal-overlay" id="profile-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Perfil del Jugador</h2>
+                <button class="close-btn" id="close-profile-modal">&times;</button>
+            </div>
+            
+            <div id="player-profile-content">
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="comparison-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Comparación de Jugadores</h2>
+                <button class="close-btn" id="close-comparison-modal">&times;</button>
+            </div>
+            
+            <div class="comparison-container" id="comparison-container">
+            </div>
+        </div>
+    </div>
+    
+
+    <script>
+        let allPlayersData = [];
+        let playersStats = {};
+        let playersStatsByPhase = {
+            'general': {},
+            'Clasificatorias': {},
+            'Semifinal': {},
+            'Final': {}
+        };
+        let teamStats = {};
+        let selectedPlayers = [];
+        let currentView = 'grid';
+        let currentSort = 'kills';
+        let currentPhase = 'general';
+        let playerRadarChart = null;
+        let playerHitsChart = null;
+
+        let profileModalPhase = 'Total';
+        let comparisonModalPhase = 'Total';
+
+        const mapNames = {
+            'M1': 'Erangel',
+            'M2': 'Miramar', 
+            'M3': 'Sanhok',
+            'M4': 'Erangel',
+            'M5': 'Miramar',
+            'M6': 'Sanhok',
+            'M7': 'Erangel',
+            'M8': 'Miramar',
+            'M9': 'Sanhok'
+        };
+        
+        const phasesStructure = [
+            { name: 'Clasificatorias', path: '/data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'] },
+            { name: 'Semifinal', path: '/data/semifinal/', groups: ['SEMIFINAL 1', 'SEMIFINAL 2'], maps: ['M1', 'M2', 'M3'] },
+            { name: 'Final', path: '/data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3', 'M4'] }
+        ];
+
+
+        const weaponNamesMap = {
+            'Arma 101101': 'M416',
+            'Arma 107040': 'AKM'
+        };
+
+
+        function parseCSV(text) {
+            const rows = [];
+            const lines = text.replace(/\r\n/g, '\n').split('\n');
+            for (let line of lines) {
+                if (line.trim() === '') continue;
+                const row = [];
+                let cur = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const ch = line[i];
+                    if (ch === '"' ) {
+                        if (inQuotes && line[i + 1] === '"') {
+                            cur += '"';
+                            i++;
+                        } else {
+                            inQuotes = !inQuotes;
+                        }
+                    } else if (ch === ',' && !inQuotes) {
+                        row.push(cur);
+                        cur = '';
+                    } else {
+                        cur += ch;
+                    }
+                }
+                row.push(cur);
+                rows.push(row.map(r => r.trim()));
+            }
+            return rows;
+        }
+
+        function normalizeHeader(h) {
+            if (!h && h !== 0) return '';
+            return String(h).toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+        }
+
+        function parseSurvivalTime(timeStr) {
+            if (!timeStr || String(timeStr).trim() === '') return 0;
+            const minutesMatch = String(timeStr).match(/(\d+)m/);
+            const secondsMatch = String(timeStr).match(/(\d+)s/);
+            let totalSeconds = 0;
+            if (minutesMatch) totalSeconds += parseInt(minutesMatch[1]) * 60;
+            if (secondsMatch) totalSeconds += parseInt(secondsMatch[1]);
+            return totalSeconds;
+        }
+
+        function formatSurvivalTime(totalSeconds) {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = Math.round(totalSeconds % 60);
+            return `${minutes}m ${seconds.toString().padStart(2,'0')}s`;
+        }
+
+        function processWeaponKills(weaponKillsStr) {
+            if (!weaponKillsStr) return {};
+            const weapons = {};
+            const entries = weaponKillsStr.split('/').map(x => x.trim()).filter(x => x !== '');
+            entries.forEach(entry => {
+                const idx = entry.lastIndexOf(':');
+                if (idx === -1) return;
+                let nameRaw = entry.substring(0, idx).trim();
+                const killsStr = entry.substring(idx + 1).trim();
+                const kills = parseInt(killsStr.replace(/\D/g,'')) || 0;
+                if (kills <= 0) return;
+                const name = weaponNamesMap[nameRaw] || nameRaw;
+                weapons[name] = (weapons[name] || 0) + kills;
+            });
+            return weapons;
+        }
+
+        function getFavoriteWeapon(weaponStats) {
+            let max = 0;
+            let fav = 'N/A';
+            for (const [w, k] of Object.entries(weaponStats || {})) {
+                if (k > max) {
+                    max = k;
+                    fav = w;
+                }
+            }
+            return fav;
+        }
+
+        function getPlayerImage(playerName) {
+            const basePath = '/data/logos/jugadores/';
+            const extensions = ['.png', '.jpg', '.jpeg', '.gif'];
+            
+            return new Promise((resolve) => {
+                const img = new Image();
+                let currentExtensionIndex = 0;
+                
+                function tryNextExtension() {
+                    if (currentExtensionIndex >= extensions.length) {
+                        resolve(`${basePath}default.png`);
+                        return;
+                    }
+                    
+                    const src = `${basePath}${playerName}${extensions[currentExtensionIndex]}`;
+                    img.src = src;
+                    
+                    img.onload = function() {
+                        resolve(src);
+                    };
+                    
+                    img.onerror = function() {
+                        currentExtensionIndex++;
+                        tryNextExtension();
+                    };
+                }
+                
+                tryNextExtension();
+            });
+        }
+
+        async function createPlayerImageElement(playerName, className = '') {
+            const imgSrc = await getPlayerImage(playerName);
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            img.alt = playerName;
+            img.className = className;
+            img.onerror = function() {
+                this.src = '/data/logos/jugadores/default.png';
+            };
+            return img;
+        }
+
+
+        async function loadPlayersData() {
+            try {
+                allPlayersData = [];
+                for (const phase of phasesStructure) {
+                    for (const group of phase.groups) {
+                        for (const map of phase.maps) {
+                            const csvPath = `${phase.path}${group}/${map}.csv`;
+                            await loadCSVFile(csvPath, phase.name, group, map);
+                        }
+                    }
+                }
+
+                processPlayersData();
+                updatePlayersView();
+                setupEventListeners();
+            } catch (err) {
+                console.error('Error cargando datos:', err);
+                document.getElementById('players-grid').innerHTML = '<div class="loading">Error cargando datos de jugadores</div>';
+            }
+        }
+
+        async function loadCSVFile(filePath, phase, group, map) {
+            try {
+                const response = await fetch(filePath + "?nocache=" + Date.now());
+                if (!response.ok) {
+                    console.log(`Archivo no encontrado: ${filePath}`);
+                    return; 
+                }
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+                if (!rows || rows.length === 0) return;
+
+                const rawHeaders = rows[0];
+                const headerIndex = {};
+                for (let i = 0; i < rawHeaders.length; i++) {
+                    headerIndex[normalizeHeader(rawHeaders[i])] = i;
+                }
+
+                function getField(row, possibleNames) {
+                    for (const n of possibleNames) {
+                        const idx = headerIndex[normalizeHeader(n)];
+                        if (typeof idx === 'number' && row[idx] !== undefined && row[idx] !== '') {
+                            return row[idx];
+                        }
+                    }
+                    for (const n of possibleNames) {
+                        const exactIdx = rawHeaders.indexOf(n);
+                        if (exactIdx !== -1 && row[exactIdx] !== undefined) return row[exactIdx];
+                    }
+                    return '';
+                }
+
+                for (let r = 1; r < rows.length; r++) {
+                    const row = rows[r];
+                    if (row.join('').trim() === '') continue;
+
+                    const playerData = {};
+
+                    playerData['Nombre del Jugador'] = getField(row, ['Nombre del Jugador', 'PlayerName', 'Name', 'Jugador']);
+                    playerData['Nombre del Equipo'] = getField(row, ['Nombre del Equipo', 'TeamName', 'Equipo']);
+                    playerData.kills = parseInt(getField(row, ['Número de Bajas', 'Kills', 'Bajas'])) || 0;
+                    playerData.damage = parseFloat(getField(row, ['Daño', 'Damage'])) || 0;
+                    playerData.headshots = parseInt(getField(row, ['Número de Headshots', 'Headshots'])) || 0;
+                    playerData.assists = parseInt(getField(row, ['Asistencias', 'Assists'])) || 0;
+                    playerData.knocks = parseInt(getField(row, ['Noqueos', 'Knocks'])) || 0;
+                    playerData.rank = parseInt(getField(row, ['Rango', 'Rank'])) || 0;
+                    playerData.maxKillDistance = parseFloat(getField(row, ['Máxima Distancia de Baja', 'MaxKillDistance'])) || 0;
+
+                    playerData.survivalTime = parseSurvivalTime(getField(row, ['Tiempo de Supervivencia', 'SurvivalTime']));
+
+                    playerData.outOfZoneTime = parseFloat(getField(row, ['Tiempo Fuera del Círculo Azul', 'OutOfZoneTime'])) || 0;
+                    playerData.damageReceived = parseFloat(getField(row, ['Daño Recibido', 'DamageReceived'])) || 0;
+                    playerData.healing = parseFloat(getField(row, ['Curación', 'Healing'])) || 0;
+                    playerData.grenadeKills = parseInt(getField(row, ['Bajas con Granada', 'GrenadeKills'])) || 0;
+                    playerData.distanceDriven = parseFloat(getField(row, ['Distancia Conducida', 'DistanceDriven'])) || 0;
+                    playerData.distanceTraveled = parseFloat(getField(row, ['Distancia Recorrida', 'DistanceTraveled'])) || 0;
+                    playerData.revives = parseInt(getField(row, ['Rescates', 'Revives'])) || 0;
+
+                    const totalShotsField = getField(row, ['TotalShots', 'Total Shots', 'Total_Shots', 'Totalshots']);
+                    const totalHitsField = getField(row, ['TotalHits', 'Total Hits', 'Total_Hits', 'Totalhits']);
+                    const accuracyField = getField(row, ['Accuracy(%)', 'Accuracy%', 'Accuracy', 'Accuracy(%)']);
+
+                    playerData.totalShots = parseInt(totalShotsField.replace(/\D/g,'')) || 0;
+                    playerData.totalHits = parseInt(totalHitsField.replace(/\D/g,'')) || 0;
+
+                    let accVal = 0;
+                    if (accuracyField && accuracyField.trim() !== '') {
+                        accVal = parseFloat(accuracyField.replace('%','').replace(',', '.')) || 0;
+                    }
+                    playerData.accuracy = accVal; 
+
+                    playerData.headHits = parseInt(getField(row, ['HeadHits','Head Hits','Head_Hits'])) || 0;
+                    playerData.bodyHits = parseInt(getField(row, ['BodyHits','Body Hits','Body_Hits'])) || 0;
+                    playerData.handHits = parseInt(getField(row, ['HandHits','Hand Hits','Hand_Hits'])) || 0;
+                    playerData.footHits = parseInt(getField(row, ['FootHits','Foot Hits','Foot_Hits'])) || 0;
+                    playerData.limbsHits = parseInt(getField(row, ['LimbsHits','Limbs Hits','Limbs_Hits'])) || 0;
+
+                    const wk = getField(row, ['WeaponKills', 'Weapon Kills', 'Weapons', 'WeaponKills']);
+                    if (wk && wk.trim() !== '') {
+                        playerData.weaponStats = processWeaponKills(wk);
+                        playerData.favoriteWeapon = getFavoriteWeapon(playerData.weaponStats);
+                    } else {
+                        playerData.weaponStats = {};
+                        playerData.favoriteWeapon = 'N/A';
+                    }
+
+                    playerData.phase = phase;
+                    playerData.group = group;
+                    playerData.map = map;
+                    playerData.mapName = mapNames[map] || map;
+
+                    allPlayersData.push(playerData);
+                }
+
+            } catch (error) {
+                console.warn(`No se pudo cargar ${filePath}:`, error);
+            }
+        }
+
+        
+        function processPlayersData() {
+            playersStats = {};
+            playersStatsByPhase = {
+                'general': {},
+                'Clasificatorias': {},
+                'Semifinal': {},
+                'Final': {}
+            };
+            teamStats = {};
+
+            function processDataForPhase(data, targetObj, phaseTeamStats = {}) {
+                data.forEach(p => {
+                    const playerName = p['Nombre del Jugador'] || 'Sin Nombre';
+                    const teamName = p['Nombre del Equipo'] || 'Sin Equipo';
+
+                    if (!targetObj[playerName]) {
+                        targetObj[playerName] = {
+                            name: playerName,
+                            team: teamName,
+                            kills: 0,
+                            damage: 0,
+                            headshots: 0,
+                            assists: 0,
+                            knocks: 0,
+                            maxKillDistance: 0,
+                            survivalTime: 0,
+                            outOfZoneTime: 0,
+                            damageReceived: 0,
+                            healing: 0,
+                            grenadeKills: 0,
+                            distanceDriven: 0,
+                            distanceTraveled: 0,
+                            revives: 0,
+                            accuracy: 0, 
+                            totalShots: 0,
+                            totalHits: 0,
+                            headHits: 0,
+                            bodyHits: 0,
+                            handHits: 0,
+                            footHits: 0,
+                            limbsHits: 0,
+                            weaponStats: {},
+                            matches: 0,
+                            favoriteWeapon: 'N/A',
+                            csvAccuracySum: 0, 
+                            csvAccuracyCount: 0
+                        };
+                    }
+
+                    const dest = targetObj[playerName];
+
+                    dest.kills += p.kills || 0;
+                    dest.damage += p.damage || 0;
+                    dest.headshots += p.headshots || 0;
+                    dest.assists += p.assists || 0;
+                    dest.knocks += p.knocks || 0;
+                    dest.maxKillDistance = Math.max(dest.maxKillDistance, p.maxKillDistance || 0);
+                    dest.survivalTime += p.survivalTime || 0;
+                    dest.outOfZoneTime += p.outOfZoneTime || 0;
+                    dest.damageReceived += p.damageReceived || 0;
+                    dest.healing += p.healing || 0;
+                    dest.grenadeKills += p.grenadeKills || 0;
+                    dest.distanceDriven += p.distanceDriven || 0;
+                    dest.distanceTraveled += p.distanceTraveled || 0;
+                    dest.revives += p.revives || 0;
+
+                    dest.totalShots += p.totalShots || 0;
+                    dest.totalHits += p.totalHits || 0;
+                    dest.headHits += p.headHits || 0;
+                    dest.bodyHits += p.bodyHits || 0;
+                    dest.handHits += p.handHits || 0;
+                    dest.footHits += p.footHits || 0;
+                    dest.limbsHits += p.limbsHits || 0;
+
+                    if (typeof p.accuracy === 'number' && p.accuracy > 0) {
+                        dest.csvAccuracySum += p.accuracy;
+                        dest.csvAccuracyCount += 1;
+                    }
+
+                    dest.matches += 1;
+
+                    if (p.weaponStats) {
+                        for (const [w, k] of Object.entries(p.weaponStats)) {
+                            dest.weaponStats[w] = (dest.weaponStats[w] || 0) + k;
+                        }
+                    }
+
+                    if (!phaseTeamStats[teamName]) phaseTeamStats[teamName] = { kills: 0, damage: 0, players: new Set() };
+                    phaseTeamStats[teamName].kills += p.kills || 0;
+                    phaseTeamStats[teamName].damage += p.damage || 0;
+                    phaseTeamStats[teamName].players.add(playerName);
+                });
+            }
+
+            processDataForPhase(allPlayersData, playersStats, teamStats);
+            
+            for (const phase of ['Clasificatorias', 'Semifinal', 'Final']) {
+                const phaseData = allPlayersData.filter(p => p.phase === phase);
+                const phaseTeamStats = {};
+                processDataForPhase(phaseData, playersStatsByPhase[phase], phaseTeamStats);
+                
+                Object.values(playersStatsByPhase[phase]).forEach(player => {
+                    if (phaseTeamStats[player.team]) {
+                        player.teamKillContribution = phaseTeamStats[player.team].kills > 0 ? (player.kills / phaseTeamStats[player.team].kills * 100) : 0;
+                        player.teamDamageContribution = phaseTeamStats[player.team].damage > 0 ? (player.damage / phaseTeamStats[player.team].damage * 100) : 0;
+                    } else {
+                        player.teamKillContribution = 0;
+                        player.teamDamageContribution = 0;
+                    }
+                });
+            }
+
+            Object.values(playersStats).forEach(player => {
+                if (player.totalShots > 0) {
+                    player.accuracy = (player.totalHits / player.totalShots) * 100;
+                } else if (player.csvAccuracyCount > 0) {
+                    player.accuracy = player.csvAccuracySum / player.csvAccuracyCount;
+                } else {
+                    player.accuracy = 0;
+                }
+
+                player.favoriteWeapon = getFavoriteWeapon(player.weaponStats);
+
+                player.avgKills = player.matches > 0 ? player.kills / player.matches : 0;
+                player.avgDamage = player.matches > 0 ? player.damage / player.matches : 0;
+                player.avgSurvivalTime = player.matches > 0 ? player.survivalTime / player.matches : 0;
+
+                if (teamStats[player.team]) {
+                    player.teamKillContribution = teamStats[player.team].kills > 0 ? (player.kills / teamStats[player.team].kills * 100) : 0;
+                    player.teamDamageContribution = teamStats[player.team].damage > 0 ? (player.damage / teamStats[player.team].damage * 100) : 0;
+                } else {
+                    player.teamKillContribution = 0;
+                    player.teamDamageContribution = 0;
+                }
+            });
+
+            for (const phase of ['Clasificatorias', 'Semifinal', 'Final']) {
+                Object.values(playersStatsByPhase[phase]).forEach(player => {
+                    if (player.totalShots > 0) {
+                        player.accuracy = (player.totalHits / player.totalShots) * 100;
+                    } else if (player.csvAccuracyCount > 0) {
+                        player.accuracy = player.csvAccuracySum / player.csvAccuracyCount;
+                    } else {
+                        player.accuracy = 0;
+                    }
+
+                    player.favoriteWeapon = getFavoriteWeapon(player.weaponStats);
+
+                    player.avgKills = player.matches > 0 ? player.kills / player.matches : 0;
+                    player.avgDamage = player.matches > 0 ? player.damage / player.matches : 0;
+                    player.avgSurvivalTime = player.matches > 0 ? player.survivalTime / player.matches : 0;
+                });
+            }
+
+            playersStatsByPhase['general'] = playersStats;
+            
+            ['Clasificatorias', 'Semifinal', 'Final'].forEach(phase => {
+                Object.keys(playersStatsByPhase[phase]).forEach(playerName => {
+                    const player = playersStatsByPhase[phase][playerName];
+                    if (
+                        !player ||
+                        (player.kills === 0 &&
+                         player.totalShots === 0 &&
+                         player.totalHits === 0)
+                    ) {
+                        delete playersStatsByPhase[phase][playerName];
+                    }
+                });
+            });
+        }
+
+        function getCurrentPlayersStats() {
+            return playersStatsByPhase[currentPhase] || playersStats;
+        }
+
+        function updatePlayersView() {
+            updatePlayersGrid();
+            updatePlayersTable();
+            updateTeamFilter();
+        }
+
+        function getSortedPlayers() {
+            const playersArray = Object.values(getCurrentPlayersStats());
+            const teamFilter = document.getElementById('player-team-filter').value;
+            const filteredPlayers = teamFilter ? playersArray.filter(p => p.team === teamFilter) : playersArray;
+            const searchTerm = document.getElementById('player-search').value.toLowerCase();
+            const searchedPlayers = searchTerm ? filteredPlayers.filter(p => 
+                p.name.toLowerCase().includes(searchTerm) || 
+                (p.team && p.team.toLowerCase().includes(searchTerm))
+            ) : filteredPlayers;
+
+            return searchedPlayers.sort((a, b) => {
+                if (currentSort === 'kills') return b.kills - a.kills;
+                if (currentSort === 'damage') return b.damage - a.damage;
+                if (currentSort === 'headshots') return b.headshots - a.headshots;
+                if (currentSort === 'accuracy') return b.accuracy - a.accuracy;
+                if (currentSort === 'survivalTime') return b.survivalTime - a.survivalTime;
+                return b.kills - a.kills;
+            });
+        }
+
+        async function updatePlayersGrid() {
+            const playersGrid = document.getElementById('players-grid');
+            const currentStats = getCurrentPlayersStats();
+            
+            if (Object.keys(currentStats).length === 0) {
+                playersGrid.innerHTML = '<div class="loading">No se encontraron datos de jugadores para esta fase</div>';
+                return;
+            }
+            
+            const sortedPlayers = getSortedPlayers();
+            
+            if (sortedPlayers.length === 0) {
+                playersGrid.innerHTML = '<div class="loading">No se encontraron jugadores que coincidan con los filtros</div>';
+                return;
+            }
+            
+            playersGrid.innerHTML = '';
+            
+            for (const player of sortedPlayers) {
+                const playerCard = document.createElement('div');
+                playerCard.className = 'glass-card player-card selectable';
+                playerCard.dataset.player = player.name;
+
+                const playerImage = await createPlayerImageElement(player.name, 'player-image');
+                
+                playerCard.innerHTML = `
+                    <div class="player-checkbox"></div>
+                    <div class="player-header">
+                        <div class="player-avatar">
+                            <!-- Imagen se insertará aquí -->
+                        </div>
+                        <div class="player-info">
+                            <h3>${player.name}</h3>
+                            <p>${player.team}</p>
+                        </div>
+                    </div>
+                    <div class="player-stats">
+                        <div class="player-stat">
+                            <div class="player-stat-value">${player.kills}</div>
+                            <div class="player-stat-label">Bajas</div>
+                        </div>
+                        <div class="player-stat">
+                            <div class="player-stat-value">${Math.round(player.damage)}</div>
+                            <div class="player-stat-label">Daño</div>
+                        </div>
+                        <div class="player-stat">
+                            <div class="player-stat-value">${player.headshots}</div>
+                            <div class="player-stat-label">Headshots</div>
+                        </div>
+                        <div class="player-stat">
+                            <div class="player-stat-value">${(typeof player.accuracy === 'number') ? player.accuracy.toFixed(2) + '%' : '0.00%'}</div>
+                            <div class="player-stat-label">Precisión</div>
+                        </div>
+                    </div>
+                `;
+                
+                const avatarContainer = playerCard.querySelector('.player-avatar');
+                avatarContainer.appendChild(playerImage);
+                
+                playersGrid.appendChild(playerCard);
+            }
+        }
+
+        async function updatePlayersTable() {
+            const tbody = document.getElementById('players-table-body');
+            const currentStats = getCurrentPlayersStats();
+            
+            if (Object.keys(currentStats).length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="loading">No se encontraron datos de jugadores para esta fase</td></tr>';
+                return;
+            }
+            
+            const sortedPlayers = getSortedPlayers();
+            
+            if (sortedPlayers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="loading">No se encontraron jugadores que coincidan con los filtros</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            for (const player of sortedPlayers) {
+                const row = document.createElement('tr');
+                row.dataset.player = player.name;
+                
+                const playerImage = await createPlayerImageElement(player.name, 'player-table-avatar');
+                
+                row.innerHTML = `
+                    <td>
+                        <div class="player-cell">
+                            <div class="player-table-avatar">
+                                <!-- Imagen se insertará aquí -->
+                            </div>
+                            ${player.name}
+                        </div>
+                    </td>
+                    <td>${player.team}</td>
+                    <td>${player.kills}</td>
+                    <td>${Math.round(player.damage)}</td>
+                    <td>${player.headshots}</td>
+                    <td>${player.assists}</td>
+                    <td>${(typeof player.accuracy === 'number') ? player.accuracy.toFixed(2) + '%' : '0.00%'}</td>
+                    <td>${formatSurvivalTime(player.survivalTime)}</td>
+                `;
+                
+                const avatarContainer = row.querySelector('.player-table-avatar');
+                avatarContainer.appendChild(playerImage);
+                
+                tbody.appendChild(row);
+            }
+        }
+
+        function updateTeamFilter() {
+            const select = document.getElementById('player-team-filter');
+            const teams = [...new Set(Object.values(getCurrentPlayersStats()).map(p => p.team))].sort();
+            while (select.options.length > 1) select.remove(1);
+            teams.forEach(team => {
+                const option = document.createElement('option');
+                option.value = team;
+                option.textContent = team;
+                select.appendChild(option);
+            });
+        }
+
+        function setupEventListeners() {
+            document.getElementById('player-search').addEventListener('input', updatePlayersView);
+            document.getElementById('player-team-filter').addEventListener('change', updatePlayersView);
+            document.getElementById('player-sort').addEventListener('change', (e) => {
+                currentSort = e.target.value;
+                updatePlayersView();
+            });
+            document.getElementById('compare-btn').addEventListener('click', showComparisonModal);
+            document.getElementById('close-profile-modal').addEventListener('click', closeProfileModal);
+            document.getElementById('close-comparison-modal').addEventListener('click', closeComparisonModal);
+            document.getElementById('profile-modal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeProfileModal(); });
+            document.getElementById('comparison-modal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeComparisonModal(); });
+            document.querySelectorAll('.view-btn').forEach(btn => btn.addEventListener('click', (e) => setView(e.target.dataset.view)));
+            document.querySelectorAll('#players-table th[data-sort]').forEach(th => th.addEventListener('click', () => {
+                currentSort = th.dataset.sort;
+                document.getElementById('player-sort').value = currentSort;
+                updatePlayersView();
+            }));
+
+            document.getElementById('players-grid').addEventListener('click', (e) => {
+                const playerCard = e.target.closest('.player-card');
+                if (!playerCard) return;
+                const playerName = playerCard.dataset.player;
+                if (e.target.classList.contains('player-checkbox') || e.target.closest('.player-checkbox')) {
+                    togglePlayerSelection(playerName, playerCard);
+                } else {
+                    showPlayerProfile(playerName);
+                }
+            });
+
+            document.getElementById('players-table-body').addEventListener('click', (e) => {
+                const row = e.target.closest('tr');
+                if (!row || !row.dataset.player) return;
+                const playerName = row.dataset.player;
+                togglePlayerSelection(playerName, row);
+            });
+        }
+
+        function setView(view) {
+            currentView = view;
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.view === view));
+            document.getElementById('players-grid').classList.toggle('hidden', view !== 'grid');
+            document.getElementById('players-table-container').classList.toggle('hidden', view !== 'table');
+        }
+
+        function togglePlayerSelection(playerName, element) {
+            const idx = selectedPlayers.indexOf(playerName);
+            if (idx === -1) {
+                if (selectedPlayers.length >= 2) {
+                    const first = selectedPlayers.shift();
+                    const firstEl = document.querySelector(`[data-player="${first}"]`);
+                    if (firstEl) firstEl.classList.remove('selected');
+                }
+                selectedPlayers.push(playerName);
+                if (element) element.classList.add('selected');
+            } else {
+                selectedPlayers.splice(idx, 1);
+                if (element) element.classList.remove('selected');
+            }
+            updateCompareButton();
+        }
+        
+        function updateCompareButton() {
+            const btn = document.getElementById('compare-btn');
+            const c = selectedPlayers.length;
+            btn.textContent = `Comparar Jugadores (${c}/2)`;
+            btn.disabled = c !== 2;
+        }
+
+        function getPlayerPhases(playerName) {
+            const phases = [];
+            if (playersStatsByPhase['Clasificatorias'][playerName]) phases.push('Clasificatorias');
+            if (playersStatsByPhase['Semifinal'][playerName]) phases.push('Semifinal');
+            if (playersStatsByPhase['Final'][playerName]) phases.push('Final');
+            phases.push('Total');
+            return phases;
+        }
+
+        function renderPhaseButtons(playerName, currentPhase) {
+            const availablePhases = getPlayerPhases(playerName);
+            let buttonsHTML = '';
+
+            availablePhases.forEach(phase => {
+                buttonsHTML += `
+                    <button class="phase-btn ${phase === currentPhase ? 'active' : ''}" data-phase="${phase}">
+                        ${phase}
+                    </button>
+                `;
+            });
+
+            return buttonsHTML;
+        }
+
+        function selectPhase(phase, playerName, modalType = 'profile') {
+            if (modalType === 'profile') {
+                profileModalPhase = phase;
+                showPlayerProfile(playerName);
+            } else {
+                comparisonModalPhase = phase;
+                showComparisonModal();
+            }
+        }
+
+        async function showPlayerProfile(playerName) {
+            const phaseForData = profileModalPhase === 'Total' ? 'general' : profileModalPhase;
+            let player = playersStatsByPhase[phaseForData][playerName];
+            if (!player) {
+                player = playersStats[playerName];
+            }
+            
+            if (!player) {
+                console.log(`Jugador no encontrado: ${playerName} en fase ${profileModalPhase}`);
+                return;
+            }
+            
+            const modal = document.getElementById('profile-modal');
+            const content = document.getElementById('player-profile-content');
+
+            const playerImage = await createPlayerImageElement(player.name, 'profile-image');
+
+            const sumHitsByRegions = player.headHits + player.bodyHits + player.handHits + player.footHits + player.limbsHits;
+
+            content.innerHTML = `
+                <div class="phase-buttons" id="profile-phase-buttons">
+                    ${renderPhaseButtons(playerName, profileModalPhase)}
+                </div>
+
+                <div class="player-profile">
+                    <div class="profile-avatar">
+                        <!-- Imagen se insertará aquí -->
+                    </div>
+                    <div class="profile-info">
+                        <h2>${player.name}</h2>
+                        <p>${player.team} • ${player.matches} partidas ${profileModalPhase !== 'Total' ? `• ${profileModalPhase}` : ''}</p>
+                        <p><strong>Arma favorita:</strong> ${player.favoriteWeapon}</p>
+                    </div>
+                </div>
+
+                <div class="team-contribution">
+                    <div class="glass-card contribution-card">
+                        <div class="contribution-value">${player.teamKillContribution.toFixed(1)}%</div>
+                        <div class="contribution-label">Aporte en Eliminaciones</div>
+                        <div class="contribution-subtitle">Del total del equipo</div>
+                    </div>
+                    <div class="glass-card contribution-card">
+                        <div class="contribution-value">${player.teamDamageContribution.toFixed(1)}%</div>
+                        <div class="contribution-label">Aporte en Daño</div>
+                        <div class="contribution-subtitle">Del total del equipo</div>
+                    </div>
+                </div>
+
+                <div class="shot-stats-container">
+                    <div class="shot-stat">
+                        <div class="shot-stat-value">${player.totalShots}</div>
+                        <div class="shot-stat-label">Total Disparos</div>
+                    </div>
+                    <div class="shot-stat">
+                        <div class="shot-stat-value">${sumHitsByRegions}</div>
+                        <div class="shot-stat-label">Total Impactos</div>
+                    </div>
+                    <div class="shot-stat">
+                        <div class="shot-stat-value">${player.accuracy.toFixed(2)}%</div>
+                        <div class="shot-stat-label">Precisión</div>
+                    </div>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">${player.kills}</div>
+                        <div class="profile-stat-label">Bajas Totales</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">${Math.round(player.damage)}</div>
+                        <div class="profile-stat-label">Daño Total</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">${player.headshots}</div>
+                        <div class="profile-stat-label">Headshots</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">${player.avgKills.toFixed(1)}</div>
+                        <div class="profile-stat-label">Bajas/Promedio</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">${Math.round(player.avgDamage)}</div>
+                        <div class="profile-stat-label">Daño/Promedio</div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="glass-card chart-card">
+                        <div class="chart-title">Estadísticas de Tiro</div>
+                        <div class="chart-container">
+                            <canvas id="player-radar-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-card chart-card">
+                        <div class="chart-title">Distribución de Impactos</div>
+                        <div class="chart-container">
+                            <canvas id="player-hits-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Estadísticas Detalladas</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Estadística</th>
+                                    <th>Total</th>
+                                    <th>Promedio por Partida</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Bajas</td><td>${player.kills}</td><td>${player.avgKills.toFixed(1)}</td></tr>
+                                <tr><td>Daño</td><td>${Math.round(player.damage)}</td><td>${Math.round(player.avgDamage)}</td></tr>
+                                <tr><td>Headshots</td><td>${player.headshots}</td><td>${(player.headshots / player.matches).toFixed(1)}</td></tr>
+                                <tr><td>Asistencias</td><td>${player.assists}</td><td>${(player.assists / player.matches).toFixed(1)}</td></tr>
+                                <tr><td>Noqueos</td><td>${player.knocks}</td><td>${(player.knocks / player.matches).toFixed(1)}</td></tr>
+                                <tr><td>Máxima Distancia de Baja (m)</td><td>${Math.round(player.maxKillDistance)}</td><td>-</td></tr>
+                                <tr><td>Daño Recibido</td><td>${Math.round(player.damageReceived)}</td><td>${Math.round(player.damageReceived / player.matches)}</td></tr>
+                                <tr><td>Curación</td><td>${Math.round(player.healing)}</td><td>${Math.round(player.healing / player.matches)}</td></tr>
+                                <tr><td>Tiempo de Supervivencia</td><td>${formatSurvivalTime(player.survivalTime)}</td><td>${formatSurvivalTime(player.avgSurvivalTime)}</td></tr>
+                                <tr><td>Bajas con Granada</td><td>${player.grenadeKills}</td><td>${(player.grenadeKills / player.matches).toFixed(1)}</td></tr>
+                                <tr><td>Distancia Conducida (m)</td><td>${Math.round(player.distanceDriven)}</td><td>${Math.round(player.distanceDriven / player.matches)}</td></tr>
+                                <tr><td>Distancia Recorrida (m)</td><td>${Math.round(player.distanceTraveled)}</td><td>${Math.round(player.distanceTraveled / player.matches)}</td></tr>
+                                <tr><td>Rescates</td><td>${player.revives}</td><td>${(player.revives / player.matches).toFixed(1)}</td></tr>
+                                <tr><td>Total Disparos</td><td>${player.totalShots}</td><td>${Math.round(player.totalShots / player.matches)}</td></tr>
+                                <tr><td>Total Impactos</td><td>${sumHitsByRegions}</td><td>${Math.round(sumHitsByRegions / player.matches)}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            const profileAvatar = content.querySelector('.profile-avatar');
+            profileAvatar.appendChild(playerImage);
+            
+            document.getElementById('profile-phase-buttons').addEventListener('click', (e) => {
+                if (e.target.classList.contains('phase-btn')) {
+                    const newPhase = e.target.dataset.phase;
+                    selectPhase(newPhase, playerName, 'profile');
+                }
+            });
+            
+            modal.classList.add('active');
+            createPlayerCharts(player);
+        }
+
+        function createPlayerCharts(player) {
+            if (playerRadarChart) {
+                playerRadarChart.destroy();
+                playerRadarChart = null;
+            }
+            if (playerHitsChart) {
+                playerHitsChart.destroy();
+                playerHitsChart = null;
+            }
+
+            const radarCtx = document.getElementById('player-radar-chart').getContext('2d');
+            const hitsCtx = document.getElementById('player-hits-chart').getContext('2d');
+
+            const sumHitsByRegions = player.headHits + player.bodyHits + player.handHits + player.footHits + player.limbsHits;
+            const radarData = [player.totalShots, sumHitsByRegions, Number(player.accuracy.toFixed(2))];
+            const maxRadarValue = Math.max(...radarData, 10) + 10;
+
+            playerRadarChart = new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Total Disparos', 'Total Impactos', 'Precisión (%)'],
+                    datasets: [{
+                        label: 'Estadísticas de Tiro',
+                        data: radarData,
+                        backgroundColor: 'rgba(187, 2, 21, 0.2)',
+                        borderColor: 'rgba(187, 2, 21, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(187, 2, 21, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: maxRadarValue,
+                            ticks: { stepSize: Math.max(1, Math.round(maxRadarValue / 5)) }
+                        }
+                    },
+                    plugins: {
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'end',
+                            offset: 8,
+                            padding: 6,
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            borderRadius: 4,
+                            color: '#000',
+                            font: {
+                                size: 10,
+                                weight: 'bold'
+                            },
+                            formatter: function(value, context) {
+                                return value;
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+
+            const hitsData = [player.headHits, player.bodyHits, player.handHits, player.footHits, player.limbsHits];
+            const totalHits = sumHitsByRegions; 
+            
+            const doughnutCenterPlugin = {
+                id: `doughnutCenter_${player.name.replace(/\s+/g, '_')}`,
+                afterDraw(chart) {
+                    if (chart.config.type !== 'doughnut') return; t
+                    
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const total = totalHits; 
+
+                    ctx.save();
+                    ctx.font = 'bold 16px Poppins';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = '#000';
+
+                    ctx.fillText('Total Impactos:', width / 2, height / 2 - 15);
+                    ctx.font = 'bold 20px Poppins';
+                    ctx.fillText(total.toString(), width / 2, height / 2 + 10);
+
+                    ctx.restore();
+                }
+            };
+            
+            playerHitsChart = new Chart(hitsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Cabeza', 'Cuerpo', 'Manos', 'Pies', 'Extremidades'],
+                    datasets: [{
+                        data: hitsData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { 
+                            position: 'bottom',
+                            labels: {
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        return data.labels.map((label, i) => {
+                                            const value = data.datasets[0].data[i];
+                                            const percentage = totalHits > 0 ? Math.round((value / totalHits) * 100) : 0;
+                                            
+                                            return {
+                                                text: `${label}: ${value} (${percentage}%)`,
+                                                fillStyle: data.datasets[0].backgroundColor[i],
+                                                strokeStyle: data.datasets[0].backgroundColor[i],
+                                                lineWidth: 1,
+                                                hidden: false,
+                                                index: i
+                                            };
+                                        });
+                                    }
+                                    return [];
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const percentage = totalHits > 0 ? Math.round((value / totalHits) * 100) : 0;
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [doughnutCenterPlugin] 
+            });
+        }
+
+        function closeProfileModal() { 
+            document.getElementById('profile-modal').classList.remove('active'); 
+        }
+
+        async function showComparisonModal() {
+            if (selectedPlayers.length !== 2) {
+                console.log('Debe seleccionar exactamente 2 jugadores para comparar');
+                return;
+            }
+            
+            const modal = document.getElementById('comparison-modal');
+            const container = document.getElementById('comparison-container');
+            
+            const phaseForData = comparisonModalPhase === 'Total' ? 'general' : comparisonModalPhase;
+            const currentStats = playersStatsByPhase[phaseForData] || playersStats;
+            
+            const p1 = currentStats[selectedPlayers[0]];
+            const p2 = currentStats[selectedPlayers[1]];
+
+            if (!p1 || !p2) {
+                console.log('Error: No se pudieron cargar los datos de los jugadores para comparación');
+                container.innerHTML = '<div class="loading">Error: No se pudieron cargar los datos de los jugadores seleccionados</div>';
+                modal.classList.add('active');
+                return;
+            }
+
+            const player1Image = await createPlayerImageElement(p1.name, 'comparison-image');
+            const player2Image = await createPlayerImageElement(p2.name, 'comparison-image');
+
+            const player1Phases = getPlayerPhases(selectedPlayers[0]);
+            const player2Phases = getPlayerPhases(selectedPlayers[1]);
+            
+            const commonPhases = player1Phases.filter(phase => player2Phases.includes(phase));
+            if (commonPhases.length === 0) commonPhases.push('Total'); 
+            let comparisonPhaseButtonsHTML = '';
+            commonPhases.forEach(phase => {
+                comparisonPhaseButtonsHTML += `
+                    <button class="phase-btn ${phase === comparisonModalPhase ? 'active' : ''}" data-phase="${phase}">
+                        ${phase}
+                    </button>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="phase-buttons" id="comparison-phase-buttons" style="grid-column: 1 / span 3; justify-content: center; margin-bottom: 1.5rem;">
+                    ${comparisonPhaseButtonsHTML}
+                </div>
+
+                <div class="comparison-player">
+                    <div class="comparison-player-header">
+                        <div class="comparison-avatar" id="player1-avatar"></div>
+                        <h3>${p1.name}</h3>
+                    </div>
+                    <div class="comparison-stats" id="player1-stats"></div>
+                </div>
+                <div class="vs-divider">VS</div>
+                <div class="comparison-player">
+                    <div class="comparison-player-header">
+                        <div class="comparison-avatar" id="player2-avatar"></div>
+                        <h3>${p2.name}</h3>
+                    </div>
+                    <div class="comparison-stats" id="player2-stats"></div>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                const avatar1 = document.getElementById('player1-avatar');
+                const avatar2 = document.getElementById('player2-avatar');
+
+                if (avatar1) {
+                    avatar1.appendChild(player1Image);
+                }
+                if (avatar2) {
+                    avatar2.appendChild(player2Image);
+                }
+
+                fillComparisonStats(p1, p2);
+            }, 0);
+            
+            document.getElementById('comparison-phase-buttons').addEventListener('click', (e) => {
+                if (e.target.classList.contains('phase-btn')) {
+                    const newPhase = e.target.dataset.phase;
+                    selectPhase(newPhase, null, 'comparison');
+                }
+            });
+            
+            modal.classList.add('active');
+        }
+
+        function fillComparisonStats(player1, player2) {
+            const stats1 = document.getElementById('player1-stats');
+            const stats2 = document.getElementById('player2-stats');
+
+            const p1HasData = player1 && player1.matches > 0;
+            const p2HasData = player2 && player2.matches > 0;
+
+            if (!p1HasData) {
+                stats1.innerHTML = '<div class="comparison-stat" style="justify-content: center; background: rgba(255,0,0,0.1);">Sin datos en esta fase</div>';
+            }
+
+            if (!p2HasData) {
+                stats2.innerHTML = '<div class="comparison-stat" style="justify-content: center; background: rgba(255,0,0,0.1);">Sin datos en esta fase</div>';
+            }
+
+            if (!p1HasData || !p2HasData) {
+                return;
+            }
+
+            const p1SumHits = player1.headHits + player1.bodyHits + player1.handHits + player1.footHits + player1.limbsHits;
+            const p2SumHits = player2.headHits + player2.bodyHits + player2.handHits + player2.footHits + player2.limbsHits;
+
+            const comparisonStats = [
+                { name: 'Bajas', key: 'kills', fmt: v => v },
+                { name: 'Daño', key: 'damage', fmt: v => Math.round(v) },
+                { name: 'Headshots', key: 'headshots', fmt: v => v },
+                { name: 'Asistencias', key: 'assists', fmt: v => v },
+                { name: 'Noqueos', key: 'knocks', fmt: v => v },
+                { name: 'Máx Dist. Baja (m)', key: 'maxKillDistance', fmt: v => Math.round(v) },
+                { name: 'Daño Recibido', key: 'damageReceived', fmt: v => Math.round(v) },
+                { name: 'Curación', key: 'healing', fmt: v => Math.round(v) },
+                { name: 'Tiempo de Supervivencia', key: 'survivalTime', fmt: v => formatSurvivalTime(v) },
+                { name: 'Tiempo Fuera de Zona (min)', key: 'outOfZoneTime', fmt: v => Math.round(v / 60) },
+                { name: 'Bajas con Granada', key: 'grenadeKills', fmt: v => v },
+                { name: 'Total Disparos', key: 'totalShots', fmt: v => v },
+                { name: 'Total Impactos', key: 'customTotalHits', fmt: v => v, p1Val: p1SumHits, p2Val: p2SumHits },
+                { name: 'Accuracy (%)', key: 'accuracy', fmt: v => (typeof v === 'number' ? v.toFixed(2) : '0.00') },
+                { name: 'Partidas', key: 'matches', fmt: v => v },
+                { name: 'Arma Favorita', key: 'favoriteWeapon', fmt: v => v },
+                { name: 'Aporte Bajas (%)', key: 'teamKillContribution', fmt: v => v.toFixed(1) },
+                { name: 'Aporte Daño (%)', key: 'teamDamageContribution', fmt: v => v.toFixed(1) }
+            ];
+
+            stats1.innerHTML = '';
+            stats2.innerHTML = '';
+
+            comparisonStats.forEach(stat => {
+                const v1 = stat.key === 'customTotalHits' ? stat.p1Val : player1[stat.key];
+                const v2 = stat.key === 'customTotalHits' ? stat.p2Val : player2[stat.key];
+                
+                let w1 = false, w2 = false;
+                if (typeof v1 === 'number' && typeof v2 === 'number') {
+                    if (stat.key === 'damageReceived' || stat.key === 'outOfZoneTime') {
+                        w1 = v1 < v2;
+                        w2 = v2 < v1;
+                    } else {
+                        w1 = v1 > v2;
+                        w2 = v2 > v1;
+                    }
+                }
+                const el1 = document.createElement('div');
+                el1.className = `comparison-stat ${w1 ? 'winner' : ''}`;
+                el1.innerHTML = `<span class="stat-name">${stat.name}</span><span class="stat-value">${stat.fmt(v1)}</span>`;
+                const el2 = document.createElement('div');
+                el2.className = `comparison-stat ${w2 ? 'winner' : ''}`;
+                el2.innerHTML = `<span class="stat-name">${stat.name}</span><span class="stat-value">${stat.fmt(v2)}</span>`;
+                stats1.appendChild(el1);
+                stats2.appendChild(el2);
+            });
+        }
+
+        function closeComparisonModal() { 
+            document.getElementById('comparison-modal').classList.remove('active'); 
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPlayersData();
+        });
+    </script>
+</body>
+</html>
