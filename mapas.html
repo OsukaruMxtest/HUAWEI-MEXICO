@@ -58,7 +58,7 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             z-index: 1000;
-            padding: 1rem 2rem;
+            padding: 1rem;
             box-shadow: 0 2px 10px var(--shadow);
         }
         
@@ -71,10 +71,11 @@
         }
         
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--primary-red);
             letter-spacing: -0.5px;
+            max-width: 70%;
         }
         
         .nav-links {
@@ -113,7 +114,7 @@
         
         main {
             margin-top: 80px;
-            padding: 2rem;
+            padding: 1rem;
             max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
@@ -122,7 +123,7 @@
         .glass-card {
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1.2rem;
             box-shadow: 0 4px 12px var(--shadow);
             transition: all 0.3s ease;
             border: 1px solid var(--border);
@@ -152,13 +153,13 @@
         }
         
         .section {
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
         }
         
         .section-title {
-            font-size: 1.75rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
             color: var(--text-primary);
             position: relative;
             padding-bottom: 0.75rem;
@@ -178,7 +179,7 @@
         .maps-tabs {
             display: flex;
             gap: 0.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
             background: var(--card-bg);
             border-radius: 10px;
@@ -197,6 +198,10 @@
             transition: all 0.3s ease;
             position: relative;
             font-size: 0.95rem;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .map-tab.active {
@@ -222,9 +227,9 @@
         .map-header {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-            padding: 2rem;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
             border-radius: 12px;
             background: var(--card-bg);
             color: var(--text-primary);
@@ -232,20 +237,21 @@
         }
         
         .map-icon {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 2rem;
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
             overflow: hidden;
+            flex-shrink: 0;
         }
         
         .map-info h2 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             margin-bottom: 0.5rem;
             font-weight: 700;
         }
@@ -258,14 +264,14 @@
         
         .map-stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.25rem;
-            margin-bottom: 2.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
         
         .map-stat-card {
             text-align: center;
-            padding: 1.5rem;
+            padding: 1.2rem;
             position: relative;
             overflow: hidden;
         }
@@ -281,7 +287,7 @@
         }
         
         .map-stat-value {
-            font-size: 2.25rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--primary-red);
             margin-bottom: 0.5rem;
@@ -296,35 +302,36 @@
         
         .charts-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
+            grid-template-columns: 1fr;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
         }
         
         .chart-card {
-            padding: 1.5rem;
+            padding: 1.2rem;
             text-align: center;
         }
         
         .chart-title {
             font-size: 1.1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
             color: var(--text-primary);
             font-weight: 600;
         }
         
         .chart-container {
             position: relative;
-            height: 300px;
+            height: 250px;
             width: 100%;
         }
         
         .table-container {
             overflow-x: auto;
             border-radius: 10px;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
             box-shadow: 0 2px 8px var(--shadow);
             border: 1px solid var(--border);
+            -webkit-overflow-scrolling: touch;
         }
         
         table {
@@ -333,10 +340,11 @@
             background: var(--card-bg);
             border-radius: 10px;
             overflow: hidden;
+            min-width: 600px;
         }
         
         th, td {
-            padding: 1rem 1.25rem;
+            padding: 0.8rem 1rem;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
@@ -360,23 +368,23 @@
         }
         
         .maps-comparison {
-            margin-top: 3rem;
+            margin-top: 2rem;
         }
         
         .comparison-charts {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
+            grid-template-columns: 1fr;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
         }
         
         footer {
             background: var(--card-bg);
             border-top: 1px solid var(--border);
-            padding: 1.5rem 2rem;
+            padding: 1.2rem;
             text-align: center;
             color: var(--text-secondary);
-            margin-top: 3rem;
+            margin-top: 2rem;
             font-size: 0.9rem;
         }
         
@@ -398,45 +406,6 @@
             background: var(--bright-red);
         }
         
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .maps-tabs {
-                flex-direction: column;
-            }
-            
-            .map-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .charts-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .comparison-charts {
-                grid-template-columns: 1fr;
-            }
-            
-            .chart-container {
-                height: 250px;
-            }
-            
-            .table-container {
-                font-size: 0.8rem;
-            }
-            
-            th, td {
-                padding: 0.75rem;
-            }
-            
-            main {
-                padding: 1.5rem;
-            }
-        }
-        
         .loading {
             text-align: center;
             padding: 2rem;
@@ -449,7 +418,7 @@
         
         p {
             color: var(--text-secondary);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
         }
         
         .section p {
@@ -467,60 +436,193 @@
         .map-stat-card:nth-child(4)::before {
             background: var(--deep-green);
         }
-.hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    width: 30px;
-    height: 21px;
-    justify-content: space-between;
-}
+        
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            width: 30px;
+            height: 21px;
+            justify-content: space-between;
+            padding: 5px;
+            background: transparent;
+            border: none;
+        }
 
-.hamburger span {
-    width: 100%;
-    height: 3px;
-    background-color: var(--primary);
-    border-radius: 2px;
-    transition: all 0.3s ease;
-}
+        .hamburger span {
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-red);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
 
-@media (max-width: 768px) {
-    .nav-links {
-        position: absolute;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        background: var(--card-bg);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid var(--card-border);
-        flex-direction: column;
-        align-items: center;
-        padding: 1rem 0;
-        gap: 1rem;
-        box-shadow: 0 4px 10px var(--shadow);
-        display: none;
-    }
+        /* Media Queries para móviles */
+        @media (max-width: 768px) {
+            header {
+                padding: 0.8rem;
+            }
+            
+            .logo {
+                font-size: 0.95rem;
+                max-width: 65%;
+            }
+            
+            .nav-links {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--card-bg);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid var(--border);
+                flex-direction: column;
+                align-items: center;
+                padding: 1rem 0;
+                gap: 1rem;
+                box-shadow: 0 4px 10px var(--shadow);
+                display: none;
+            }
 
-    .nav-links.active {
-        display: flex;
-    }
+            .nav-links.active {
+                display: flex;
+            }
 
-    .hamburger {
-        display: flex;
-    }
+            .hamburger {
+                display: flex;
+            }
 
-    .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(6px, 6px);
-    }
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(6px, 6px);
+            }
 
-    .hamburger.active span:nth-child(2) {
-        opacity: 0;
-    }
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
 
-    .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(6px, -6px);
-    }
-}
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(6px, -6px);
+            }
+            
+            main {
+                margin-top: 70px;
+                padding: 0.8rem;
+            }
+            
+            .section {
+                margin-bottom: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .maps-tabs {
+                flex-direction: column;
+                margin-bottom: 1.2rem;
+            }
+            
+            .map-tab {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .map-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.8rem;
+                margin-bottom: 1.2rem;
+                padding: 1.2rem;
+            }
+            
+            .map-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+            }
+            
+            .map-info h2 {
+                font-size: 1.3rem;
+            }
+            
+            .map-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+                margin-bottom: 1.2rem;
+            }
+            
+            .map-stat-card {
+                padding: 1rem;
+            }
+            
+            .map-stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .charts-container {
+                gap: 1rem;
+                margin-bottom: 1.2rem;
+            }
+            
+            .chart-card {
+                padding: 1rem;
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+            
+            .table-container {
+                margin-bottom: 1rem;
+                font-size: 0.8rem;
+            }
+            
+            th, td {
+                padding: 0.6rem 0.8rem;
+            }
+            
+            .maps-comparison {
+                margin-top: 1.5rem;
+            }
+            
+            .comparison-charts {
+                gap: 1rem;
+                margin-bottom: 1.2rem;
+            }
+            
+            footer {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 0.85rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+            }
+            
+            .map-tab {
+                font-size: 0.85rem;
+                padding: 0.6rem 1rem;
+            }
+            
+            .map-stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-stat-value {
+                font-size: 1.3rem;
+            }
+            
+            th, td {
+                padding: 0.5rem 0.6rem;
+                font-size: 0.75rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -529,24 +631,24 @@
     </video>
     
     <header>
-    <nav>
-        <div class="logo">PUBG MOBILE COPA HUAWEI MÉXICO</div>
-        <div class="nav-links" id="nav-links">
-            <a href="index.html" style="color: var(--primary);">Inicio</a>
-            <a href="grupos.html">Grupos</a>
-            <a href="fases.html">Fases</a>
-            <a href="tablas.html">Tabla</a>
-            <a href="equipos.html">Equipos</a>
-            <a href="jugadores.html">Jugadores</a>
-            <a href="mapas.html">Mapas</a>
-        </div>
-        <div class="hamburger" id="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </nav>
-</header>
+        <nav>
+            <div class="logo">PUBG MOBILE COPA HUAWEI MÉXICO</div>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="grupos.html">Grupos</a>
+                <a href="fases.html">Fases</a>
+                <a href="tablas.html">Tabla</a>
+                <a href="equipos.html">Equipos</a>
+                <a href="jugadores.html">Jugadores</a>
+                <a href="mapas.html" style="color: var(--primary-red);">Mapas</a>
+            </div>
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
     
     <main>
         <div class="section fade-in">
@@ -568,7 +670,6 @@
                     </div>
                     <div class="map-info">
                         <h2>Erangel</h2>
-                        
                     </div>
                 </div>
                 
@@ -657,7 +758,6 @@
                     </div>
                     <div class="map-info">
                         <h2>Miramar</h2>
-                        
                     </div>
                 </div>
                 
@@ -746,7 +846,6 @@
                     </div>
                     <div class="map-info">
                         <h2>Sanhok</h2>
-                        
                     </div>
                 </div>
                 
@@ -889,6 +988,7 @@
     </footer>
 
     <script>
+        // El código JavaScript permanece igual
         let mapsData = {
             'Erangel': { players: [], teams: {}, stats: {} },
             'Miramar': { players: [], teams: {}, stats: {} },
@@ -1479,10 +1579,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadMapsData();
         });
-		document.getElementById('hamburger').addEventListener('click', function() {
-    this.classList.toggle('active');
-    document.getElementById('nav-links').classList.toggle('active');
-});
+        
+        document.getElementById('hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('nav-links').classList.toggle('active');
+        });
     </script>
 </body>
 </html>
