@@ -52,9 +52,9 @@
         .semifinal-selector{display:flex;gap:.5rem;margin:1rem 0;flex-wrap:wrap}
         .semifinal-btn{padding:.5rem .9rem;border-radius:8px;border:1px solid var(--card-border);cursor:pointer;background:transparent;transition:all 0.3s ease;font-size:0.85rem}
         .semifinal-btn.active{background:rgba(187,2,21,0.12);border-color:var(--primary);color:var(--primary);font-weight:600;box-shadow:0 2px 8px rgba(187,2,21,0.2)}
-        .table-container{overflow-x:auto;margin-top:.75rem;border-radius:10px;padding:10px;display:flex;justify-content:center}
+        .table-container{overflow-x:auto;margin-top:.75rem;border-radius:10px;padding:10px;max-width:100%}
         
-        table{border-collapse:collapse;width:auto;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.12);background:var(--card-bg);border:1px solid rgba(0,0,0,0.08)}
+        table{border-collapse:collapse;width:100%;border-radius:12px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.12);background:var(--card-bg);border:1px solid rgba(0,0,0,0.08);min-width:800px}
         th,td{padding:.8rem .5rem;text-align:left;border-bottom:1px solid rgba(0,0,0,0.08);white-space:nowrap;transition:all 0.2s ease;font-size:0.85rem}
         .center{text-align:center}
         th{background:linear-gradient(135deg, rgba(187,2,21,0.15), rgba(187,2,21,0.1));font-weight:700;color:var(--primary);position:sticky;top:0;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.8px;border-bottom:2px solid var(--primary)}
@@ -172,6 +172,16 @@
                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
                 gap: 0.8rem;
             }
+            
+            /* Ajustes específicos para tablas en móviles */
+            .table-container {
+                padding: 5px;
+                margin-top: 0.5rem;
+            }
+            
+            table {
+                min-width: 700px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -205,6 +215,23 @@
             .stats-grid {
                 grid-template-columns: 1fr;
                 gap: 0.6rem;
+            }
+            
+            /* Ajustes adicionales para móviles pequeños */
+            .table-container {
+                padding: 3px;
+            }
+            
+            table {
+                min-width: 650px;
+            }
+            
+            h1 {
+                font-size: 1.2rem;
+            }
+            
+            h2 {
+                font-size: 1rem;
             }
         }
     </style>
