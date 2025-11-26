@@ -972,6 +972,60 @@
                 font-size: 0.8rem;
             }
         }
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    width: 30px;
+    height: 21px;
+    justify-content: space-between;
+}
+
+.hamburger span {
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--card-border);
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0;
+        gap: 1rem;
+        box-shadow: 0 4px 10px var(--shadow);
+        display: none;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+    }
+}
     </style>
 </head>
 <body>
@@ -984,11 +1038,11 @@
         <nav>
             <div class="logo">PUBG MOBILE COPA HUAWEI MÉXICO</div>
             <div class="nav-links" id="nav-links">
-                <a href="index.html" style="color: var(--primary);">Inicio</a>
+                <a href="index.html" >Inicio</a>
                 <a href="grupos.html">Grupos</a>
                 <a href="fases.html">Fases</a>
                 <a href="tablas.html">Tabla</a>
-                <a href="equipos.html">Equipos</a>
+                <a href="equipos.html"> style="color: var(--primary);"Equipos</a>
                 <a href="jugadores.html">Jugadores</a>
                 <a href="mapas.html">Mapas</a>
             </div>
