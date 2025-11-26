@@ -2,10 +2,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fases - PUBG MOBILE COPA HUAWEI MEXICO</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
         :root {
             --primary: #BB0215;
             --primary-bright: #E9072B;
@@ -20,11 +21,13 @@
             --shadow: rgba(0, 0, 0, 0.1);
             --shadow-hover: rgba(0, 0, 0, 0.15);
         }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
             font-family: 'Poppins', sans-serif;
             color: var(--text);
@@ -32,8 +35,8 @@
             overflow-x: hidden;
             line-height: 1.6;
             position: relative;
-            touch-action: manipulation;
         }
+
         .video-background {
             position: fixed;
             top: 0;
@@ -43,6 +46,7 @@
             object-fit: cover;
             z-index: -2;
         }
+
         .overlay {
             position: fixed;
             top: 0;
@@ -52,6 +56,7 @@
             background: rgba(0, 0, 0, 0.7);
             z-index: -1;
         }
+        
         header {
             position: fixed;
             top: 0;
@@ -61,34 +66,29 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--card-border);
             z-index: 1000;
-            padding: 1rem 1rem;
+            padding: 1rem 2rem;
             box-shadow: 0 2px 15px var(--shadow);
         }
+        
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
         }
+        
         .logo {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 1px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 180px;
         }
+        
         .nav-links {
             display: flex;
-            gap: 1rem;
-            margin-top: 0.5rem;
-            width: 100%;
-            flex-wrap: wrap;
-            justify-content: center;
+            gap: 1.5rem;
         }
+        
         .nav-links a {
             color: var(--text);
             text-decoration: none;
@@ -96,13 +96,12 @@
             transition: all 0.3s ease;
             position: relative;
             padding: 0.5rem 0;
-            font-size: 0.9rem;
-            min-width: 80px;
-            text-align: center;
         }
+        
         .nav-links a:hover {
             color: var(--primary);
         }
+        
         .nav-links a::after {
             content: '';
             position: absolute;
@@ -113,188 +112,195 @@
             background: var(--primary);
             transition: width 0.3s ease;
         }
+        
         .nav-links a:hover::after {
             width: 100%;
         }
+        
         main {
             margin-top: 80px;
-            padding: 1rem;
+            padding: 2rem;
             position: relative;
             z-index: 1;
-            width: 100%;
-            max-width: 100%;
-            overflow-x: hidden;
         }
+        
         .glass-card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border: 1px solid var(--card-border);
             border-radius: 12px;
-            padding: 1rem;
+            padding: 1.5rem;
             box-shadow: 0 8px 25px var(--shadow);
             transition: all 0.3s ease;
-            width: 100%;
-            margin-bottom: 1rem;
         }
+        
         .glass-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px var(--shadow-hover);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px var(--shadow-hover);
         }
+
         .text-container {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
             box-shadow: 0 4px 15px var(--shadow);
             border: 1px solid var(--card-border);
-            width: 100%;
         }
+        
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+        
         @keyframes blurIn {
             from { filter: blur(10px); opacity: 0; }
             to { filter: blur(0); opacity: 1; }
         }
+        
         .fade-in {
             animation: fadeIn 1s ease forwards;
         }
+        
         .slide-up {
             animation: slideUp 0.8s ease forwards;
         }
+        
         .blur-in {
             animation: blurIn 1s ease forwards;
         }
+        
         .section {
-            margin-bottom: 1.5rem;
-            width: 100%;
+            margin-bottom: 2rem;
         }
+        
         .section-title {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 600;
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
             color: var(--text);
-            border-left: 3px solid var(--primary);
-            padding-left: 0.5rem;
-            word-wrap: break-word;
+            border-left: 4px solid var(--primary);
+            padding-left: 0.75rem;
         }
+        
         .phases-nav {
             display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
+            gap: 1rem;
+            margin-bottom: 2rem;
             flex-wrap: wrap;
-            justify-content: center;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
         }
+        
         .phase-btn {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 0.65rem 1rem;
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
             color: var(--text);
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 3px 10px var(--shadow);
-            min-width: 120px;
-            font-size: 0.9rem;
-            flex-shrink: 0;
+            box-shadow: 0 4px 12px var(--shadow);
         }
+        
         .phase-btn.active {
             background: var(--primary);
             border-color: var(--primary);
             color: var(--text-light);
         }
+        
         .phase-btn:hover:not(.active) {
             background: rgba(187, 2, 21, 0.1);
             transform: translateY(-2px);
         }
+        
         .groups-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-            width: 100%;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
+        
         .group-card {
             text-align: center;
-            padding: 1rem;
+            padding: 1.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            border-radius: 10px;
-            width: 100%;
+            border-radius: 12px;
         }
+        
         .group-card.active {
             border: 2px solid var(--primary);
             box-shadow: 0 0 0 2px rgba(187, 2, 21, 0.2);
         }
+        
         .group-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
         }
+        
         .group-name {
-            font-size: 1rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.5rem;
             color: var(--text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
+        
         .group-stats {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
         }
+        
         .group-content {
             display: none;
         }
+        
         .group-content.active {
             display: block;
             animation: fadeIn 0.5s ease;
         }
+        
         .maps-tabs {
             display: flex;
             gap: 0.5rem;
             margin-bottom: 1.5rem;
             flex-wrap: wrap;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
         }
+        
         .map-tab {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 8px;
-            padding: 0.6rem 0.8rem;
+            padding: 0.75rem 1rem;
             color: var(--text);
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.85rem;
-            min-width: 90px;
-            text-align: center;
-            flex-shrink: 0;
         }
+        
         .map-tab.active {
             background: var(--secondary);
             border-color: var(--secondary);
             color: var(--text-light);
         }
+        
         .map-tab:hover:not(.active) {
             background: rgba(0, 104, 63, 0.1);
             transform: translateY(-2px);
         }
+        
         .map-content {
             display: none;
         }
+        
         .map-content.active {
             display: block;
             animation: fadeIn 0.5s ease;
         }
+        
         .map-indicator {
             display: inline-block;
             padding: 0.25rem 0.75rem;
@@ -303,172 +309,200 @@
             border-radius: 20px;
             font-size: 0.8rem;
             margin-bottom: 1rem;
-            width: fit-content;
         }
+        
         .table-container {
             overflow-x: auto;
             border-radius: 10px;
             margin-bottom: 1.5rem;
             box-shadow: 0 4px 15px var(--shadow);
-            -webkit-overflow-scrolling: touch;
-            width: 100%;
         }
+        
         table {
             width: 100%;
             border-collapse: collapse;
             background: var(--card-bg);
             border-radius: 10px;
             overflow: hidden;
-            min-width: 600px;
         }
+        
         th, td {
-            padding: 0.65rem 0.8rem;
+            padding: 0.75rem 1rem;
             text-align: center;
             border-bottom: 1px solid var(--card-border);
             white-space: nowrap;
-            font-size: 0.85rem;
         }
+
         th {
             background: rgba(187, 2, 21, 0.1);
             font-weight: 600;
             color: var(--primary);
-            font-size: 0.9rem;
         }
+
         table {
             table-layout: auto;
             width: auto;
             min-width: 100%;
         }
+
         th, td {
             width: auto;
         }
+        
         tr:hover {
             background: rgba(0, 0, 0, 0.03);
         }
+        
         .mvp-card {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 1.25rem;
-            margin-bottom: 1.25rem;
-            flex-direction: column;
-            text-align: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
+        
         .mvp-avatar {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             background: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.75rem;
+            font-size: 2rem;
             color: var(--text-light);
             flex-shrink: 0;
             overflow: hidden;
         }
+        
         .mvp-info h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.4rem;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
             color: var(--text);
         }
-        .mvp-info h4 {
-            font-size: 1.1rem;
-            margin-bottom: 0.3rem;
-            color: var(--primary);
-        }
+        
         .mvp-stats {
             display: flex;
-            gap: 0.8rem;
+            gap: 1rem;
             margin-top: 0.5rem;
-            flex-wrap: wrap;
-            justify-content: center;
         }
+        
         .mvp-stat {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-width: 70px;
         }
+        
         .mvp-stat-value {
             font-weight: 600;
             color: var(--primary);
-            font-size: 1.1rem;
         }
+        
         .mvp-stat-label {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
         }
+        
         footer {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border-top: 1px solid var(--card-border);
-            padding: 1.25rem;
+            padding: 1.5rem 2rem;
             text-align: center;
             color: var(--text-secondary);
-            margin-top: 1.5rem;
+            margin-top: 2rem;
             box-shadow: 0 -2px 15px var(--shadow);
-            font-size: 0.9rem;
         }
+        
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 8px;
         }
+        
         ::-webkit-scrollbar-track {
             background: rgba(0, 0, 0, 0.05);
             border-radius: 10px;
         }
+        
         ::-webkit-scrollbar-thumb {
             background: var(--primary);
             border-radius: 10px;
         }
+        
         ::-webkit-scrollbar-thumb:hover {
             background: var(--primary-bright);
         }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .groups-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .mvp-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .table-container {
+                font-size: 0.8rem;
+            }
+            
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+        
         .loading {
             text-align: center;
-            padding: 1.5rem;
+            padding: 2rem;
             color: var(--text-secondary);
-            font-size: 0.95rem;
-            width: 100%;
         }
+        
         .hidden {
             display: none;
         }
+
         .team-logo {
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             object-fit: cover;
-            margin-right: 8px;
+            margin-right: 10px;
             background: #f0f0f0;
             border: 1px solid var(--card-border);
             transition: transform 0.3s ease;
         }
+
         .team-logo:hover {
-            transform: scale(2);
+            transform: scale(2.5);
             z-index: 10;
             position: relative;
         }
+
         .player-avatar {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             object-fit: cover;
             background: #f0f0f0;
             border: 2px solid var(--card-border);
             transition: transform 0.3s ease;
         }
+
         .player-avatar:hover {
-            transform: scale(2);
+            transform: scale(2.5);
             z-index: 10;
             position: relative;
         }
+
         .clasificado {
             position: relative;
             border: 2px solid var(--secondary) !important;
             box-shadow: 0 0 10px rgba(0, 104, 63, 0.3);
         }
+
         .clasificado::after {
             content: "✓";
             position: absolute;
@@ -476,117 +510,127 @@
             right: 5px;
             background: var(--secondary);
             color: var(--text-light);
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 10px;
+            font-size: 12px;
         }
+
         .maps-content-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
         }
+
+        @media (max-width: 1024px) {
+            .maps-content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .mvp-container {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.25rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
+
         .mvp-map-card {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            padding: 1rem;
-            flex-direction: column;
-            text-align: center;
+            gap: 1rem;
+            padding: 1.2rem;
         }
+
         .mvp-map-avatar {
-            width: 55px;
-            height: 55px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: var(--secondary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             color: var(--text-light);
             flex-shrink: 0;
             overflow: hidden;
         }
+
         .mvp-map-info h4 {
-            font-size: 1rem;
-            margin-bottom: 0.2rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
             color: var(--secondary);
         }
+
         .mvp-map-info h5 {
-            font-size: 0.95rem;
+            font-size: 1rem;
             margin-bottom: 0.2rem;
             color: var(--text);
         }
+
         .mvp-map-info p {
             color: var(--text-secondary);
             margin-bottom: 0.2rem;
-            font-size: 0.85rem;
         }
+
         .mvp-map-stats {
             display: flex;
-            gap: 0.6rem;
+            gap: 0.8rem;
             margin-top: 0.3rem;
-            flex-wrap: wrap;
-            justify-content: center;
         }
+
         .mvp-map-stat {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-width: 60px;
         }
+
         .mvp-map-stat-value {
             font-weight: 600;
             color: var(--primary);
-            font-size: 0.85rem;
-        }
-        .mvp-map-stat-label {
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-        }
-        .longest-kill-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.25rem;
-            margin-bottom: 1.5rem;
-        }
-        .longest-kill-card {
-            padding: 1rem;
-            text-align: center;
-        }
-        .longest-kill-card h4 {
-            font-size: 1rem;
-            margin-bottom: 0.4rem;
-            color: var(--secondary);
-        }
-        .longest-kill-card p {
-            margin: 0.1rem 0;
-            color: var(--text);
             font-size: 0.9rem;
         }
+
+        .mvp-map-stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .longest-kill-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .longest-kill-card {
+            padding: 1.2rem;
+        }
+
+        .longest-kill-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .longest-kill-card p {
+            margin: 0;
+            color: var(--text);
+        }
+
         .longest-kill-card strong {
             color: var(--primary);
-            font-size: 0.95rem;
         }
+
         .player-info-with-avatar {
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-direction: column;
+            gap: 10px;
         }
-        .player-info-with-avatar img {
-            margin-bottom: 0.3rem;
-        }
+
         .mvp-avatar img,
         .mvp-map-avatar img {
             width: 100%;
@@ -594,202 +638,72 @@
             object-fit: cover;
             border-radius: 50%;
         }
+
         .mvp-avatar,
         .mvp-map-avatar {
             transition: transform 0.3s ease;
         }
+
         .mvp-avatar:hover,
         .mvp-map-avatar:hover {
-            transform: scale(2);
+            transform: scale(2.5);
             z-index: 10;
             position: relative;
         }
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            width: 28px;
-            height: 21px;
-            justify-content: space-between;
-            z-index: 1001;
-        }
-        .hamburger span {
-            width: 100%;
-            height: 3px;
-            background-color: var(--primary);
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-        @media (max-width: 768px) {
-            .nav-links {
-                position: absolute;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                background: var(--card-bg);
-                backdrop-filter: blur(10px);
-                border-bottom: 1px solid var(--card-border);
-                flex-direction: column;
-                align-items: center;
-                padding: 1rem 0;
-                gap: 0.8rem;
-                box-shadow: 0 4px 10px var(--shadow);
-                display: none;
-                max-height: calc(100vh - 70px);
-                overflow-y: auto;
-                z-index: 999;
-            }
-            .nav-links.active {
-                display: flex;
-            }
-            .hamburger {
-                display: flex;
-            }
-            .hamburger.active span:nth-child(1) {
-                transform: rotate(45deg) translate(5px, 5px);
-            }
-            .hamburger.active span:nth-child(2) {
-                opacity: 0;
-            }
-            .hamburger.active span:nth-child(3) {
-                transform: rotate(-45deg) translate(5px, -5px);
-            }
-            .maps-content-grid {
-                grid-template-columns: 1fr;
-            }
-            .section-title {
-                font-size: 1.2rem;
-            }
-            .table-container {
-                font-size: 0.75rem;
-            }
-            th, td {
-                padding: 0.4rem 0.6rem;
-            }
-            .group-name {
-                font-size: 0.95rem;
-            }
-            .group-stats {
-                font-size: 0.8rem;
-            }
-            .groups-container {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            }
-            .phase-btn {
-                padding: 0.6rem 0.8rem;
-                min-width: 100px;
-                font-size: 0.85rem;
-            }
-            .mvp-stat-value {
-                font-size: 1rem;
-            }
-            .logo {
-                font-size: 1.1rem;
-            }
-        }
-        @media (max-width: 480px) {
-            header {
-                padding: 0.8rem;
-            }
-            .logo {
-                font-size: 1rem;
-            }
-            main {
-                margin-top: 70px;
-                padding: 0.75rem;
-            }
-            .text-container {
-                padding: 1rem;
-            }
-            .section-title {
-                font-size: 1.1rem;
-            }
-            .phases-nav {
-                gap: 0.5rem;
-            }
-            .phase-btn {
-                padding: 0.5rem 0.7rem;
-                min-width: 90px;
-                font-size: 0.8rem;
-            }
-            .groups-container {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-                gap: 0.5rem;
-            }
-            .group-card {
-                padding: 0.8rem;
-            }
-            .group-name {
-                font-size: 0.9rem;
-            }
-            .group-stats {
-                font-size: 0.75rem;
-            }
-            table {
-                min-width: 500px;
-            }
-            th, td {
-                padding: 0.4rem 0.5rem;
-                font-size: 0.75rem;
-            }
-            th {
-                font-size: 0.8rem;
-            }
-            .mvp-card, .mvp-map-card {
-                padding: 0.9rem;
-            }
-            .mvp-avatar {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
-            }
-            .mvp-map-avatar {
-                width: 50px;
-                height: 50px;
-                font-size: 1.2rem;
-            }
-            .mvp-info h3 {
-                font-size: 1.15rem;
-            }
-            .mvp-info h4 {
-                font-size: 1rem;
-            }
-            .mvp-map-info h4 {
-                font-size: 0.95rem;
-            }
-            .mvp-map-info h5 {
-                font-size: 0.9rem;
-            }
-            .hamburger {
-                width: 24px;
-            }
-        }
-        @media (min-width: 769px) {
-            .maps-content-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 2rem;
-            }
-            .mvp-container {
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                gap: 1.5rem;
-                margin-bottom: 2rem;
-            }
-            .longest-kill-container {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 1.5rem;
-                margin-bottom: 2rem;
-            }
-        }
-        .team-logo-container {
-            display: flex;
-            justify-content: center;
-            min-width: 35px;
-        }
-        /* Añadir soporte táctil para elementos interactivos */
-        button, .map-tab, .phase-btn, .group-card {
-            touch-action: manipulation;
-            -ms-touch-action: manipulation;
-        }
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    width: 30px;
+    height: 21px;
+    justify-content: space-between;
+}
+
+.hamburger span {
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--card-border);
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0;
+        gap: 1rem;
+        box-shadow: 0 4px 10px var(--shadow);
+        display: none;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+    }
+}
     </style>
 </head>
 <body>
@@ -798,14 +712,10 @@
         Tu navegador no soporta videos HTML5.
     </video>
     <div class="overlay"></div>
+    
 <header>
     <nav>
         <div class="logo">PUBG MOBILE COPA HUAWEI MÉXICO</div>
-        <div class="hamburger" id="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
         <div class="nav-links" id="nav-links">
             <a href="index.html" style="color: var(--primary);">Inicio</a>
             <a href="grupos.html">Grupos</a>
@@ -815,8 +725,14 @@
             <a href="jugadores.html">Jugadores</a>
             <a href="mapas.html">Mapas</a>
         </div>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </nav>
 </header>
+    
     <main>
         <div class="section fade-in">
             <div class="text-container">
@@ -824,6 +740,7 @@
                 <p>Selecciona una fase para ver los grupos y estadísticas detalladas.</p>
             </div>
         </div>
+        
         <div class="section slide-up">
             <div class="text-container">
                 <h2 class="section-title">Navegación por Fases</h2>
@@ -832,6 +749,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="section slide-up hidden" id="groups-section">
             <div class="text-container">
                 <h2 class="section-title">Grupos de la Fase</h2>
@@ -839,9 +757,13 @@
                 </div>
             </div>
         </div>
+        
         <div class="section slide-up hidden" id="group-content-section">
         </div>
     </main>
+    
+    
+
     <script>
         let tournamentData = {};
         let currentPhase = null;
@@ -850,6 +772,7 @@
         let clasificados = [];
         let teamLogoCache = {};
         let uidToPlayerMap = {};
+        
         const mapNames = {
             'M1': 'Erangel',
             'M2': 'Miramar', 
@@ -861,17 +784,21 @@
             'M8': 'Miramar',
             'M9': 'Sanhok'
         };
+        
         const phasesStructure = [
             { name: 'Clasificatorias', path: 'data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'] },
             { name: 'Semifinal', path: 'data/semifinal/', groups: ['SEMIFINAL 1', 'SEMIFINAL 2'], maps: ['M1', 'M2', 'M3'] },
             { name: 'Final', path: 'data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3', 'M4'] }
         ];
+
         async function loadUidMap() {
             try {
                 const response = await fetch('data/uid/uid.csv');
                 if (!response.ok) return;
+                
                 const csvText = await response.text();
                 const lines = csvText.split('\n');
+                
                 for (let i = 1; i < lines.length; i++) {
                     if (lines[i].trim() === '') continue;
                     const [uid, jugador] = lines[i].split('|').map(s => s.trim());
@@ -883,33 +810,41 @@
                 console.warn('No se pudo cargar el mapeo de UID:', error);
             }
         }
+
         function getPlayerNameByUid(uid, originalName) {
             return uidToPlayerMap[uid] || originalName;
         }
+
         function getPlayerImageByUid(uid) {
             if (!uid) return 'data/logos/jugadores/default.png';
             return `data/logos/jugadores/${uid}.png`;
         }
+
         function getTeamLogo(teamName) {
             if (!teamName || !teamName.trim()) {
                 console.warn('Nombre de equipo vacío');
                 return 'data/logos/equipos/default.png';
             }
+            
             const safeName = teamName.replace(/[^\w\s-]/g, "").trim();
             if (!safeName) {
                 console.warn('Nombre sanitizado vacío:', teamName);
                 return 'data/logos/equipos/default.png';
             }
+            
             const logoPath = `data/logos/equipos/${safeName}.png`;
             console.log('Logo generado para', teamName, ':', logoPath);
             return logoPath;
         }
+
         async function loadClasificados() {
             try {
                 const response = await fetch('data/clasificatorias/clasificados.csv');
                 if (!response.ok) return;
+                
                 const csvText = await response.text();
                 const lines = csvText.split('\n');
+                
                 for (let i = 1; i < lines.length; i++) {
                     if (lines[i].trim() === '') continue;
                     const values = lines[i].split(',');
@@ -921,47 +856,62 @@
                 console.warn('No se pudo cargar clasificados:', error);
             }
         }
+        
         async function loadTournamentData() {
             try {
                 await loadClasificados();
+                
                 await loadUidMap();
+                
                 for (const phase of phasesStructure) {
                     tournamentData[phase.name] = {};
+                    
                     for (const group of phase.groups) {
                         tournamentData[phase.name][group] = {};
+                        
                         for (const map of phase.maps) {
                             const csvPath = `${phase.path}${group}/${map}.csv`;
                             await loadCSVFile(csvPath, phase.name, group, map);
                         }
                     }
                 }
+                
                 updatePhasesNavigation();
+                
             } catch (error) {
                 console.error('Error cargando datos:', error);
                 document.getElementById('phases-nav').innerHTML = '<div class="loading">Error cargando datos del torneo</div>';
             }
         }
+        
         async function loadCSVFile(filePath, phase, group, map) {
             try {
                 const response = await fetch(filePath + "?nocache=" + Date.now());
                 if (!response.ok) {
                     return;
                 }
+                
                 const csvText = await response.text();
                 const lines = csvText.split('\n');
+                
                 const headers = lines[0].split(',');
+                
                 tournamentData[phase][group][map] = {
                     teams: {},
                     players: [],
                     mapName: mapNames[map] || map
                 };
+                
                 for (let i = 1; i < lines.length; i++) {
                     if (lines[i].trim() === '') continue;
+                    
                     const values = lines[i].split(',');
                     const playerData = {};
+                    
                     headers.forEach((header, index) => {
                         playerData[header.trim()] = values[index] ? values[index].trim() : '';
                     });
+                    
                     playerData.kills = parseInt(playerData['Número de Bajas']) || 0;
                     playerData.damage = parseFloat(playerData['Daño']) || 0;
                     playerData.headshots = parseInt(playerData['Número de Headshots']) || 0;
@@ -970,12 +920,16 @@
                     playerData.maxKillDistance = parseFloat(playerData['Máxima Distancia de Baja']) || 0;
                     playerData.survivalTime = parseFloat(playerData['Tiempo de Supervivencia']) || 0;
                     playerData.accuracy = parseFloat(playerData['Accuracy(%)']) || 0;
+                    
                     playerData.phase = phase;
                     playerData.group = group;
                     playerData.map = map;
+                    
                     playerData.uid = playerData['UID'] || '';
                     playerData.realName = getPlayerNameByUid(playerData.uid, playerData['Nombre del Jugador']);
+                    
                     tournamentData[phase][group][map].players.push(playerData);
+                    
                     const teamName = playerData['Nombre del Equipo'];
                     if (!tournamentData[phase][group][map].teams[teamName]) {
                         const logo = getTeamLogo(teamName);
@@ -989,18 +943,23 @@
                             logo: logo
                         };
                     }
+                    
                     tournamentData[phase][group][map].teams[teamName].players.push(playerData);
                     tournamentData[phase][group][map].teams[teamName].kills += playerData.kills;
                     tournamentData[phase][group][map].teams[teamName].damage += playerData.damage;
                 }
+                
             } catch (error) {
                 console.warn(`No se pudo cargar ${filePath}:`, error);
             }
         }
+        
         function updatePhasesNavigation() {
             const phasesNav = document.getElementById('phases-nav');
             phasesNav.innerHTML = '';
+            
             let hasData = false;
+            
             phasesStructure.forEach(phase => {
                 let phaseHasData = false;
                 for (const group of phase.groups) {
@@ -1015,6 +974,7 @@
                     }
                     if (phaseHasData) break;
                 }
+                
                 if (phaseHasData) {
                     hasData = true;
                     const phaseBtn = document.createElement('button');
@@ -1024,6 +984,7 @@
                     phasesNav.appendChild(phaseBtn);
                 }
             });
+            
             if (!hasData) {
                 phasesNav.innerHTML = '<div class="loading">No se encontraron datos de fases</div>';
             } else {
@@ -1033,21 +994,29 @@
                 }
             }
         }
+        
         function selectPhase(phaseName) {
             currentPhase = phaseName;
+            
             document.querySelectorAll('.phase-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
+            
             document.getElementById('groups-section').classList.remove('hidden');
+            
             updateGroups(phaseName);
         }
+        
         function updateGroups(phaseName) {
             const groupsContainer = document.getElementById('groups-container');
             groupsContainer.innerHTML = '';
+            
             const phase = phasesStructure.find(p => p.name === phaseName);
             if (!phase) return;
+            
             let hasGroupData = false;
+            
             phase.groups.forEach(groupName => {
                 let groupHasData = false;
                 for (const map of phase.maps) {
@@ -1059,16 +1028,20 @@
                         break;
                     }
                 }
+                
                 if (groupHasData) {
                     hasGroupData = true;
                     const groupCard = document.createElement('div');
                     groupCard.className = 'glass-card group-card';
                     groupCard.addEventListener('click', () => selectGroup(phaseName, groupName));
+                    
                     const groupNameEl = document.createElement('div');
                     groupNameEl.className = 'group-name';
                     groupNameEl.textContent = groupName;
+                    
                     const groupStats = document.createElement('div');
                     groupStats.className = 'group-stats';
+                    
                     let matchCount = 0;
                     for (const map of phase.maps) {
                         if (tournamentData[phaseName] && 
@@ -1078,12 +1051,15 @@
                             matchCount++;
                         }
                     }
+                    
                     groupStats.textContent = `${matchCount} partidas`;
+                    
                     groupCard.appendChild(groupNameEl);
                     groupCard.appendChild(groupStats);
                     groupsContainer.appendChild(groupCard);
                 }
             });
+            
             if (!hasGroupData) {
                 groupsContainer.innerHTML = '<div class="loading">No se encontraron datos para los grupos de esta fase</div>';
             } else {
@@ -1093,23 +1069,30 @@
                 }
             }
         }
+        
         function selectGroup(phaseName, groupName) {
             currentPhase = phaseName;
             currentGroup = groupName;
+            
             document.querySelectorAll('.group-card').forEach(card => {
                 card.classList.remove('active');
             });
             event.target.classList.add('active');
+            
             showGroupContent(phaseName, groupName);
         }
+        
         function showGroupContent(phaseName, groupName) {
             const contentSection = document.getElementById('group-content-section');
             contentSection.classList.remove('hidden');
+            
             const groupStats = calculateGroupStats(phaseName, groupName);
+            
             contentSection.innerHTML = `
                 <div class="text-container">
                     <h2 class="section-title">${groupName} - ${phaseName}</h2>
                 </div>
+                
                 <div class="section">
                     <div class="text-container">
                         <h3 class="section-title">MVP por Mapa</h3>
@@ -1213,6 +1196,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="section">
                     <div class="text-container">
                         <h3 class="section-title">Eliminación Más Lejana por Mapa</h3>
@@ -1260,6 +1244,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="section">
                     <div class="text-container">
                         <h3 class="section-title">Tabla de Posiciones</h3>
@@ -1284,21 +1269,26 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="section">
                     <div class="text-container">
                         <h3 class="section-title">Partidas por Mapa</h3>
                         <div class="maps-tabs" id="maps-tabs">
                             <!-- Los tabs de mapas se cargarán dinámicamente -->
                         </div>
+                        
                         <div id="maps-content">
                             <!-- El contenido de los mapas se cargará dinámicamente -->
                         </div>
                     </div>
                 </div>
             `;
+            
             fillGroupStandings(groupStats.standings);
+            
             showMapsTabs(phaseName, groupName);
         }
+        
         function calculateGroupStats(phaseName, groupName) {
             const phase = phasesStructure.find(p => p.name === phaseName);
             const stats = {
@@ -1316,6 +1306,7 @@
                     Sanhok: { realName: 'N/A', team: 'N/A', distance: 0, uid: '' }
                 }
             };
+            
             const teamStats = {};
             const playerStats = {
                 general: {},
@@ -1323,12 +1314,15 @@
                 Miramar: {},
                 Sanhok: {}
             };
+            
             phase.maps.forEach(map => {
                 if (tournamentData[phaseName] && 
                     tournamentData[phaseName][groupName] && 
                     tournamentData[phaseName][groupName][map]) {
+                    
                     const mapData = tournamentData[phaseName][groupName][map];
                     const mapRealName = mapNames[map];
+                    
                     Object.values(mapData.teams).forEach(team => {
                         if (!teamStats[team.name]) {
                             teamStats[team.name] = {
@@ -1343,21 +1337,27 @@
                                 lastMatchRank: 99
                             };
                         }
+                        
                         teamStats[team.name].eliminationPoints += team.kills;
                         teamStats[team.name].damage += team.damage;
                         teamStats[team.name].wwcd += team.wwcd;
+                        
                         const positionPoints = calculatePositionPoints(team.rank);
                         teamStats[team.name].positionPoints += positionPoints;
+                        
                         if (team.rank < teamStats[team.name].bestRank) {
                             teamStats[team.name].bestRank = team.rank;
                         }
+                        
                         teamStats[team.name].lastMatchRank = team.rank;
                     });
+                    
                     mapData.players.forEach(player => {
                         const playerName = player['Nombre del Jugador'];
                         const playerRealName = player.realName;
                         const teamName = player['Nombre del Equipo'];
                         const playerUID = player.uid;
+                        
                         if (!playerStats.general[playerName]) {
                             playerStats.general[playerName] = {
                                 realName: playerRealName,
@@ -1371,13 +1371,16 @@
                                 maxKillDistance: 0
                             };
                         }
+                        
                         playerStats.general[playerName].kills += player.kills;
                         playerStats.general[playerName].damage += player.damage;
                         playerStats.general[playerName].headshots += player.headshots;
                         playerStats.general[playerName].assists += player.assists;
+                        
                         if (player.maxKillDistance > playerStats.general[playerName].maxKillDistance) {
                             playerStats.general[playerName].maxKillDistance = player.maxKillDistance;
                         }
+                        
                         if (!playerStats[mapRealName][playerName]) {
                             playerStats[mapRealName][playerName] = {
                                 realName: playerRealName,
@@ -1391,19 +1394,23 @@
                                 maxKillDistance: 0
                             };
                         }
+                        
                         playerStats[mapRealName][playerName].kills += player.kills;
                         playerStats[mapRealName][playerName].damage += player.damage;
                         playerStats[mapRealName][playerName].headshots += player.headshots;
                         playerStats[mapRealName][playerName].assists += player.assists;
+                        
                         if (player.maxKillDistance > playerStats[mapRealName][playerName].maxKillDistance) {
                             playerStats[mapRealName][playerName].maxKillDistance = player.maxKillDistance;
                         }
                     });
                 }
             });
+            
             Object.values(teamStats).forEach(team => {
                 team.totalPoints = team.positionPoints + team.eliminationPoints;
             });
+            
             stats.standings = Object.values(teamStats).sort((a, b) => {
                 if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
                 if (b.wwcd !== a.wwcd) return b.wwcd - a.wwcd;
@@ -1411,6 +1418,7 @@
                 if (b.eliminationPoints !== a.eliminationPoints) return b.eliminationPoints - a.eliminationPoints;
                 return a.lastMatchRank - b.lastMatchRank;
             });
+            
             let mvpGeneral = null;
             Object.values(playerStats.general).forEach(player => {
                 if (!mvpGeneral || 
@@ -1420,9 +1428,11 @@
                     mvpGeneral = player;
                 }
             });
+            
             if (mvpGeneral) {
                 stats.mvp.general = mvpGeneral;
             }
+            
             ['Erangel', 'Miramar', 'Sanhok'].forEach(mapName => {
                 let mvpMap = null;
                 Object.values(playerStats[mapName]).forEach(player => {
@@ -1433,16 +1443,19 @@
                         mvpMap = player;
                     }
                 });
+                
                 if (mvpMap) {
                     stats.mvp[mapName] = mvpMap;
                 }
             });
+            
             let longestKillGeneral = null;
             Object.values(playerStats.general).forEach(player => {
                 if (!longestKillGeneral || player.maxKillDistance > longestKillGeneral.maxKillDistance) {
                     longestKillGeneral = player;
                 }
             });
+            
             if (longestKillGeneral) {
                 stats.longestKill.general = {
                     realName: longestKillGeneral.realName,
@@ -1452,6 +1465,7 @@
                     uid: longestKillGeneral.uid
                 };
             }
+            
             ['Erangel', 'Miramar', 'Sanhok'].forEach(mapName => {
                 let longestKillMap = null;
                 Object.values(playerStats[mapName]).forEach(player => {
@@ -1459,6 +1473,7 @@
                         longestKillMap = player;
                     }
                 });
+                
                 if (longestKillMap) {
                     stats.longestKill[mapName] = {
                         realName: longestKillMap.realName,
@@ -1469,26 +1484,32 @@
                     };
                 }
             });
+            
             return stats;
         }
+        
         function calculatePositionPoints(rank) {
             const pointsMap = {
                 1: 10, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 2, 8: 1
             };
             return pointsMap[rank] || 0;
         }
+        
         function fillGroupStandings(standings) {
             const tbody = document.getElementById('group-standings-body');
             tbody.innerHTML = '';
+            
             standings.forEach((team, index) => {
                 const row = document.createElement('tr');
+                
                 const isClasificado = clasificados.includes(team.name);
                 if (isClasificado) {
                     row.classList.add('clasificado');
                 }
+                
                 row.innerHTML = `
                     <td>${index + 1}</td>
-                    <td class="team-logo-container"><img src="${team.logo}" alt="${team.name}" class="team-logo" onerror="this.onerror=null; this.src='data/logos/equipos/default.png?v=' + Date.now()"></td>
+                    <td><img src="${team.logo}" alt="${team.name}" class="team-logo" onerror="this.onerror=null; this.src='data/logos/equipos/default.png?v=' + Date.now()"></td>
                     <td>${team.name}</td>
                     <td>${team.positionPoints}</td>
                     <td>${team.eliminationPoints}</td>
@@ -1499,30 +1520,38 @@
                 tbody.appendChild(row);
             });
         }
+        
         function showMapsTabs(phaseName, groupName) {
             const phase = phasesStructure.find(p => p.name === phaseName);
             const mapsTabs = document.getElementById('maps-tabs');
             const mapsContent = document.getElementById('maps-content');
+            
             mapsTabs.innerHTML = '';
             mapsContent.innerHTML = '';
+            
             let hasMapData = false;
+            
             phase.maps.forEach(map => {
                 if (tournamentData[phaseName] && 
                     tournamentData[phaseName][groupName] && 
                     tournamentData[phaseName][groupName][map] &&
                     tournamentData[phaseName][groupName][map].players.length > 0) {
+                    
                     hasMapData = true;
+                    
                     const mapTab = document.createElement('button');
                     mapTab.className = 'map-tab';
                     mapTab.textContent = mapNames[map] || map;
                     mapTab.addEventListener('click', () => showMapContent(phaseName, groupName, map));
                     mapsTabs.appendChild(mapTab);
+                    
                     const mapContent = document.createElement('div');
                     mapContent.className = 'map-content';
                     mapContent.id = `map-${map}-content`;
                     mapsContent.appendChild(mapContent);
                 }
             });
+            
             if (hasMapData) {
                 const firstMapTab = mapsTabs.querySelector('.map-tab');
                 if (firstMapTab) {
@@ -1532,20 +1561,27 @@
                 mapsContent.innerHTML = '<div class="loading">No se encontraron datos de mapas para este grupo</div>';
             }
         }
+        
         function showMapContent(phaseName, groupName, map) {
             currentMap = map;
+            
             document.querySelectorAll('.map-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             event.target.classList.add('active');
+            
             document.querySelectorAll('.map-content').forEach(content => {
                 content.classList.remove('active');
             });
+            
             const mapContent = document.getElementById(`map-${map}-content`);
             mapContent.classList.add('active');
+            
             const mapData = tournamentData[phaseName][groupName][map];
+            
             mapContent.innerHTML = `
                 <div class="map-indicator">${mapNames[map] || map}</div>
+                
                 <div class="maps-content-grid">
                     <div class="section">
                         <div class="text-container">
@@ -1568,6 +1604,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section">
                         <div class="text-container">
                             <h4 class="section-title">Jugadores - ${mapNames[map] || map}</h4>
@@ -1593,21 +1630,28 @@
                     </div>
                 </div>
             `;
+            
             fillMapTeamsTable(map, mapData.teams);
+            
             fillMapPlayersTable(map, mapData.players);
         }
+        
         function fillMapTeamsTable(map, teams) {
             const tbody = document.getElementById(`map-teams-body-${map}`);
             tbody.innerHTML = '';
+            
             const teamsArray = Object.values(teams).sort((a, b) => a.rank - b.rank);
+            
             teamsArray.forEach(team => {
                 const row = document.createElement('tr');
+                
                 const isClasificado = clasificados.includes(team.name);
                 if (isClasificado) {
                     row.classList.add('clasificado');
                 }
+                
                 row.innerHTML = `
-                    <td class="team-logo-container"><img src="${team.logo}" alt="${team.name}" class="team-logo" onerror="this.onerror=null; this.src='data/logos/equipos/default.png?v=' + Date.now()"></td>
+                    <td><img src="${team.logo}" alt="${team.name}" class="team-logo" onerror="this.onerror=null; this.src='data/logos/equipos/default.png?v=' + Date.now()"></td>
                     <td>${team.name}</td>
                     <td>${team.rank}</td>
                     <td>${team.kills}</td>
@@ -1616,15 +1660,18 @@
                 tbody.appendChild(row);
             });
         }
+        
         function fillMapPlayersTable(map, players) {
             const tbody = document.getElementById(`map-players-body-${map}`);
             tbody.innerHTML = '';
+            
             const sortedPlayers = [...players].sort((a, b) => 
                 b.kills - a.kills ||
                 b.damage - a.damage ||
                 b.headshots - a.headshots ||
                 b.assists - a.assists
             );
+            
             sortedPlayers.forEach(player => {
                 const row = document.createElement('tr');
                 const playerImage = getPlayerImageByUid(player.uid);
@@ -1640,13 +1687,14 @@
                 tbody.appendChild(row);
             });
         }
+        
         document.addEventListener('DOMContentLoaded', () => {
             loadTournamentData();
         });
         document.getElementById('hamburger').addEventListener('click', function() {
-            this.classList.toggle('active');
-            document.getElementById('nav-links').classList.toggle('active');
-        });
+    this.classList.toggle('active');
+    document.getElementById('nav-links').classList.toggle('active');
+});
     </script>
 </body>
 </html>
