@@ -509,10 +509,25 @@
             font-size: 11px;
         }
 
+        /* CORRECCIÓN ESPECÍFICA PARA LAS TABLAS EN MAPAS */
         .maps-content-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
+            width: 100%;
+        }
+
+        .maps-content-grid .section {
+            width: 100%;
+        }
+
+        .maps-content-grid .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .maps-content-grid table {
+            width: 100%;
         }
 
         .mvp-container {
@@ -787,6 +802,22 @@
                 font-size: 0.8rem;
             }
             
+            /* CORRECCIÓN ESPECÍFICA PARA MAPAS EN MÓVILES */
+            .maps-content-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                width: 100%;
+            }
+            
+            .maps-content-grid .section {
+                width: 100%;
+            }
+            
+            .maps-content-grid .table-container {
+                width: 100%;
+                overflow-x: auto;
+            }
+            
             .mvp-card {
                 flex-direction: column;
                 text-align: center;
@@ -814,11 +845,6 @@
             
             .mvp-stat-label {
                 font-size: 0.7rem;
-            }
-            
-            .maps-content-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
             }
             
             .mvp-container {
@@ -973,7 +999,7 @@
     </footer>
 
     <script>
-        // El resto del código JavaScript permanece igual
+        // El código JavaScript permanece igual
         let tournamentData = {};
         let currentPhase = null;
         let currentGroup = null;
