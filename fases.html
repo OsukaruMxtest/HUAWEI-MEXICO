@@ -1036,7 +1036,7 @@
                 
                 for (let i = 1; i < lines.length; i++) {
                     if (lines[i].trim() === '') continue;
-                    const [uid, jugador] = lines[i].split('|').map(s => s.trim());
+                    const [uid, jugador] = lines[i].split(',').map(s => s.trim());
                     if (uid && jugador) {
                         uidToPlayerMap[uid] = jugador;
                     }
