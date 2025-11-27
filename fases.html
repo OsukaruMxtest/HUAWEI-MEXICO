@@ -332,6 +332,7 @@
             margin-bottom: 1.2rem;
             box-shadow: 0 4px 15px var(--shadow);
             -webkit-overflow-scrolling: touch;
+            width: 100%;
         }
         
         table {
@@ -354,16 +355,6 @@
             background: rgba(187, 2, 21, 0.1);
             font-weight: 600;
             color: var(--primary);
-        }
-
-        table {
-            table-layout: auto;
-            width: auto;
-            min-width: 100%;
-        }
-
-        th, td {
-            width: auto;
         }
         
         tr:hover {
@@ -651,6 +642,7 @@
             padding: 5px;
             background: transparent;
             border: none;
+            z-index: 1001;
         }
 
         .hamburger span {
@@ -673,19 +665,21 @@
             }
             
             .nav-links {
-                position: absolute;
-                top: 70px;
+                position: fixed;
+                top: 0;
                 left: 0;
                 width: 100%;
+                height: 100vh;
                 background: var(--card-bg);
                 backdrop-filter: blur(10px);
-                border-bottom: 1px solid var(--card-border);
                 flex-direction: column;
                 align-items: center;
-                padding: 1rem 0;
-                gap: 1rem;
+                justify-content: center;
+                padding: 2rem 0;
+                gap: 2rem;
                 box-shadow: 0 4px 10px var(--shadow);
                 display: none;
+                z-index: 1000;
             }
 
             .nav-links.active {
@@ -694,6 +688,8 @@
 
             .hamburger {
                 display: flex;
+                position: relative;
+                z-index: 1001;
             }
 
             .hamburger.active span:nth-child(1) {
@@ -769,6 +765,14 @@
             .table-container {
                 margin-bottom: 1rem;
                 font-size: 0.8rem;
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            table {
+                min-width: 600px;
+                width: 100%;
             }
             
             th, td {
@@ -872,6 +876,7 @@
         @media (max-width: 480px) {
             .logo {
                 font-size: 0.85rem;
+                max-width: 60%;
             }
             
             .phase-btn {
@@ -890,6 +895,10 @@
             
             th, td {
                 padding: 0.4rem 0.5rem;
+                font-size: 0.75rem;
+            }
+            
+            .table-container {
                 font-size: 0.75rem;
             }
         }
