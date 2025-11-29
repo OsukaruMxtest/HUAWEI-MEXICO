@@ -1097,14 +1097,16 @@
                 
                 for (const phase of phasesStructure) {
                     tournamentData[phase.name] = {};
-                    
+
                     for (const group of phase.groups) {
                         tournamentData[phase.name][group] = {};
-                        
-                        for (const map of phase.maps) {
+
+                        const loadTasks = phase.maps.map(map => {
                             const csvPath = `${phase.path}${group}/${map}.csv`;
-                            await loadCSVFile(csvPath, phase.name, group, map);
-                        }
+                            return loadCSVFile(csvPath, phase.name, group, map);
+                        });
+
+                        await Promise.all(loadTasks);
                     }
                 }
                 
