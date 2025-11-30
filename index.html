@@ -531,7 +531,7 @@
             <h2 class="section-title">Estadísticas Generales</h2>
             <div class="stats-grid">
                 <div class="glass-card stat-card" data-modal="teams">
-                    <div class="stat-value" id="total-teams">4</div>
+                    <div class="stat-value" id="total-teams">0</div>
                     <div class="stat-label">Equipos Participantes</div>
                 </div>
                 <div class="glass-card stat-card" data-modal="total-shots">
@@ -662,6 +662,8 @@
 
         async function loadCSVData() {
             try {
+                resetUI();
+                
                 for (const phase of phasesStructure) {
                     for (const group of phase.groups) {
 
@@ -678,9 +680,21 @@
 
                 updateUI();
 
+                animateCounters();
+
             } catch (error) {
                 console.error('Error cargando datos:', error);
             }
+        }
+
+        function resetUI() {
+            document.getElementById('total-teams').textContent = '0';
+            document.getElementById('total-shots').textContent = '0';
+            document.getElementById('total-hits').textContent = '0';
+            document.getElementById('total-grenade-kills').textContent = '0';
+            document.getElementById('longest-kill').textContent = '0m';
+            document.getElementById('longest-kill-player').textContent = '';
+            document.getElementById('most-kills-weapon').textContent = '-';
         }
 
         async function loadCSVFile(filePath, phase, group, map) {
@@ -778,13 +792,29 @@
         }
 
         function updateUI() {
-            document.getElementById('total-teams').textContent = tournamentStats.totalTeams;
-            document.getElementById('total-shots').textContent = tournamentStats.totalShots.toLocaleString('en-US');
-            document.getElementById('total-hits').textContent = tournamentStats.totalHits.toLocaleString('en-US');
-            document.getElementById('total-grenade-kills').textContent = tournamentStats.totalGrenadeKills.toLocaleString('en-US');
             document.getElementById('longest-kill').textContent = Math.round(tournamentStats.longestKill) + 'm';
             document.getElementById('longest-kill-player').textContent = `${tournamentStats.longestKillPlayer} - ${tournamentStats.longestKillTeam}`;
             document.getElementById('most-kills-weapon').textContent = tournamentStats.mostKillsWeapon;
+        }
+
+        function animateCounters() {
+            const totalShotsElement = document.getElementById('total-shots');
+            const totalHitsElement = document.getElementById('total-hits');
+            const totalGrenadeKillsElement = document.getElementById('total-grenade-kills');
+            const totalTeamsElement = document.getElementById('total-teams');
+            
+            if (tournamentStats.totalShots > 0) {
+                animateCounter(totalShotsElement, tournamentStats.totalShots);
+            }
+            if (tournamentStats.totalHits > 0) {
+                animateCounter(totalHitsElement, tournamentStats.totalHits);
+            }
+            if (tournamentStats.totalGrenadeKills > 0) {
+                animateCounter(totalGrenadeKillsElement, tournamentStats.totalGrenadeKills);
+            }
+            if (tournamentStats.totalTeams > 0) {
+                animateCounter(totalTeamsElement, tournamentStats.totalTeams);
+            }
         }
 
         function showTopPlayersByStat(statKey, modalId, title, formatValue) {
@@ -920,7 +950,7 @@
 
         function animateCounter(element, targetValue, duration = 1500) {
             const startValue = 0;
-            const increment = targetValue / (duration / 16); // 60fps
+            const increment = targetValue / (duration / 16); 
             
             let currentValue = startValue;
             const timer = setInterval(() => {
@@ -998,23 +1028,9 @@
             
             setupModalEvents();
             
-            loadCSVData();
+            resetUI();
             
-            setTimeout(() => {
-                const totalShotsElement = document.getElementById('total-shots');
-                const totalHitsElement = document.getElementById('total-hits');
-                const totalGrenadeKillsElement = document.getElementById('total-grenade-kills');
-                
-                if (tournamentStats.totalShots > 0) {
-                    animateCounter(totalShotsElement, tournamentStats.totalShots);
-                }
-                if (tournamentStats.totalHits > 0) {
-                    animateCounter(totalHitsElement, tournamentStats.totalHits);
-                }
-                if (tournamentStats.totalGrenadeKills > 0) {
-                    animateCounter(totalGrenadeKillsElement, tournamentStats.totalGrenadeKills);
-                }
-            }, 1000);
+            loadCSVData();
         });
 		document.getElementById('hamburger').addEventListener('click', function() {
     this.classList.toggle('active');
