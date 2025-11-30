@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipos - PUBG MOBILE COPA HUAWEI MEXICO</title>
+    <title>Jugadores - PUBG MOBILE COPA HUAWEI MEXICO</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
@@ -29,7 +31,6 @@
         
         body {
             font-family: 'Poppins', sans-serif;
-            background: var(--background);
             color: var(--text);
             min-height: 100vh;
             overflow-x: hidden;
@@ -44,8 +45,18 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(197, 197, 197, 0.7);
             z-index: -1;
-            opacity: 0.3;
         }
         
         header {
@@ -57,7 +68,7 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--glass-border);
             z-index: 1000;
-            padding: 1rem 1.5rem;
+            padding: 1rem;
             box-shadow: 0 2px 15px var(--shadow);
         }
         
@@ -68,10 +79,12 @@
         }
         
         .logo {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--primary);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            max-width: 70%;
         }
         
         .nav-links {
@@ -109,7 +122,9 @@
         
         main {
             margin-top: 80px;
-            padding: 1.5rem;
+            padding: 1rem;
+            position: relative;
+            z-index: 1;
         }
         
         .glass-card {
@@ -117,7 +132,7 @@
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1.2rem;
             box-shadow: 0 8px 20px var(--shadow);
             transition: all 0.3s ease;
         }
@@ -146,11 +161,11 @@
         }
         
         .section {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         
         .section-title {
-            font-size: 1.6rem;
+            font-size: 1.3rem;
             font-weight: 600;
             margin-bottom: 1rem;
             color: var(--text);
@@ -161,25 +176,34 @@
         .filters-container {
             display: flex;
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
             align-items: center;
         }
         
-        .search-input {
+        .search-input, .filter-select {
             background: var(--glass);
             border: 1px solid var(--glass-border);
             border-radius: 8px;
             padding: 0.75rem 1rem;
             color: var(--text);
             font-family: 'Poppins', sans-serif;
-            width: 100%;
-            max-width: 300px;
             transition: all 0.3s ease;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            min-height: 44px;
+            width: 100%;
         }
         
-        .search-input:focus {
+        .filter-select option {
+            background: var(--card-bg);
+            color: var(--text);
+        }
+        
+        .search-input {
+            min-width: 100%;
+        }
+        
+        .search-input:focus, .filter-select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 2px rgba(187, 2, 21, 0.2);
@@ -195,8 +219,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(187, 2, 21, 0.2);
+            min-height: 44px;
             width: 100%;
-            max-width: 300px;
         }
         
         .compare-btn:hover {
@@ -212,60 +236,113 @@
             box-shadow: none;
         }
         
-        .group-filters {
+        .view-toggle {
             display: flex;
             gap: 0.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             flex-wrap: wrap;
         }
         
-        .group-btn {
+        .view-btn {
             background: var(--glass);
             border: 1px solid var(--glass-border);
             border-radius: 8px;
             padding: 0.5rem 1rem;
             color: var(--text);
-            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.9rem;
+            font-weight: 500;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .group-btn:hover {
+        .view-btn:hover {
             background: rgba(255, 255, 255, 0.9);
             transform: translateY(-2px);
         }
         
-        .group-btn.active {
+        .view-btn.active {
             background: var(--secondary);
             border-color: var(--secondary);
             color: white;
         }
         
-        .teams-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px var(--shadow);
+            -webkit-overflow-scrolling: touch;
         }
         
-        .team-card {
-            padding: 1.5rem;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            min-width: 600px;
+        }
+        
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        th {
+            background: rgba(0, 0, 0, 0.05);
+            font-weight: 600;
+            color: var(--primary);
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s ease;
+        }
+        
+        th:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        tr {
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        tr:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        tr.selected {
+            background: rgba(187, 2, 21, 0.1);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .player-card {
+            padding: 1.2rem;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
         }
         
-        .team-card.selected {
+        .player-card.selected {
             border: 2px solid var(--primary);
             background: rgba(255, 255, 255, 0.95);
         }
         
-        .team-card.selectable:hover {
+        .player-card.selectable:hover {
             transform: translateY(-5px);
         }
         
-        .team-checkbox {
+        .player-checkbox {
             position: absolute;
             top: 1rem;
             right: 1rem;
@@ -278,12 +355,12 @@
             transition: all 0.2s ease;
         }
         
-        .team-card.selected .team-checkbox {
+        .player-card.selected .player-checkbox {
             background: var(--primary);
             border-color: var(--primary);
         }
         
-        .team-card.selected .team-checkbox::after {
+        .player-card.selected .player-checkbox::after {
             content: '✓';
             position: absolute;
             color: white;
@@ -293,14 +370,14 @@
             transform: translate(-50%, -50%);
         }
         
-        .team-header {
+        .player-header {
             display: flex;
             align-items: center;
             gap: 1rem;
             margin-bottom: 1rem;
         }
         
-        .team-logo {
+        .player-avatar {
             width: 60px;
             height: 60px;
             border-radius: 50%;
@@ -315,80 +392,46 @@
             flex-shrink: 0;
         }
         
-        .team-logo img {
+        .player-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
         
-        .team-info h3 {
+        .player-info h3 {
             font-size: 1.2rem;
             margin-bottom: 0.25rem;
             color: var(--text);
         }
         
-        .team-info p {
+        .player-info p {
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
         
-        .team-stats {
+        .player-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 0.75rem;
             margin-bottom: 1rem;
         }
         
-        .team-stat {
+        .player-stat {
             text-align: center;
             padding: 0.5rem;
             border-radius: 6px;
             background: rgba(255, 255, 255, 0.5);
         }
         
-        .team-stat-value {
-            font-size: 1.5rem;
+        .player-stat-value {
+            font-size: 1.25rem;
             font-weight: 700;
             color: var(--primary);
         }
         
-        .team-stat-label {
+        .player-stat-label {
             font-size: 0.8rem;
             color: var(--text-secondary);
-        }
-        
-        .team-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .action-btn {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid var(--glass-border);
-            border-radius: 6px;
-            padding: 0.5rem;
-            color: var(--text);
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-        
-        .action-btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-            transform: translateY(-1px);
-        }
-        
-        .action-btn.primary {
-            background: var(--secondary);
-            border-color: var(--secondary);
-            color: white;
-        }
-        
-        .action-btn.primary:hover {
-            background: var(--secondary-deep);
-            transform: translateY(-1px);
         }
         
         .modal-overlay {
@@ -434,7 +477,7 @@
         }
         
         .modal-title {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 600;
             color: var(--text);
         }
@@ -459,185 +502,366 @@
             background: rgba(0, 0, 0, 0.1);
         }
         
-        .team-details-content {
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .team-details-section {
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--glass-border);
-        }
-        
-        .team-details-section:last-child {
-            border-bottom: none;
-        }
-        
-        .section-subtitle {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--secondary);
-            border-left: 3px solid var(--secondary);
-            padding-left: 0.5rem;
-        }
-        
-        .team-details-grid {
+        .player-profile {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 1rem;
+            grid-template-columns: auto 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
         
-        .team-detail-card {
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        
+        .profile-info p {
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .profile-stat {
+            text-align: center;
+            padding: 0.8rem;
             background: rgba(255, 255, 255, 0.7);
             border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
         }
         
-        .team-detail-card:hover {
+        .profile-stat:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
         }
         
-        .team-detail-value {
-            font-size: 1.5rem;
+        .profile-stat-value {
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--primary);
             margin-bottom: 0.25rem;
         }
         
-        .team-detail-label {
+        .profile-stat-label {
             font-size: 0.8rem;
             color: var(--text-secondary);
         }
         
-        .players-grid {
+        .charts-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1rem;
+            grid-template-columns: 1fr;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
         }
         
-        .player-card {
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 8px;
-            padding: 1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-        
-        .player-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .player-card.mvp {
-            border: 2px solid var(--primary);
-            background: rgba(187, 2, 21, 0.05);
-        }
-        
-        .player-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-        
-        .player-name {
-            font-weight: 600;
-        }
-        
-        .mvp-badge {
-            background: var(--primary);
-            color: white;
-            font-size: 0.7rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-        
-        .player-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-        }
-        
-        .player-stat {
+        .chart-card {
+            padding: 1.2rem;
             text-align: center;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 4px;
-            padding: 0.5rem;
         }
         
-        .player-stat-value {
+        .chart-title {
             font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text);
             font-weight: 600;
-            color: var(--secondary);
         }
         
-        .player-stat-label {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
         }
         
-        .phases-grid {
+        .shot-stats-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
         }
         
-        .phase-card {
+        .shot-stat {
+            text-align: center;
+            padding: 0.8rem;
             background: rgba(255, 255, 255, 0.7);
             border-radius: 8px;
-            padding: 1rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
         }
         
-        .phase-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .phase-name {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--secondary);
-        }
-        
-        .maps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-        
-        .map-card {
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 6px;
-            padding: 0.5rem;
-            text-align: center;
-            transition: all 0.2s ease;
-        }
-        
-        .map-card:hover {
-            background: rgba(255, 255, 255, 0.9);
-        }
-        
-        .map-name {
-            font-size: 0.8rem;
-            font-weight: 600;
+        .shot-stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
             margin-bottom: 0.25rem;
         }
         
-        .map-stats {
-            font-size: 0.7rem;
+        .shot-stat-label {
+            font-size: 0.8rem;
             color: var(--text-secondary);
         }
         
+        .team-contribution {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .contribution-card {
+            text-align: center;
+            padding: 1.2rem;
+        }
+        
+        .contribution-value {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .contribution-label {
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .contribution-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        
+        .comparison-player {
+            text-align: center;
+        }
+        
+        .comparison-player-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        
+        .comparison-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .comparison-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .comparison-stats {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.8rem;
+        }
+        
+        .comparison-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .comparison-stat:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .comparison-stat.winner {
+            background: rgba(0, 104, 63, 0.2);
+            border: 1px solid rgba(0, 104, 63, 0.5);
+        }
+        
+        .stat-name {
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .vs-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin: 1rem 0;
+        }
+        
+        footer {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            padding: 1.2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-deep);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .player-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .player-table-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .player-table-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .phase-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .phase-btn {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .phase-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .phase-btn.active {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: white;
+        }
+        
+        .phase-btn:disabled {
+            background: #e0e0e0;
+            color: #a0a0a0;
+            cursor: not-allowed;
+        }
+        
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            width: 30px;
+            height: 21px;
+            justify-content: space-between;
+            padding: 5px;
+            background: transparent;
+            border: none;
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* Nuevos estilos para la comparación basados en el diseño de equipos */
         .central-comparison-container {
             display: grid;
             grid-template-columns: 1fr auto 1fr;
@@ -645,11 +869,11 @@
             align-items: start;
         }
         
-        .comparison-team {
+        .comparison-player {
             text-align: center;
         }
         
-        .comparison-team-header {
+        .comparison-player-header {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -657,7 +881,7 @@
             margin-bottom: 1.5rem;
         }
         
-        .comparison-logo {
+        .comparison-avatar {
             width: 80px;
             height: 80px;
             border-radius: 50%;
@@ -669,18 +893,24 @@
             color: white;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            flex-shrink: 0;
         }
         
-        .comparison-logo img {
+        .comparison-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
         
-        .comparison-team-name {
+        .comparison-player-name {
             font-size: 1.2rem;
             font-weight: 600;
             color: var(--text);
+        }
+        
+        .comparison-player-team {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
         
         .comparison-metrics {
@@ -731,84 +961,20 @@
             padding: 0.5rem;
             color: var(--text);
         }
-        
-        .vs-divider {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 1.2rem;
-            margin: 1rem 0;
-        }
-        
-        footer {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid var(--glass-border);
-            padding: 1.5rem 2rem;
-            text-align: center;
-            color: var(--text-secondary);
-            margin-top: 2rem;
-        }
-        
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--secondary);
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary-deep);
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-secondary);
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            width: 30px;
-            height: 21px;
-            justify-content: space-between;
-        }
 
-        .hamburger span {
-            width: 100%;
-            height: 3px;
-            background-color: var(--primary);
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-
-        /* Estilos para móviles */
+        /* Media Queries para móviles */
         @media (max-width: 768px) {
             header {
-                padding: 1rem;
+                padding: 0.8rem;
             }
             
             .logo {
-                font-size: 1rem;
+                font-size: 0.95rem;
+                max-width: 65%;
             }
             
             .nav-links {
-                position: fixed;
+                position: absolute;
                 top: 70px;
                 left: 0;
                 width: 100%;
@@ -845,50 +1011,197 @@
             
             main {
                 margin-top: 70px;
-                padding: 1rem;
+                padding: 0.8rem;
+            }
+            
+            .section {
+                margin-bottom: 1.2rem;
             }
             
             .section-title {
-                font-size: 1.4rem;
+                font-size: 1.2rem;
             }
             
             .filters-container {
-                flex-direction: column;
-                align-items: stretch;
+                gap: 0.8rem;
+                margin-bottom: 1.2rem;
             }
             
-            .search-input, .compare-btn {
-                max-width: 100%;
+            .search-input, .filter-select, .compare-btn {
+                font-size: 0.9rem;
+                padding: 0.7rem 0.9rem;
             }
             
-            .teams-grid {
+            .view-toggle {
+                gap: 0.3rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .view-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+            }
+            
+            .players-grid {
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
             
-            .team-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 0.5rem;
+            .player-card {
+                padding: 1rem;
             }
             
-            .team-logo {
+            .player-header {
+                gap: 0.8rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .player-avatar {
                 width: 50px;
                 height: 50px;
+                font-size: 1.3rem;
             }
             
-            .team-stats {
-                grid-template-columns: repeat(4, 1fr);
+            .player-info h3 {
+                font-size: 1.1rem;
             }
             
-            .team-stat-value {
+            .player-stats {
+                gap: 0.6rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .player-stat {
+                padding: 0.4rem;
+            }
+            
+            .player-stat-value {
+                font-size: 1.1rem;
+            }
+            
+            .table-container {
+                margin-bottom: 1rem;
+                font-size: 0.8rem;
+            }
+            
+            th, td {
+                padding: 0.5rem 0.6rem;
+            }
+            
+            .modal {
+                padding: 1rem;
+            }
+            
+            .modal-header {
+                margin-bottom: 1.2rem;
+            }
+            
+            .modal-title {
                 font-size: 1.2rem;
             }
             
-            .team-actions {
-                flex-direction: column;
+            .player-profile {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 1rem;
+                margin-bottom: 1.2rem;
             }
             
+            .profile-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+                margin: 0 auto;
+            }
+            
+            .profile-info h2 {
+                font-size: 1.3rem;
+            }
+            
+            .profile-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.6rem;
+                margin-bottom: 1.2rem;
+            }
+            
+            .profile-stat {
+                padding: 0.6rem;
+            }
+            
+            .profile-stat-value {
+                font-size: 1.1rem;
+            }
+            
+            .charts-container {
+                gap: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .chart-card {
+                padding: 1rem;
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+            
+            .shot-stats-container {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.6rem;
+                margin-bottom: 1rem;
+            }
+            
+            .shot-stat {
+                padding: 0.6rem;
+            }
+            
+            .shot-stat-value {
+                font-size: 1.1rem;
+            }
+            
+            .team-contribution {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-bottom: 1.2rem;
+            }
+            
+            .contribution-card {
+                padding: 1rem;
+            }
+            
+            .contribution-value {
+                font-size: 1.5rem;
+            }
+            
+            .comparison-container {
+                gap: 1rem;
+            }
+            
+            .comparison-player-header {
+                gap: 0.8rem;
+                margin-bottom: 1rem;
+            }
+            
+            .comparison-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .comparison-stats {
+                gap: 0.6rem;
+            }
+            
+            .comparison-stat {
+                padding: 0.6rem;
+            }
+            
+            .vs-divider {
+                font-size: 1.1rem;
+                margin: 0.5rem 0;
+            }
+            
+            /* Ajustes para la comparación en móviles */
             .central-comparison-container {
                 grid-template-columns: 1fr;
                 gap: 1rem;
@@ -899,11 +1212,11 @@
                 order: 3;
             }
             
-            .comparison-team-header {
+            .comparison-player-header {
                 margin-bottom: 1rem;
             }
             
-            .comparison-logo {
+            .comparison-avatar {
                 width: 60px;
                 height: 60px;
             }
@@ -929,844 +1242,1341 @@
                 font-size: 0.9rem;
             }
             
-            .modal {
+            footer {
                 padding: 1rem;
-            }
-            
-            .modal-title {
-                font-size: 1.2rem;
-            }
-            
-            .team-details-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .players-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .phases-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .maps-grid {
-                grid-template-columns: repeat(3, 1fr);
+                font-size: 0.9rem;
             }
         }
         
         @media (max-width: 480px) {
-            .team-stats {
-                grid-template-columns: repeat(2, 1fr);
+            .logo {
+                font-size: 0.85rem;
             }
             
-            .team-details-grid {
+            .section-title {
+                font-size: 1.1rem;
+            }
+            
+            .search-input, .filter-select, .compare-btn {
+                font-size: 0.85rem;
+                padding: 0.6rem 0.8rem;
+            }
+            
+            .view-btn {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.6rem;
+            }
+            
+            .player-info h3 {
+                font-size: 1rem;
+            }
+            
+            .player-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+            
+            .player-stat-value {
+                font-size: 1rem;
+            }
+            
+            th, td {
+                padding: 0.4rem 0.5rem;
+                font-size: 0.75rem;
+            }
+            
+            .profile-stats {
                 grid-template-columns: 1fr;
             }
             
-            .maps-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .shot-stats-container {
+                grid-template-columns: 1fr;
             }
             
-            .group-btn {
-                padding: 0.5rem 0.75rem;
-                font-size: 0.8rem;
+            .comparison-avatar {
+                width: 50px;
+                height: 50px;
             }
         }
-.hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    width: 30px;
-    height: 21px;
-    justify-content: space-between;
-}
-
-.hamburger span {
-    width: 100%;
-    height: 3px;
-    background-color: var(--primary);
-    border-radius: 2px;
-    transition: all 0.3s ease;
-}
-
-@media (max-width: 768px) {
-    .nav-links {
-        position: absolute;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        background: var(--card-bg);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid var(--card-border);
-        flex-direction: column;
-        align-items: center;
-        padding: 1rem 0;
-        gap: 1rem;
-        box-shadow: 0 4px 10px var(--shadow);
-        display: none;
-    }
-
-    .nav-links.active {
-        display: flex;
-    }
-
-    .hamburger {
-        display: flex;
-    }
-
-    .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(6px, 6px);
-    }
-
-    .hamburger.active span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(6px, -6px);
-    }
-}
     </style>
 </head>
 <body>
     <video class="background-video" autoplay muted loop playsinline>
         <source src="https://res.cloudinary.com/dxtvsnw3g/video/upload/v1763772374/fondo_g1hfuz.mp4" type="video/mp4">
-        Tu navegador no soporta videos HTML5.
     </video>
     
     <header>
         <nav>
             <div class="logo">PUBG MOBILE COPA HUAWEI MÉXICO</div>
             <div class="nav-links" id="nav-links">
-                <a href="index.html" >Inicio</a>
+                <a href="index.html">Inicio</a>
                 <a href="grupos.html">Grupos</a>
                 <a href="fases.html">Fases</a>
                 <a href="tablas.html">Tabla</a>
-                <a href="equipos.html" style="color: var(--primary);">Equipos</a>
-                <a href="jugadores.html">Jugadores</a>
+                <a href="equipos.html">Equipos</a>
+                <a href="jugadores.html" style="color: var(--primary);">Jugadores</a>
                 <a href="mapas.html">Mapas</a>
             </div>
-            <div class="hamburger" id="hamburger">
+            <button class="hamburger" id="hamburger">
                 <span></span>
                 <span></span>
                 <span></span>
-            </div>
+            </button>
         </nav>
     </header>
     
     <main>
         <div class="section fade-in">
-            <h1 class="section-title">Equipos del Torneo</h1>
-            <p>Visualiza y compara las estadísticas de todos los equipos participantes.</p>
+            <h1 class="section-title">Jugadores del Torneo</h1>
+            <p>Visualiza y compara las estadísticas de todos los jugadores participantes.</p>
         </div>
         
         <div class="section slide-up">
             <div class="filters-container">
-                <input type="text" id="team-search" class="search-input" placeholder="Buscar equipo...">
-                <button id="compare-btn" class="compare-btn" disabled>Comparar Equipos (0/2)</button>
+                <input type="text" id="player-search" class="search-input" placeholder="Buscar por nombre o UID...">
+                <select id="player-team-filter" class="filter-select">
+                    <option value="">Todos los equipos</option>
+                </select>
+                <select id="player-sort" class="filter-select">
+                    <option value="kills">Ordenar por: Bajas</option>
+                    <option value="damage">Ordenar por: Daño</option>
+                    <option value="headshots">Ordenar por: Headshots</option>
+                    <option value="accuracy">Ordenar por: Precisión</option>
+                    <option value="survivalTime">Ordenar por: Tiempo Supervivencia</option>
+                </select>
+                <button id="compare-btn" class="compare-btn" disabled>Comparar Jugadores (0/2)</button>
             </div>
             
-            <div class="group-filters" id="group-filters">
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid">Vista Grid</button>
+                <button class="view-btn" data-view="table">Vista Tabla</button>
             </div>
             
-            <div class="teams-grid" id="teams-grid">
-                <div class="loading">Cargando equipos...</div>
+            <div class="players-grid" id="players-grid">
+                <div class="loading">Cargando jugadores...</div>
+            </div>
+            
+            <div class="table-container hidden" id="players-table-container">
+                <table id="players-table">
+                    <thead>
+                        <tr>
+                            <th data-sort="name">Jugador</th>
+                            <th data-sort="team">Equipo</th>
+                            <th data-sort="kills">Bajas</th>
+                            <th data-sort="damage">Daño</th>
+                            <th data-sort="headshots">Headshots</th>
+                            <th data-sort="assists">Asistencias</th>
+                            <th data-sort="accuracy">Precisión (%)</th>
+                            <th data-sort="survivalTime">T. Supervivencia</th>
+                        </tr>
+                    </thead>
+                    <tbody id="players-table-body">
+                    </tbody>
+                </table>
             </div>
         </div>
     </main>
     
+    <div class="modal-overlay" id="profile-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Perfil del Jugador</h2>
+                <button class="close-btn" id="close-profile-modal">&times;</button>
+            </div>
+            
+            <div id="player-profile-content">
+            </div>
+        </div>
+    </div>
+    
     <div class="modal-overlay" id="comparison-modal">
         <div class="modal">
             <div class="modal-header">
-                <h2 class="modal-title">Comparación de Equipos</h2>
-                <button class="close-btn" id="close-modal">&times;</button>
+                <h2 class="modal-title">Comparación de Jugadores</h2>
+                <button class="close-btn" id="close-comparison-modal">&times;</button>
             </div>
             
-            <div class="central-comparison-container" id="comparison-container">
+            <div class="comparison-container" id="comparison-container">
             </div>
         </div>
     </div>
-    
-    <div class="modal-overlay" id="team-details-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title" id="team-details-title">Detalles del Equipo</h2>
-                <button class="close-btn" id="close-details-modal">&times;</button>
-            </div>
-            
-            <div class="team-details-content" id="team-details-content">
-            </div>
-        </div>
-    </div>
-    
-   
 
     <script>
-        // Código JavaScript existente (se mantiene igual)
-        let allTeamsData = {};
-        let selectedTeams = [];
-        let currentGroup = null;
-        let teamGroups = {};
-        
-        const phasesStructure = [
-            { name: 'Clasificatorias', path: 'data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'] },
-            { name: 'Semifinal', path: 'data/semifinal/', groups: ['SEMIFINAL 1', 'SEMIFINAL 2'], maps: ['M1', 'M2', 'M3'] },
-            { name: 'Final', path: 'data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3'] }
-        ];
-        
+        let allPlayersData = [];
+        let playersStats = {};
+        let playersStatsByPhase = {
+            'general': {},
+            'Clasificatorias': {},
+            'Semifinal': {},
+            'Final': {}
+        };
+        let teamStats = {};
+        let selectedPlayers = [];
+        let currentView = 'grid';
+        let currentSort = 'kills';
+        let currentPhase = 'general';
+        let playerRadarChart = null;
+        let playerHitsChart = null;
+
+        let profileModalPhase = 'Total';
+        let comparisonModalPhase = 'Total';
+
         const mapNames = {
             'M1': 'Erangel',
             'M2': 'Miramar', 
             'M3': 'Sanhok',
             'M4': 'Erangel',
-            'M5': 'Miramar', 
+            'M5': 'Miramar',
             'M6': 'Sanhok',
             'M7': 'Erangel',
-            'M8': 'Miramar', 
+            'M8': 'Miramar',
             'M9': 'Sanhok'
         };
         
-        function calculatePositionPoints(rank) {
-            const pointsMap = { 1: 10, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 2, 8: 1 };
-            return pointsMap[rank] || 0;
-        }
-        
-        function getTeamLogoUrl(teamName) {
-            const basePath = 'data/logos/equipos/';
-            const extensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp'];
-            const normalizedTeamName = teamName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+        const phasesStructure = [
+            { name: 'Clasificatorias', path: 'data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'] },
+            { name: 'Semifinal', path: 'data/semifinal/', groups: ['SEMIFINAL 1', 'SEMIFINAL 2'], maps: ['M1', 'M2', 'M3'] },
+            { name: 'Final', path: 'data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3', 'M4'] }
+        ];
+
+        const weaponNamesMap = {
+            'Arma 101101': 'M416',
+            'Arma 107040': 'AKM'
+        };
+
+        async function loadCSVFilesInParallel(phase) {
+            const promises = [];
             
-            for (const ext of extensions) {
-                const logoPath = `${basePath}${normalizedTeamName}${ext}`;
-                if (allTeamsData[teamName]) {
-                    return logoPath;
+            for (const group of phase.groups) {
+                for (const map of phase.maps) {
+                    const csvPath = `${phase.path}${group}/${map}.csv`;
+                    promises.push(loadCSVFile(csvPath, phase.name, group, map));
                 }
             }
             
-            return `${basePath}default.png`;
+            return Promise.allSettled(promises);
         }
-        
-        function getCurrentPhase() {
-            if (currentGroup.startsWith('GRUPO')) {
-                return 'Clasificatorias';
-            } else if (currentGroup.startsWith('SEMIFINAL')) {
-                return 'Semifinal';
-            } else if (currentGroup === 'FINAL') {
-                return 'Final';
-            }
-            return 'GENERAL';
-        }
-        
-        async function loadTeamsData() {
-            try {
-                for (const phase of phasesStructure) {
-                    for (const group of phase.groups) {
-                        for (const map of phase.maps) {
-                            const csvPath = `${phase.path}${group}/${map}.csv`;
-                            await loadCSVFile(csvPath, phase.name, group, map);
+
+        function parseCSV(text) {
+            const rows = [];
+            const lines = text.replace(/\r\n/g, '\n').split('\n');
+            for (let line of lines) {
+                if (line.trim() === '') continue;
+                const row = [];
+                let cur = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const ch = line[i];
+                    if (ch === '"' ) {
+                        if (inQuotes && line[i + 1] === '"') {
+                            cur += '"';
+                            i++;
+                        } else {
+                            inQuotes = !inQuotes;
                         }
+                    } else if (ch === ',' && !inQuotes) {
+                        row.push(cur);
+                        cur = '';
+                    } else {
+                        cur += ch;
                     }
                 }
+                row.push(cur);
+                rows.push(row.map(r => r.trim()));
+            }
+            return rows;
+        }
+
+        function normalizeHeader(h) {
+            if (!h && h !== 0) return '';
+            return String(h).toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+        }
+
+        function parseSurvivalTime(timeStr) {
+            if (!timeStr || String(timeStr).trim() === '') return 0;
+            const minutesMatch = String(timeStr).match(/(\d+)m/);
+            const secondsMatch = String(timeStr).match(/(\d+)s/);
+            let totalSeconds = 0;
+            if (minutesMatch) totalSeconds += parseInt(minutesMatch[1]) * 60;
+            if (secondsMatch) totalSeconds += parseInt(secondsMatch[1]);
+            return totalSeconds;
+        }
+
+        function formatSurvivalTime(totalSeconds) {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = Math.round(totalSeconds % 60);
+            return `${minutes}m ${seconds.toString().padStart(2,'0')}s`;
+        }
+
+        function processWeaponKills(weaponKillsStr) {
+            if (!weaponKillsStr) return {};
+            const weapons = {};
+            const entries = weaponKillsStr.split('/').map(x => x.trim()).filter(x => x !== '');
+            entries.forEach(entry => {
+                const idx = entry.lastIndexOf(':');
+                if (idx === -1) return;
+                let nameRaw = entry.substring(0, idx).trim();
+                const killsStr = entry.substring(idx + 1).trim();
+                const kills = parseInt(killsStr.replace(/\D/g,'')) || 0;
+                if (kills <= 0) return;
+                const name = weaponNamesMap[nameRaw] || nameRaw;
+                weapons[name] = (weapons[name] || 0) + kills;
+            });
+            return weapons;
+        }
+
+        function getFavoriteWeapon(weaponStats) {
+            let max = 0;
+            let fav = 'N/A';
+            for (const [w, k] of Object.entries(weaponStats || {})) {
+                if (k > max) {
+                    max = k;
+                    fav = w;
+                }
+            }
+            return fav;
+        }
+
+        function getPlayerImage(playerName) {
+            const basePath = 'data/logos/jugadores/';
+            const extensions = ['.png', '.jpg', '.jpeg', '.gif'];
+            
+            return new Promise((resolve) => {
+                const img = new Image();
+                let currentExtensionIndex = 0;
                 
-                processTeamsData();
+                function tryNextExtension() {
+                    if (currentExtensionIndex >= extensions.length) {
+                        resolve(`${basePath}default.png`);
+                        return;
+                    }
+                    
+                    const src = `${basePath}${playerName}${extensions[currentExtensionIndex]}`;
+                    img.src = src;
+                    
+                    img.onload = function() {
+                        resolve(src);
+                    };
+                    
+                    img.onerror = function() {
+                        currentExtensionIndex++;
+                        tryNextExtension();
+                    };
+                }
                 
-                updateGroupFilters();
-                updateTeamsGrid();
+                tryNextExtension();
+            });
+        }
+
+        async function createPlayerImageElement(playerName, className = '') {
+            const imgSrc = await getPlayerImage(playerName);
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            img.alt = playerName;
+            img.className = className;
+            img.onerror = function() {
+                this.src = 'data/logos/jugadores/default.png';
+            };
+            return img;
+        }
+
+        async function loadPlayersData() {
+            try {
+                allPlayersData = [];
+                const phasePromises = phasesStructure.map(phase => loadCSVFilesInParallel(phase));
                 
+                const results = await Promise.allSettled(phasePromises);
+                
+                for (const result of results) {
+                    if (result.status === 'rejected') {
+                        console.error('Error cargando fase:', result.reason);
+                    }
+                }
+
+                processPlayersData();
+                updatePlayersView();
                 setupEventListeners();
-                
-            } catch (error) {
-                console.error('Error cargando datos:', error);
-                document.getElementById('teams-grid').innerHTML = '<div class="loading">Error cargando datos de equipos</div>';
+            } catch (err) {
+                console.error('Error cargando datos:', err);
+                document.getElementById('players-grid').innerHTML = '<div class="loading">Error cargando datos de jugadores</div>';
             }
         }
-        
+
         async function loadCSVFile(filePath, phase, group, map) {
             try {
                 const response = await fetch(filePath + "?nocache=" + Date.now());
                 if (!response.ok) {
-                    return;
+                    console.log(`Archivo no encontrado: ${filePath}`);
+                    return; 
                 }
-                
                 const csvText = await response.text();
-                const lines = csvText.split('\n');
-                
-                const headers = lines[0].split(',');
+                const rows = parseCSV(csvText);
+                if (!rows || rows.length === 0) return;
 
-                const teamBestRank = {};
-                const teamWWCD = {};
-                
-                for (let i = 1; i < lines.length; i++) {
-                    if (lines[i].trim() === '') continue;
-                    
-                    const values = lines[i].split(',');
+                const rawHeaders = rows[0];
+                const headerIndex = {};
+                for (let i = 0; i < rawHeaders.length; i++) {
+                    headerIndex[normalizeHeader(rawHeaders[i])] = i;
+                }
+
+                function getField(row, possibleNames) {
+                    for (const n of possibleNames) {
+                        const idx = headerIndex[normalizeHeader(n)];
+                        if (typeof idx === 'number' && row[idx] !== undefined && row[idx] !== '') {
+                            return row[idx];
+                        }
+                    }
+                    for (const n of possibleNames) {
+                        const exactIdx = rawHeaders.indexOf(n);
+                        if (exactIdx !== -1 && row[exactIdx] !== undefined) return row[exactIdx];
+                    }
+                    return '';
+                }
+
+                for (let r = 1; r < rows.length; r++) {
+                    const row = rows[r];
+                    if (row.join('').trim() === '') continue;
+
                     const playerData = {};
-                    
-                    headers.forEach((header, index) => {
-                        playerData[header.trim()] = values[index] ? values[index].trim() : '';
-                    });
-                    
-                    playerData.kills = parseInt(playerData['Número de Bajas']) || 0;
-                    playerData.damage = parseFloat(playerData['Daño']) || 0;
-                    playerData.headshots = parseInt(playerData['Número de Headshots']) || 0;
-                    playerData.assists = parseInt(playerData['Asistencias']) || 0;
-                    playerData.rank = parseInt(playerData['Rango']) || 0;
-                    playerData.maxKillDistance = parseFloat(playerData['Máxima Distancia de Baja']) || 0;
-                    playerData.survivalTime = parseFloat(playerData['Tiempo de Supervivencia']) || 0;
-                    playerData.accuracy = parseFloat(playerData['Accuracy(%)']) || 0;
-                    playerData.totalShots = parseInt(playerData['TotalShots']) || 0;
-                    playerData.totalHits = parseInt(playerData['TotalHits']) || 0;
-                    playerData.headHits = parseInt(playerData['HeadHits']) || 0;
-                    playerData.bodyHits = parseInt(playerData['BodyHits']) || 0;
-                    playerData.handHits = parseInt(playerData['HandHits']) || 0;
-                    playerData.footHits = parseInt(playerData['FootHits']) || 0;
-                    playerData.limbsHits = parseInt(playerData['LimbsHits']) || 0;
-                    playerData.weaponKills = parseInt(playerData['WeaponKills']) || 0;
-                    
+
+                    playerData['Nombre del Jugador'] = getField(row, ['Nombre del Jugador', 'PlayerName', 'Name', 'Jugador']);
+                    playerData['Nombre del Equipo'] = getField(row, ['Nombre del Equipo', 'TeamName', 'Equipo']);
+                    playerData.kills = parseInt(getField(row, ['Número de Bajas', 'Kills', 'Bajas'])) || 0;
+                    playerData.damage = parseFloat(getField(row, ['Daño', 'Damage'])) || 0;
+                    playerData.headshots = parseInt(getField(row, ['Número de Headshots', 'Headshots'])) || 0;
+                    playerData.assists = parseInt(getField(row, ['Asistencias', 'Assists'])) || 0;
+                    playerData.knocks = parseInt(getField(row, ['Noqueos', 'Knocks'])) || 0;
+                    playerData.rank = parseInt(getField(row, ['Rango', 'Rank'])) || 0;
+                    playerData.maxKillDistance = parseFloat(getField(row, ['Máxima Distancia de Baja', 'MaxKillDistance'])) || 0;
+
+                    playerData.survivalTime = parseSurvivalTime(getField(row, ['Tiempo de Supervivencia', 'SurvivalTime']));
+
+                    playerData.outOfZoneTime = parseFloat(getField(row, ['Tiempo Fuera del Círculo Azul', 'OutOfZoneTime'])) || 0;
+                    playerData.damageReceived = parseFloat(getField(row, ['Daño Recibido', 'DamageReceived'])) || 0;
+                    playerData.healing = parseFloat(getField(row, ['Curación', 'Healing'])) || 0;
+                    playerData.grenadeKills = parseInt(getField(row, ['Bajas con Granada', 'GrenadeKills'])) || 0;
+                    playerData.distanceDriven = parseFloat(getField(row, ['Distancia Conducida', 'DistanceDriven'])) || 0;
+                    playerData.distanceTraveled = parseFloat(getField(row, ['Distancia Recorrida', 'DistanceTraveled'])) || 0;
+                    playerData.revives = parseInt(getField(row, ['Rescates', 'Revives'])) || 0;
+
+                    const totalShotsField = getField(row, ['TotalShots', 'Total Shots', 'Total_Shots', 'Totalshots']);
+                    const totalHitsField = getField(row, ['TotalHits', 'Total Hits', 'Total_Hits', 'Totalhits']);
+                    const accuracyField = getField(row, ['Accuracy(%)', 'Accuracy%', 'Accuracy', 'Accuracy(%)']);
+
+                    playerData.totalShots = parseInt(totalShotsField.replace(/\D/g,'')) || 0;
+                    playerData.totalHits = parseInt(totalHitsField.replace(/\D/g,'')) || 0;
+
+                    let accVal = 0;
+                    if (accuracyField && accuracyField.trim() !== '') {
+                        accVal = parseFloat(accuracyField.replace('%','').replace(',', '.')) || 0;
+                    }
+                    playerData.accuracy = accVal; 
+
+                    playerData.headHits = parseInt(getField(row, ['HeadHits','Head Hits','Head_Hits'])) || 0;
+                    playerData.bodyHits = parseInt(getField(row, ['BodyHits','Body Hits','Body_Hits'])) || 0;
+                    playerData.handHits = parseInt(getField(row, ['HandHits','Hand Hits','Hand_Hits'])) || 0;
+                    playerData.footHits = parseInt(getField(row, ['FootHits','Foot Hits','Foot_Hits'])) || 0;
+                    playerData.limbsHits = parseInt(getField(row, ['LimbsHits','Limbs Hits','Limbs_Hits'])) || 0;
+
+                    const wk = getField(row, ['WeaponKills', 'Weapon Kills', 'Weapons', 'WeaponKills']);
+                    if (wk && wk.trim() !== '') {
+                        playerData.weaponStats = processWeaponKills(wk);
+                        playerData.favoriteWeapon = getFavoriteWeapon(playerData.weaponStats);
+                    } else {
+                        playerData.weaponStats = {};
+                        playerData.favoriteWeapon = 'N/A';
+                    }
+
                     playerData.phase = phase;
                     playerData.group = group;
                     playerData.map = map;
                     playerData.mapName = mapNames[map] || map;
-                    
-                    const teamName = playerData['Nombre del Equipo'];
-                    if (!allTeamsData[teamName]) {
-                        allTeamsData[teamName] = {
-                            name: teamName,
-                            players: {},
-                            kills: 0,
-                            damage: 0,
-                            headshots: 0,
-                            wwcd: 0,
-                            matches: new Set(),
-                            maps: {},
-                            phases: {},
-                            bestRank: 99,
-                            lastMatchRank: 0,
-                            totalAssists: 0,
-                            totalSurvivalTime: 0,
-                            totalMaxKillDistance: 0,
-                            totalGrenadeKills: 0,
-                            totalDistanceDriven: 0,
-                            totalDistanceTraveled: 0,
-                            totalRevives: 0,
-                            groups: new Set(),
-                            matchPoints: 0,
-                            matchPositions: {},
-                            phaseData: {}
-                        };
-                    }
-                    
-                    if (!allTeamsData[teamName].phaseData[phase]) {
-                        allTeamsData[teamName].phaseData[phase] = {
-                            kills: 0,
-                            damage: 0,
-                            headshots: 0,
-                            wwcd: 0,
-                            matches: new Set(),
-                            points: 0,
-                            bestRank: 99,
-                            players: {},
-                            maps: {},
-                            totalAssists: 0,
-                            totalSurvivalTime: 0,
-                            totalMaxKillDistance: 0,
-                            totalGrenadeKills: 0,
-                            totalDistanceDriven: 0,
-                            totalDistanceTraveled: 0,
-                            totalRevives: 0
-                        };
-                    }
-                    
-                    allTeamsData[teamName].kills += playerData.kills;
-                    allTeamsData[teamName].damage += playerData.damage;
-                    allTeamsData[teamName].headshots += playerData.headshots;
-                    allTeamsData[teamName].totalAssists += playerData.assists;
-                    allTeamsData[teamName].totalSurvivalTime += playerData.survivalTime;
-                    allTeamsData[teamName].totalMaxKillDistance = Math.max(
-                        allTeamsData[teamName].totalMaxKillDistance, 
-                        playerData.maxKillDistance
-                    );
-                    allTeamsData[teamName].totalGrenadeKills += parseInt(playerData['Bajas con Granada']) || 0;
-                    allTeamsData[teamName].totalDistanceDriven += parseFloat(playerData['Distancia Conducida']) || 0;
-                    allTeamsData[teamName].totalDistanceTraveled += parseFloat(playerData['Distancia Recorrida']) || 0;
-                    allTeamsData[teamName].totalRevives += parseInt(playerData['Rescates']) || 0;
-                    
-                    allTeamsData[teamName].phaseData[phase].kills += playerData.kills;
-                    allTeamsData[teamName].phaseData[phase].damage += playerData.damage;
-                    allTeamsData[teamName].phaseData[phase].headshots += playerData.headshots;
-                    allTeamsData[teamName].phaseData[phase].totalAssists += playerData.assists;
-                    allTeamsData[teamName].phaseData[phase].totalSurvivalTime += playerData.survivalTime;
-                    allTeamsData[teamName].phaseData[phase].totalMaxKillDistance = Math.max(
-                        allTeamsData[teamName].phaseData[phase].totalMaxKillDistance, 
-                        playerData.maxKillDistance
-                    );
-                    allTeamsData[teamName].phaseData[phase].totalGrenadeKills += parseInt(playerData['Bajas con Granada']) || 0;
-                    allTeamsData[teamName].phaseData[phase].totalDistanceDriven += parseFloat(playerData['Distancia Conducida']) || 0;
-                    allTeamsData[teamName].phaseData[phase].totalDistanceTraveled += parseFloat(playerData['Distancia Recorrida']) || 0;
-                    allTeamsData[teamName].phaseData[phase].totalRevives += parseInt(playerData['Rescates']) || 0;
-                    
-                    allTeamsData[teamName].groups.add(group);
-                    
-                    const matchId = `${phase}-${group}-${map}`;
-                    allTeamsData[teamName].matches.add(matchId);
-                    allTeamsData[teamName].phaseData[phase].matches.add(matchId);
-                    
-                    if (!teamBestRank[teamName] || playerData.rank < teamBestRank[teamName]) {
-                        teamBestRank[teamName] = playerData.rank;
-                    }
-                    
-                    if (playerData.rank === 1) {
-                        teamWWCD[teamName] = true;
-                    }
-                    
-                    if (playerData.rank < allTeamsData[teamName].bestRank) {
-                        allTeamsData[teamName].bestRank = playerData.rank;
-                    }
-                    
-                    if (playerData.rank < allTeamsData[teamName].phaseData[phase].bestRank) {
-                        allTeamsData[teamName].phaseData[phase].bestRank = playerData.rank;
-                    }
-                    
-                    allTeamsData[teamName].lastMatchRank = playerData.rank;
-                    
-                    if (!allTeamsData[teamName].maps[playerData.mapName]) {
-                        allTeamsData[teamName].maps[playerData.mapName] = {
-                            kills: 0,
-                            damage: 0
-                        };
-                    }
-                    allTeamsData[teamName].maps[playerData.mapName].kills += playerData.kills;
-                    allTeamsData[teamName].maps[playerData.mapName].damage += playerData.damage;
-                    
-                    if (!allTeamsData[teamName].phaseData[phase].maps[playerData.mapName]) {
-                        allTeamsData[teamName].phaseData[phase].maps[playerData.mapName] = {
-                            kills: 0,
-                            damage: 0
-                        };
-                    }
-                    allTeamsData[teamName].phaseData[phase].maps[playerData.mapName].kills += playerData.kills;
-                    allTeamsData[teamName].phaseData[phase].maps[playerData.mapName].damage += playerData.damage;
-                    
-                    if (!allTeamsData[teamName].phases[phase]) {
-                        allTeamsData[teamName].phases[phase] = {
-                            kills: 0,
-                            damage: 0
-                        };
-                    }
-                    allTeamsData[teamName].phases[phase].kills += playerData.kills;
-                    allTeamsData[teamName].phases[phase].damage += playerData.damage;
-                    
-                    const playerName = playerData['Nombre del Jugador'];
-                    if (!allTeamsData[teamName].players[playerName]) {
-                        allTeamsData[teamName].players[playerName] = {
-                            name: playerName,
-                            kills: 0,
-                            damage: 0,
-                            headshots: 0,
-                            assists: 0
-                        };
-                    }
-                    allTeamsData[teamName].players[playerName].kills += playerData.kills;
-                    allTeamsData[teamName].players[playerName].damage += playerData.damage;
-                    allTeamsData[teamName].players[playerName].headshots += playerData.headshots;
-                    allTeamsData[teamName].players[playerName].assists += playerData.assists;
-                    
-                    if (!allTeamsData[teamName].phaseData[phase].players[playerName]) {
-                        allTeamsData[teamName].phaseData[phase].players[playerName] = {
-                            name: playerName,
-                            kills: 0,
-                            damage: 0,
-                            headshots: 0,
-                            assists: 0
-                        };
-                    }
-                    allTeamsData[teamName].phaseData[phase].players[playerName].kills += playerData.kills;
-                    allTeamsData[teamName].phaseData[phase].players[playerName].damage += playerData.damage;
-                    allTeamsData[teamName].phaseData[phase].players[playerName].headshots += playerData.headshots;
-                    allTeamsData[teamName].phaseData[phase].players[playerName].assists += playerData.assists;
+
+                    allPlayersData.push(playerData);
                 }
-                
-                Object.keys(teamBestRank).forEach(teamName => {
-                    if (teamWWCD[teamName]) {
-                        allTeamsData[teamName].wwcd += 1;
-                        allTeamsData[teamName].phaseData[phase].wwcd += 1;
-                    }
-                    
-                    const positionPoints = calculatePositionPoints(teamBestRank[teamName]);
-                    allTeamsData[teamName].matchPoints += positionPoints;
-                    allTeamsData[teamName].phaseData[phase].points += positionPoints;
-                    
-                    const matchId = `${phase}-${group}-${map}`;
-                    if (!allTeamsData[teamName].matchPositions[matchId]) {
-                        allTeamsData[teamName].matchPositions[matchId] = teamBestRank[teamName];
-                    }
-                });
-                
+
             } catch (error) {
                 console.warn(`No se pudo cargar ${filePath}:`, error);
             }
         }
         
-        function processTeamsData() {
-            Object.values(allTeamsData).forEach(team => {
-                team.points = team.matchPoints + team.kills;
-                team.matchCount = team.matches.size;
-                
-                Object.keys(team.phaseData).forEach(phase => {
-                    team.phaseData[phase].totalPoints = team.phaseData[phase].points + team.phaseData[phase].kills;
-                    team.phaseData[phase].matchCount = team.phaseData[phase].matches.size;
-                    
-                    team.phaseData[phase].mvp = Object.values(team.phaseData[phase].players).reduce((best, player) => {
-                        return !best || player.kills > best.kills ? player : best;
-                    }, null);
-                    
-                    if (team.phaseData[phase].mvp) {
-                        team.phaseData[phase].mvp.killPercentage = (team.phaseData[phase].mvp.kills / team.phaseData[phase].kills * 100).toFixed(1);
-                        team.phaseData[phase].mvp.damagePercentage = (team.phaseData[phase].mvp.damage / team.phaseData[phase].damage * 100).toFixed(1);
+        function processPlayersData() {
+            playersStats = {};
+            playersStatsByPhase = {
+                'general': {},
+                'Clasificatorias': {},
+                'Semifinal': {},
+                'Final': {}
+            };
+            teamStats = {};
+
+            function processDataForPhase(data, targetObj, phaseTeamStats = {}) {
+                data.forEach(p => {
+                    const playerName = p['Nombre del Jugador'] || 'Sin Nombre';
+                    const teamName = p['Nombre del Equipo'] || 'Sin Equipo';
+
+                    if (!targetObj[playerName]) {
+                        targetObj[playerName] = {
+                            name: playerName,
+                            team: teamName,
+                            kills: 0,
+                            damage: 0,
+                            headshots: 0,
+                            assists: 0,
+                            knocks: 0,
+                            maxKillDistance: 0,
+                            survivalTime: 0,
+                            outOfZoneTime: 0,
+                            damageReceived: 0,
+                            healing: 0,
+                            grenadeKills: 0,
+                            distanceDriven: 0,
+                            distanceTraveled: 0,
+                            revives: 0,
+                            accuracy: 0, 
+                            totalShots: 0,
+                            totalHits: 0,
+                            headHits: 0,
+                            bodyHits: 0,
+                            handHits: 0,
+                            footHits: 0,
+                            limbsHits: 0,
+                            weaponStats: {},
+                            matches: 0,
+                            favoriteWeapon: 'N/A',
+                            csvAccuracySum: 0, 
+                            csvAccuracyCount: 0
+                        };
                     }
-                    
-                    team.phaseData[phase].bestKillsMap = Object.entries(team.phaseData[phase].maps).reduce((best, [map, stats]) => {
-                        return !best || stats.kills > best.kills ? { map, ...stats } : best;
-                    }, null);
-                    
-                    team.phaseData[phase].bestDamageMap = Object.entries(team.phaseData[phase].maps).reduce((best, [map, stats]) => {
-                        return !best || stats.damage > best.damage ? { map, ...stats } : best;
-                    }, null);
+
+                    const dest = targetObj[playerName];
+
+                    dest.kills += p.kills || 0;
+                    dest.damage += p.damage || 0;
+                    dest.headshots += p.headshots || 0;
+                    dest.assists += p.assists || 0;
+                    dest.knocks += p.knocks || 0;
+                    dest.maxKillDistance = Math.max(dest.maxKillDistance, p.maxKillDistance || 0);
+                    dest.survivalTime += p.survivalTime || 0;
+                    dest.outOfZoneTime += p.outOfZoneTime || 0;
+                    dest.damageReceived += p.damageReceived || 0;
+                    dest.healing += p.healing || 0;
+                    dest.grenadeKills += p.grenadeKills || 0;
+                    dest.distanceDriven += p.distanceDriven || 0;
+                    dest.distanceTraveled += p.distanceTraveled || 0;
+                    dest.revives += p.revives || 0;
+
+                    dest.totalShots += p.totalShots || 0;
+                    dest.totalHits += p.totalHits || 0;
+                    dest.headHits += p.headHits || 0;
+                    dest.bodyHits += p.bodyHits || 0;
+                    dest.handHits += p.handHits || 0;
+                    dest.footHits += p.footHits || 0;
+                    dest.limbsHits += p.limbsHits || 0;
+
+                    if (typeof p.accuracy === 'number' && p.accuracy > 0) {
+                        dest.csvAccuracySum += p.accuracy;
+                        dest.csvAccuracyCount += 1;
+                    }
+
+                    dest.matches += 1;
+
+                    if (p.weaponStats) {
+                        for (const [w, k] of Object.entries(p.weaponStats)) {
+                            dest.weaponStats[w] = (dest.weaponStats[w] || 0) + k;
+                        }
+                    }
+
+                    if (!phaseTeamStats[teamName]) phaseTeamStats[teamName] = { kills: 0, damage: 0, players: new Set() };
+                    phaseTeamStats[teamName].kills += p.kills || 0;
+                    phaseTeamStats[teamName].damage += p.damage || 0;
+                    phaseTeamStats[teamName].players.add(playerName);
                 });
+            }
+
+            processDataForPhase(allPlayersData, playersStats, teamStats);
+            
+            for (const phase of ['Clasificatorias', 'Semifinal', 'Final']) {
+                const phaseData = allPlayersData.filter(p => p.phase === phase);
+                const phaseTeamStats = {};
+                processDataForPhase(phaseData, playersStatsByPhase[phase], phaseTeamStats);
                 
-                team.bestKillsMap = Object.entries(team.maps).reduce((best, [map, stats]) => {
-                    return !best || stats.kills > best.kills ? { map, ...stats } : best;
-                }, null);
-                
-                team.bestDamageMap = Object.entries(team.maps).reduce((best, [map, stats]) => {
-                    return !best || stats.damage > best.damage ? { map, ...stats } : best;
-                }, null);
-                
-                team.mvp = Object.values(team.players).reduce((best, player) => {
-                    return !best || player.kills > best.kills ? player : best;
-                }, null);
-                
-                if (team.mvp) {
-                    team.mvp.killPercentage = (team.mvp.kills / team.kills * 100).toFixed(1);
-                    team.mvp.damagePercentage = (team.mvp.damage / team.damage * 100).toFixed(1);
+                Object.values(playersStatsByPhase[phase]).forEach(player => {
+                    if (phaseTeamStats[player.team]) {
+                        player.teamKillContribution = phaseTeamStats[player.team].kills > 0 ? (player.kills / phaseTeamStats[player.team].kills * 100) : 0;
+                        player.teamDamageContribution = phaseTeamStats[player.team].damage > 0 ? (player.damage / phaseTeamStats[player.team].damage * 100) : 0;
+                    } else {
+                        player.teamKillContribution = 0;
+                        player.teamDamageContribution = 0;
+                    }
+                });
+            }
+
+            Object.values(playersStats).forEach(player => {
+                if (player.totalShots > 0) {
+                    player.accuracy = (player.totalHits / player.totalShots) * 100;
+                } else if (player.csvAccuracyCount > 0) {
+                    player.accuracy = player.csvAccuracySum / player.csvAccuracyCount;
+                } else {
+                    player.accuracy = 0;
+                }
+
+                player.favoriteWeapon = getFavoriteWeapon(player.weaponStats);
+
+                player.avgKills = player.matches > 0 ? player.kills / player.matches : 0;
+                player.avgDamage = player.matches > 0 ? player.damage / player.matches : 0;
+                player.avgSurvivalTime = player.matches > 0 ? player.survivalTime / player.matches : 0;
+
+                if (teamStats[player.team]) {
+                    player.teamKillContribution = teamStats[player.team].kills > 0 ? (player.kills / teamStats[player.team].kills * 100) : 0;
+                    player.teamDamageContribution = teamStats[player.team].damage > 0 ? (player.damage / teamStats[player.team].damage * 100) : 0;
+                } else {
+                    player.teamKillContribution = 0;
+                    player.teamDamageContribution = 0;
                 }
             });
+
+            for (const phase of ['Clasificatorias', 'Semifinal', 'Final']) {
+                Object.values(playersStatsByPhase[phase]).forEach(player => {
+                    if (player.totalShots > 0) {
+                        player.accuracy = (player.totalHits / player.totalShots) * 100;
+                    } else if (player.csvAccuracyCount > 0) {
+                        player.accuracy = player.csvAccuracySum / player.csvAccuracyCount;
+                    } else {
+                        player.accuracy = 0;
+                    }
+
+                    player.favoriteWeapon = getFavoriteWeapon(player.weaponStats);
+
+                    player.avgKills = player.matches > 0 ? player.kills / player.matches : 0;
+                    player.avgDamage = player.matches > 0 ? player.damage / player.matches : 0;
+                    player.avgSurvivalTime = player.matches > 0 ? player.survivalTime / player.matches : 0;
+                });
+            }
+
+            playersStatsByPhase['general'] = playersStats;
             
-            prepareTeamGroups();
-        }
-        
-        function prepareTeamGroups() {
-            teamGroups = {};
-            
-            const groupOrder = ['GENERAL', 'GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D', 'SEMIFINAL 1', 'SEMIFINAL 2', 'FINAL'];
-            
-            teamGroups['GENERAL'] = Object.keys(allTeamsData);
-            
-            groupOrder.forEach(group => {
-                if (group !== 'GENERAL') {
-                    teamGroups[group] = Object.keys(allTeamsData).filter(teamName => 
-                        allTeamsData[teamName].groups.has(group)
-                    );
-                }
+            ['Clasificatorias', 'Semifinal', 'Final'].forEach(phase => {
+                Object.keys(playersStatsByPhase[phase]).forEach(playerName => {
+                    const player = playersStatsByPhase[phase][playerName];
+                    if (
+                        !player ||
+                        (player.kills === 0 &&
+                         player.totalShots === 0 &&
+                         player.totalHits === 0)
+                    ) {
+                        delete playersStatsByPhase[phase][playerName];
+                    }
+                });
             });
-            
-            currentGroup = 'GENERAL';
         }
-        
-        function updateGroupFilters() {
-            const groupFilters = document.getElementById('group-filters');
+
+        function getCurrentPlayersStats() {
+            return playersStatsByPhase[currentPhase] || playersStats;
+        }
+
+        function updatePlayersView() {
+            updatePlayersGrid();
+            updatePlayersTable();
+            updateTeamFilter();
+        }
+
+        function getSortedPlayers() {
+            const playersArray = Object.values(getCurrentPlayersStats());
+            const teamFilter = document.getElementById('player-team-filter').value;
+            const filteredPlayers = teamFilter ? playersArray.filter(p => p.team === teamFilter) : playersArray;
+            const searchTerm = document.getElementById('player-search').value.toLowerCase();
+            const searchedPlayers = searchTerm ? filteredPlayers.filter(p => 
+                p.name.toLowerCase().includes(searchTerm) || 
+                (p.team && p.team.toLowerCase().includes(searchTerm))
+            ) : filteredPlayers;
+
+            return searchedPlayers.sort((a, b) => {
+                if (currentSort === 'kills') return b.kills - a.kills;
+                if (currentSort === 'damage') return b.damage - a.damage;
+                if (currentSort === 'headshots') return b.headshots - a.headshots;
+                if (currentSort === 'accuracy') return b.accuracy - a.accuracy;
+                if (currentSort === 'survivalTime') return b.survivalTime - a.survivalTime;
+                return b.kills - a.kills;
+            });
+        }
+
+        async function updatePlayersGrid() {
+            const playersGrid = document.getElementById('players-grid');
+            const currentStats = getCurrentPlayersStats();
             
-            const groupOrder = ['GENERAL', 'GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D', 'SEMIFINAL 1', 'SEMIFINAL 2', 'FINAL'];
-            
-            const availableGroups = groupOrder.filter(group => 
-                teamGroups[group] && teamGroups[group].length > 0
-            );
-            
-            if (availableGroups.length === 0) {
+            if (Object.keys(currentStats).length === 0) {
+                playersGrid.innerHTML = '<div class="loading">No se encontraron datos de jugadores para esta fase</div>';
                 return;
             }
             
-            groupFilters.innerHTML = '';
+            const sortedPlayers = getSortedPlayers();
             
-            availableGroups.forEach(group => {
-                const groupBtn = document.createElement('button');
-                groupBtn.className = `group-btn ${group === currentGroup ? 'active' : ''}`;
-                groupBtn.textContent = group;
-                groupBtn.dataset.group = group;
-                
-                groupBtn.addEventListener('click', () => {
-                    document.querySelectorAll('.group-btn').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    groupBtn.classList.add('active');
-                    
-                    currentGroup = group;
-                    updateTeamsGrid();
-                });
-                
-                groupFilters.appendChild(groupBtn);
-            });
-        }
-        
-        function updateTeamsGrid() {
-            const teamsGrid = document.getElementById('teams-grid');
-            
-            if (Object.keys(allTeamsData).length === 0) {
-                teamsGrid.innerHTML = '<div class="loading">No se encontraron datos de equipos</div>';
+            if (sortedPlayers.length === 0) {
+                playersGrid.innerHTML = '<div class="loading">No se encontraron jugadores que coincidan con los filtros</div>';
                 return;
             }
             
-            let teamsToShow;
-            if (currentGroup && teamGroups[currentGroup]) {
-                teamsToShow = teamGroups[currentGroup].map(teamName => {
-                    const team = allTeamsData[teamName];
-                    
-                    if (currentGroup !== 'GENERAL') {
-                        let phaseForGroup = '';
-                        if (currentGroup.startsWith('GRUPO')) {
-                            phaseForGroup = 'Clasificatorias';
-                        } else if (currentGroup.startsWith('SEMIFINAL')) {
-                            phaseForGroup = 'Semifinal';
-                        } else if (currentGroup === 'FINAL') {
-                            phaseForGroup = 'Final';
-                        }
-                        
-                        if (phaseForGroup && team.phaseData[phaseForGroup]) {
-                            const phaseData = team.phaseData[phaseForGroup];
-                            return {
-                                ...team,
-                                kills: phaseData.kills,
-                                damage: phaseData.damage,
-                                headshots: phaseData.headshots,
-                                wwcd: phaseData.wwcd,
-                                points: phaseData.totalPoints,
-                                matchCount: phaseData.matchCount,
-                                bestRank: phaseData.bestRank,
-                                isPhaseSpecific: true,
-                                phaseName: phaseForGroup
-                            };
-                        }
-                    }
-                    
-                    return {
-                        ...team,
-                        isPhaseSpecific: false
-                    };
-                });
-            } else {
-                teamsToShow = Object.values(allTeamsData).map(team => ({
-                    ...team,
-                    isPhaseSpecific: false
-                }));
-            }
+            playersGrid.innerHTML = '';
             
-            teamsToShow.sort((a, b) => b.points - a.points);
-            
-            teamsGrid.innerHTML = '';
-            
-            teamsToShow.forEach(team => {
-                const teamCard = document.createElement('div');
-                teamCard.className = `glass-card team-card selectable ${selectedTeams.includes(team.name) ? 'selected' : ''}`;
-                teamCard.dataset.team = team.name;
+            for (const player of sortedPlayers) {
+                const playerCard = document.createElement('div');
+                playerCard.className = 'glass-card player-card selectable';
+                playerCard.dataset.player = player.name;
+
+                const playerImage = await createPlayerImageElement(player.name, 'player-image');
                 
-                teamCard.innerHTML = `
-                    <div class="team-checkbox"></div>
-                    <div class="team-header">
-                        <div class="team-logo">
-                            <img src="${getTeamLogoUrl(team.name)}" alt="${team.name}" onerror="this.src='data/logos/equipos/default.png'">
+                playerCard.innerHTML = `
+                    <div class="player-checkbox"></div>
+                    <div class="player-header">
+                        <div class="player-avatar">
+                            <!-- Imagen se insertará aquí -->
                         </div>
-                        <div class="team-info">
-                            <h3>${team.name}</h3>
-                            <p>${team.matchCount} partidas</p>
-                            ${team.isPhaseSpecific ? `<small>${team.phaseName}</small>` : ''}
-                        </div>
-                    </div>
-                    <div class="team-stats">
-                        <div class="team-stat">
-                            <div class="team-stat-value">${team.points}</div>
-                            <div class="team-stat-label">Puntos</div>
-                        </div>
-                        <div class="team-stat">
-                            <div class="team-stat-value">${team.wwcd}</div>
-                            <div class="team-stat-label">WWCD</div>
-                        </div>
-                        <div class="team-stat">
-                            <div class="team-stat-value">${team.kills}</div>
-                            <div class="team-stat-label">Bajas</div>
-                        </div>
-                        <div class="team-stat">
-                            <div class="team-stat-value">${Math.round(team.damage)}</div>
-                            <div class="team-stat-label">Daño</div>
+                        <div class="player-info">
+                            <h3>${player.name}</h3>
+                            <p>${player.team}</p>
                         </div>
                     </div>
-                    <div class="team-actions">
-                        <button class="action-btn" data-action="details">Ver Detalles</button>
-                        <button class="action-btn primary" data-action="select">Seleccionar</button>
+                    <div class="player-stats">
+                        <div class="player-stat">
+                            <div class="player-stat-value">${player.kills}</div>
+                            <div class="player-stat-label">Bajas</div>
+                        </div>
+                        <div class="player-stat">
+                            <div class="player-stat-value">${Math.round(player.damage)}</div>
+                            <div class="player-stat-label">Daño</div>
+                        </div>
+                        <div class="player-stat">
+                            <div class="player-stat-value">${player.headshots}</div>
+                            <div class="player-stat-label">Headshots</div>
+                        </div>
+                        <div class="player-stat">
+                            <div class="player-stat-value">${(typeof player.accuracy === 'number') ? player.accuracy.toFixed(2) + '%' : '0.00%'}</div>
+                            <div class="player-stat-label">Precisión</div>
+                        </div>
                     </div>
                 `;
                 
-                teamsGrid.appendChild(teamCard);
-            });
-        }
-        
-        function setupEventListeners() {
-            document.getElementById('team-search').addEventListener('input', filterTeams);
-            
-            document.getElementById('compare-btn').addEventListener('click', showComparisonModal);
-            
-            document.getElementById('close-modal').addEventListener('click', closeComparisonModal);
-            document.getElementById('close-details-modal').addEventListener('click', closeTeamDetailsModal);
-            
-            document.getElementById('comparison-modal').addEventListener('click', (e) => {
-                if (e.target === e.currentTarget) {
-                    closeComparisonModal();
-                }
-            });
-            
-            document.getElementById('team-details-modal').addEventListener('click', (e) => {
-                if (e.target === e.currentTarget) {
-                    closeTeamDetailsModal();
-                }
-            });
-            
-            document.getElementById('teams-grid').addEventListener('click', (e) => {
-                const teamCard = e.target.closest('.team-card');
-                if (!teamCard) return;
+                const avatarContainer = playerCard.querySelector('.player-avatar');
+                avatarContainer.appendChild(playerImage);
                 
-                const teamName = teamCard.dataset.team;
-                const action = e.target.dataset.action;
-                
-                if (action === 'select' || e.target.classList.contains('team-checkbox')) {
-                    toggleTeamSelection(teamName, teamCard);
-                } else if (action === 'details' || e.target.closest('.team-card') === teamCard) {
-                    showTeamDetailsModal(teamName);
-                }
-            });
-            
-            // Event listener para el menú hamburguesa
-            document.getElementById('hamburger').addEventListener('click', function() {
-                this.classList.toggle('active');
-                document.getElementById('nav-links').classList.toggle('active');
-            });
+                playersGrid.appendChild(playerCard);
+            }
         }
-        
-        function filterTeams() {
-            const searchTerm = document.getElementById('team-search').value.toLowerCase();
+
+        async function updatePlayersTable() {
+            const tbody = document.getElementById('players-table-body');
+            const currentStats = getCurrentPlayersStats();
             
-            document.querySelectorAll('.team-card').forEach(card => {
-                const teamName = card.querySelector('h3').textContent.toLowerCase();
-                card.style.display = teamName.includes(searchTerm) ? '' : 'none';
-            });
-        }
-        
-        function toggleTeamSelection(teamName, teamCard) {
-            const index = selectedTeams.indexOf(teamName);
-            
-            if (index === -1) {
-                if (selectedTeams.length >= 2) {
-                    const firstTeam = selectedTeams[0];
-                    const firstCard = document.querySelector(`[data-team="${firstTeam}"]`);
-                    if (firstCard) {
-                        firstCard.classList.remove('selected');
-                    }
-                    selectedTeams.shift();
-                }
-                
-                selectedTeams.push(teamName);
-                teamCard.classList.add('selected');
-            } else {
-                selectedTeams.splice(index, 1);
-                teamCard.classList.remove('selected');
+            if (Object.keys(currentStats).length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="loading">No se encontraron datos de jugadores para esta fase</td></tr>';
+                return;
             }
             
+            const sortedPlayers = getSortedPlayers();
+            
+            if (sortedPlayers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="loading">No se encontraron jugadores que coincidan con los filtros</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            for (const player of sortedPlayers) {
+                const row = document.createElement('tr');
+                row.dataset.player = player.name;
+                
+                const playerImage = await createPlayerImageElement(player.name, 'player-table-avatar');
+                
+                row.innerHTML = `
+                    <td>
+                        <div class="player-cell">
+                            <div class="player-table-avatar">
+                                <!-- Imagen se insertará aquí -->
+                            </div>
+                            ${player.name}
+                        </div>
+                    </td>
+                    <td>${player.team}</td>
+                    <td>${player.kills}</td>
+                    <td>${Math.round(player.damage)}</td>
+                    <td>${player.headshots}</td>
+                    <td>${player.assists}</td>
+                    <td>${(typeof player.accuracy === 'number') ? player.accuracy.toFixed(2) + '%' : '0.00%'}</td>
+                    <td>${formatSurvivalTime(player.survivalTime)}</td>
+                `;
+                
+                const avatarContainer = row.querySelector('.player-table-avatar');
+                avatarContainer.appendChild(playerImage);
+                
+                tbody.appendChild(row);
+            }
+        }
+
+        function updateTeamFilter() {
+            const select = document.getElementById('player-team-filter');
+            const teams = [...new Set(Object.values(getCurrentPlayersStats()).map(p => p.team))].sort();
+            while (select.options.length > 1) select.remove(1);
+            teams.forEach(team => {
+                const option = document.createElement('option');
+                option.value = team;
+                option.textContent = team;
+                select.appendChild(option);
+            });
+        }
+
+        function setupEventListeners() {
+            document.getElementById('player-search').addEventListener('input', updatePlayersView);
+            document.getElementById('player-team-filter').addEventListener('change', updatePlayersView);
+            document.getElementById('player-sort').addEventListener('change', (e) => {
+                currentSort = e.target.value;
+                updatePlayersView();
+            });
+            document.getElementById('compare-btn').addEventListener('click', showComparisonModal);
+            document.getElementById('close-profile-modal').addEventListener('click', closeProfileModal);
+            document.getElementById('close-comparison-modal').addEventListener('click', closeComparisonModal);
+            document.getElementById('profile-modal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeProfileModal(); });
+            document.getElementById('comparison-modal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeComparisonModal(); });
+            document.querySelectorAll('.view-btn').forEach(btn => btn.addEventListener('click', (e) => setView(e.target.dataset.view)));
+            document.querySelectorAll('#players-table th[data-sort]').forEach(th => th.addEventListener('click', () => {
+                currentSort = th.dataset.sort;
+                document.getElementById('player-sort').value = currentSort;
+                updatePlayersView();
+            }));
+
+            document.getElementById('players-grid').addEventListener('click', (e) => {
+                const playerCard = e.target.closest('.player-card');
+                if (!playerCard) return;
+                const playerName = playerCard.dataset.player;
+                if (e.target.classList.contains('player-checkbox') || e.target.closest('.player-checkbox')) {
+                    togglePlayerSelection(playerName, playerCard);
+                } else {
+                    showPlayerProfile(playerName);
+                }
+            });
+
+            document.getElementById('players-table-body').addEventListener('click', (e) => {
+                const row = e.target.closest('tr');
+                if (!row || !row.dataset.player) return;
+                const playerName = row.dataset.player;
+                togglePlayerSelection(playerName, row);
+            });
+        }
+
+        function setView(view) {
+            currentView = view;
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.view === view));
+            document.getElementById('players-grid').classList.toggle('hidden', view !== 'grid');
+            document.getElementById('players-table-container').classList.toggle('hidden', view !== 'table');
+        }
+
+        function togglePlayerSelection(playerName, element) {
+            const idx = selectedPlayers.indexOf(playerName);
+            if (idx === -1) {
+                if (selectedPlayers.length >= 2) {
+                    const first = selectedPlayers.shift();
+                    const firstEl = document.querySelector(`[data-player="${first}"]`);
+                    if (firstEl) firstEl.classList.remove('selected');
+                }
+                selectedPlayers.push(playerName);
+                if (element) element.classList.add('selected');
+            } else {
+                selectedPlayers.splice(idx, 1);
+                if (element) element.classList.remove('selected');
+            }
             updateCompareButton();
         }
         
         function updateCompareButton() {
-            const compareBtn = document.getElementById('compare-btn');
-            const count = selectedTeams.length;
-            
-            compareBtn.textContent = `Comparar Equipos (${count}/2)`;
-            compareBtn.disabled = count !== 2;
+            const btn = document.getElementById('compare-btn');
+            const c = selectedPlayers.length;
+            btn.textContent = `Comparar Jugadores (${c}/2)`;
+            btn.disabled = c !== 2;
         }
-        
-        function showComparisonModal() {
-            if (selectedTeams.length !== 2) return;
+
+        function getPlayerPhases(playerName) {
+            const phases = [];
+            if (playersStatsByPhase['Clasificatorias'][playerName]) phases.push('Clasificatorias');
+            if (playersStatsByPhase['Semifinal'][playerName]) phases.push('Semifinal');
+            if (playersStatsByPhase['Final'][playerName]) phases.push('Final');
+            phases.push('Total');
+            return phases;
+        }
+
+        function renderPhaseButtons(playerName, currentPhase) {
+            const availablePhases = getPlayerPhases(playerName);
+            let buttonsHTML = '';
+
+            availablePhases.forEach(phase => {
+                buttonsHTML += `
+                    <button class="phase-btn ${phase === currentPhase ? 'active' : ''}" data-phase="${phase}">
+                        ${phase}
+                    </button>
+                `;
+            });
+
+            return buttonsHTML;
+        }
+
+        function selectPhase(phase, playerName, modalType = 'profile') {
+            if (modalType === 'profile') {
+                profileModalPhase = phase;
+                showPlayerProfile(playerName);
+            } else {
+                comparisonModalPhase = phase;
+                showComparisonModal();
+            }
+        }
+
+        async function showPlayerProfile(playerName) {
+            const phaseForData = profileModalPhase === 'Total' ? 'general' : profileModalPhase;
+            let player = playersStatsByPhase[phaseForData][playerName];
+            if (!player) {
+                player = playersStats[playerName];
+            }
             
-            const modal = document.getElementById('comparison-modal');
-            const container = document.getElementById('comparison-container');
+            if (!player) {
+                console.log(`Jugador no encontrado: ${playerName} en fase ${profileModalPhase}`);
+                return;
+            }
             
-            const team1 = allTeamsData[selectedTeams[0]];
-            const team2 = allTeamsData[selectedTeams[1]];
-            
-            container.innerHTML = `
-                <div class="comparison-team">
-                    <div class="comparison-team-header">
-                        <div class="comparison-logo">
-                            <img src="${getTeamLogoUrl(team1.name)}" alt="${team1.name}" onerror="this.src='data/logos/equipos/default.png'">
-                        </div>
-                        <h3 class="comparison-team-name">${team1.name}</h3>
+            const modal = document.getElementById('profile-modal');
+            const content = document.getElementById('player-profile-content');
+
+            const playerImage = await createPlayerImageElement(player.name, 'profile-image');
+
+            const sumHitsByRegions = player.headHits + player.bodyHits + player.handHits + player.footHits + player.limbsHits;
+
+            content.innerHTML = `
+                <div class="phase-buttons" id="profile-phase-buttons">
+                    ${renderPhaseButtons(playerName, profileModalPhase)}
+                </div>
+
+                <div class="player-profile">
+                    <div class="profile-avatar">
+                        <!-- Imagen se insertará aquí -->
+                    </div>
+                    <div class="profile-info">
+                        <h2>${player.name}</h2>
+                        <p>${player.team} • ${player.matches} partidas ${profileModalPhase !== 'Total' ? `• ${profileModalPhase}` : ''}</p>
+                        <p><strong>Arma favorita:</strong> ${player.favoriteWeapon}</p>
                     </div>
                 </div>
-                
-                <div class="comparison-metrics" id="comparison-metrics">
-                    <!-- Las métricas se cargarán dinámicamente aquí -->
+
+                <div class="team-contribution">
+                    <div class="glass-card contribution-card">
+                        <div class="contribution-value">${player.teamKillContribution.toFixed(1)}%</div>
+                        <div class="contribution-label">Aporte en Eliminaciones</div>
+                        <div class="contribution-subtitle">Del total del equipo</div>
+                    </div>
+                    <div class="glass-card contribution-card">
+                        <div class="contribution-value">${player.teamDamageContribution.toFixed(1)}%</div>
+                        <div class="contribution-label">Aporte en Daño</div>
+                        <div class="contribution-subtitle">Del total del equipo</div>
+                    </div>
                 </div>
-                
-                <div class="comparison-team">
-                    <div class="comparison-team-header">
-                        <div class="comparison-logo">
-                            <img src="${getTeamLogoUrl(team2.name)}" alt="${team2.name}" onerror="this.src='data/logos/equipos/default.png'">
+
+                <div class="shot-stats-container">
+                    <div class="shot-stat">
+                        <div class="shot-stat-value">${player.totalShots}</div>
+                        <div class="shot-stat-label">Total Disparos</div>
+                    </div>
+                    <div class="shot-stat">
+                        <div class="shot-stat-value">${sumHitsByRegions}</div>
+                        <div class="shot-stat-label">Total Impactos</div>
+                    </div>
+                    <div class="shot-stat">
+                        <div class="shot-stat-value">${player.accuracy.toFixed(2)}%</div>
+                        <div class="shot-stat-label">Precisión</div>
+                    </div>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">${player.kills}</div>
+                        <div class="profile-stat-label">Bajas Totales</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">${Math.round(player.damage)}</div>
+                        <div class="profile-stat-label">Daño Total</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">${player.headshots}</div>
+                        <div class="profile-stat-label">Headshots</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">${player.avgKills.toFixed(1)}</div>
+                        <div class="profile-stat-label">Bajas/Promedio</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">${Math.round(player.avgDamage)}</div>
+                        <div class="profile-stat-label">Daño/Promedio</div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="glass-card chart-card">
+                        <div class="chart-title">Estadísticas de Tiro</div>
+                        <div class="chart-container">
+                            <canvas id="player-radar-chart"></canvas>
                         </div>
-                        <h3 class="comparison-team-name">${team2.name}</h3>
+                    </div>
+
+                    <div class="glass-card chart-card">
+                        <div class="chart-title">Distribución de Impactos</div>
+                        <div class="chart-container">
+                            <canvas id="player-hits-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Estadísticas Detalladas</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Estadística</th>
+                                    <th>Total</th>
+                                    <th>Promedio por Partida</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Bajas</td><td>${player.kills}</td><td>${player.avgKills.toFixed(1)}</td></tr>
+                                <tr><td>Daño</td><td>${Math.round(player.damage)}</td><td>${Math.round(player.avgDamage)}</td></tr>
+                                <tr><td>Headshots</td><td>${player.headshots}</td><td>${(player.headshots / player.matches).toFixed(1)}</td></tr>
+                                <tr><td>Asistencias</td><td>${player.assists}</td><td>${(player.assists / player.matches).toFixed(1)}</td></tr>
+                                <tr><td>Noqueos</td><td>${player.knocks}</td><td>${(player.knocks / player.matches).toFixed(1)}</td></tr>
+                                <tr><td>Máxima Distancia de Baja (m)</td><td>${Math.round(player.maxKillDistance)}</td><td>-</td></tr>
+                                <tr><td>Daño Recibido</td><td>${Math.round(player.damageReceived)}</td><td>${Math.round(player.damageReceived / player.matches)}</td></tr>
+                                <tr><td>Curación</td><td>${Math.round(player.healing)}</td><td>${Math.round(player.healing / player.matches)}</td></tr>
+                                <tr><td>Tiempo de Supervivencia</td><td>${formatSurvivalTime(player.survivalTime)}</td><td>${formatSurvivalTime(player.avgSurvivalTime)}</td></tr>
+                                <tr><td>Bajas con Granada</td><td>${player.grenadeKills}</td><td>${(player.grenadeKills / player.matches).toFixed(1)}</td></tr>
+                                <tr><td>Distancia Conducida (m)</td><td>${Math.round(player.distanceDriven)}</td><td>${Math.round(player.distanceDriven / player.matches)}</td></tr>
+                                <tr><td>Distancia Recorrida (m)</td><td>${Math.round(player.distanceTraveled)}</td><td>${Math.round(player.distanceTraveled / player.matches)}</td></tr>
+                                <tr><td>Rescates</td><td>${player.revives}</td><td>${(player.revives / player.matches).toFixed(1)}</td></tr>
+                                <tr><td>Total Disparos</td><td>${player.totalShots}</td><td>${Math.round(player.totalShots / player.matches)}</td></tr>
+                                <tr><td>Total Impactos</td><td>${sumHitsByRegions}</td><td>${Math.round(sumHitsByRegions / player.matches)}</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             `;
             
-            fillComparisonStats(team1, team2);
+            const profileAvatar = content.querySelector('.profile-avatar');
+            profileAvatar.appendChild(playerImage);
+            
+            document.getElementById('profile-phase-buttons').addEventListener('click', (e) => {
+                if (e.target.classList.contains('phase-btn')) {
+                    const newPhase = e.target.dataset.phase;
+                    selectPhase(newPhase, playerName, 'profile');
+                }
+            });
+            
+            modal.classList.add('active');
+            createPlayerCharts(player);
+        }
+
+        function createPlayerCharts(player) {
+            if (playerRadarChart) {
+                playerRadarChart.destroy();
+                playerRadarChart = null;
+            }
+            if (playerHitsChart) {
+                playerHitsChart.destroy();
+                playerHitsChart = null;
+            }
+
+            const radarCtx = document.getElementById('player-radar-chart').getContext('2d');
+            const hitsCtx = document.getElementById('player-hits-chart').getContext('2d');
+
+            const sumHitsByRegions = player.headHits + player.bodyHits + player.handHits + player.footHits + player.limbsHits;
+            const radarData = [player.totalShots, sumHitsByRegions, Number(player.accuracy.toFixed(2))];
+            const maxRadarValue = Math.max(...radarData, 10) + 10;
+
+            playerRadarChart = new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Total Disparos', 'Total Impactos', 'Precisión (%)'],
+                    datasets: [{
+                        label: 'Estadísticas de Tiro',
+                        data: radarData,
+                        backgroundColor: 'rgba(187, 2, 21, 0.2)',
+                        borderColor: 'rgba(187, 2, 21, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(187, 2, 21, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: maxRadarValue,
+                            ticks: { stepSize: Math.max(1, Math.round(maxRadarValue / 5)) }
+                        }
+                    },
+                    plugins: {
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'end',
+                            offset: 8,
+                            padding: 6,
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            borderRadius: 4,
+                            color: '#000',
+                            font: {
+                                size: 10,
+                                weight: 'bold'
+                            },
+                            formatter: function(value, context) {
+                                return value;
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+
+            const hitsData = [player.headHits, player.bodyHits, player.handHits, player.footHits, player.limbsHits];
+            const totalHits = sumHitsByRegions; 
+            
+            const doughnutCenterPlugin = {
+                id: `doughnutCenter_${player.name.replace(/\s+/g, '_')}`,
+                afterDraw(chart) {
+                    if (chart.config.type !== 'doughnut') return; t
+                    
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const total = totalHits; 
+
+                    ctx.save();
+                    ctx.font = 'bold 16px Poppins';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = '#000';
+
+                    ctx.fillText('Total Impactos:', width / 2, height / 2 - 15);
+                    ctx.font = 'bold 20px Poppins';
+                    ctx.fillText(total.toString(), width / 2, height / 2 + 10);
+
+                    ctx.restore();
+                }
+            };
+            
+            playerHitsChart = new Chart(hitsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Cabeza', 'Cuerpo', 'Manos', 'Pies', 'Extremidades'],
+                    datasets: [{
+                        data: hitsData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { 
+                            position: 'bottom',
+                            labels: {
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        return data.labels.map((label, i) => {
+                                            const value = data.datasets[0].data[i];
+                                            const percentage = totalHits > 0 ? Math.round((value / totalHits) * 100) : 0;
+                                            
+                                            return {
+                                                text: `${label}: ${value} (${percentage}%)`,
+                                                fillStyle: data.datasets[0].backgroundColor[i],
+                                                strokeStyle: data.datasets[0].backgroundColor[i],
+                                                lineWidth: 1,
+                                                hidden: false,
+                                                index: i
+                                            };
+                                        });
+                                    }
+                                    return [];
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const percentage = totalHits > 0 ? Math.round((value / totalHits) * 100) : 0;
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [doughnutCenterPlugin] 
+            });
+        }
+
+        function closeProfileModal() { 
+            document.getElementById('profile-modal').classList.remove('active'); 
+        }
+
+        async function showComparisonModal() {
+            if (selectedPlayers.length !== 2) {
+                console.log('Debe seleccionar exactamente 2 jugadores para comparar');
+                return;
+            }
+            
+            const modal = document.getElementById('comparison-modal');
+            const container = document.getElementById('comparison-container');
+            
+            const phaseForData = comparisonModalPhase === 'Total' ? 'general' : comparisonModalPhase;
+            const currentStats = playersStatsByPhase[phaseForData] || playersStats;
+            
+            const p1 = currentStats[selectedPlayers[0]];
+            const p2 = currentStats[selectedPlayers[1]];
+
+            if (!p1 || !p2) {
+                console.log('Error: No se pudieron cargar los datos de los jugadores para comparación');
+                container.innerHTML = '<div class="loading">Error: No se pudieron cargar los datos de los jugadores seleccionados</div>';
+                modal.classList.add('active');
+                return;
+            }
+
+            const player1Image = await createPlayerImageElement(p1.name, 'comparison-image');
+            const player2Image = await createPlayerImageElement(p2.name, 'comparison-image');
+
+            const player1Phases = getPlayerPhases(selectedPlayers[0]);
+            const player2Phases = getPlayerPhases(selectedPlayers[1]);
+            
+            const commonPhases = player1Phases.filter(phase => player2Phases.includes(phase));
+            if (commonPhases.length === 0) commonPhases.push('Total'); 
+            let comparisonPhaseButtonsHTML = '';
+            commonPhases.forEach(phase => {
+                comparisonPhaseButtonsHTML += `
+                    <button class="phase-btn ${phase === comparisonModalPhase ? 'active' : ''}" data-phase="${phase}">
+                        ${phase}
+                    </button>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="phase-buttons" id="comparison-phase-buttons" style="grid-column: 1 / span 3; justify-content: center; margin-bottom: 1.5rem;">
+                    ${comparisonPhaseButtonsHTML}
+                </div>
+
+                <div class="central-comparison-container">
+                    <div class="comparison-player">
+                        <div class="comparison-player-header">
+                            <div class="comparison-avatar" id="player1-avatar"></div>
+                            <div>
+                                <div class="comparison-player-name">${p1.name}</div>
+                                <div class="comparison-player-team">${p1.team}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-metrics" id="comparison-metrics">
+                        <!-- Las métricas se cargarán dinámicamente aquí -->
+                    </div>
+                    
+                    <div class="comparison-player">
+                        <div class="comparison-player-header">
+                            <div class="comparison-avatar" id="player2-avatar"></div>
+                            <div>
+                                <div class="comparison-player-name">${p2.name}</div>
+                                <div class="comparison-player-team">${p2.team}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                const avatar1 = document.getElementById('player1-avatar');
+                const avatar2 = document.getElementById('player2-avatar');
+                
+                if (avatar1) {
+                    avatar1.appendChild(player1Image);
+                }
+                if (avatar2) {
+                    avatar2.appendChild(player2Image);
+                }
+
+                fillComparisonMetrics(p1, p2);
+            }, 0);
+            
+            document.getElementById('comparison-phase-buttons').addEventListener('click', (e) => {
+                if (e.target.classList.contains('phase-btn')) {
+                    const newPhase = e.target.dataset.phase;
+                    selectPhase(newPhase, null, 'comparison');
+                }
+            });
             
             modal.classList.add('active');
         }
-        
-        function fillComparisonStats(team1, team2) {
+
+        function fillComparisonMetrics(player1, player2) {
             const metricsContainer = document.getElementById('comparison-metrics');
             
+            const p1HasData = player1 && player1.matches > 0;
+            const p2HasData = player2 && player2.matches > 0;
+
+            if (!p1HasData || !p2HasData) {
+                metricsContainer.innerHTML = '<div class="loading">No hay datos suficientes para comparar en esta fase</div>';
+                return;
+            }
+
+            const p1SumHits = player1.headHits + player1.bodyHits + player1.handHits + player1.footHits + player1.limbsHits;
+            const p2SumHits = player2.headHits + player2.bodyHits + player2.handHits + player2.footHits + player2.limbsHits;
+
             const comparisonStats = [
-                { name: 'Puntos Totales', key: 'points', formatter: (v) => v },
-                { name: 'WWCD', key: 'wwcd', formatter: (v) => v },
-                { name: 'Bajas Totales', key: 'kills', formatter: (v) => v },
-                { name: 'Daño Total', key: 'damage', formatter: (v) => Math.round(v) },
-                { name: 'Headshots', key: 'headshots', formatter: (v) => v },
-                { name: 'Asistencias', key: 'totalAssists', formatter: (v) => v },
-                { name: 'Partidas Jugadas', key: 'matchCount', formatter: (v) => v },
-                { name: 'Mejor Posición', key: 'bestRank', formatter: (v) => v === 99 ? 'N/A' : v },
-                { name: 'Posición Última Partida', key: 'lastMatchRank', formatter: (v) => v },
-                { name: 'Eliminación Más Lejana (m)', key: 'totalMaxKillDistance', formatter: (v) => Math.round(v) },
-                { name: 'Bajas con Granada', key: 'totalGrenadeKills', formatter: (v) => v },
-                { name: 'Distancia Conducida (m)', key: 'totalDistanceDriven', formatter: (v) => Math.round(v) },
-                { name: 'Distancia Recorrida (m)', key: 'totalDistanceTraveled', formatter: (v) => Math.round(v) },
-                { name: 'Rescates', key: 'totalRevives', formatter: (v) => v }
+                { name: 'Bajas', key: 'kills', fmt: v => v },
+                { name: 'Daño', key: 'damage', fmt: v => Math.round(v) },
+                { name: 'Headshots', key: 'headshots', fmt: v => v },
+                { name: 'Asistencias', key: 'assists', fmt: v => v },
+                { name: 'Noqueos', key: 'knocks', fmt: v => v },
+                { name: 'Máx Dist. Baja (m)', key: 'maxKillDistance', fmt: v => Math.round(v) },
+                { name: 'Daño Recibido', key: 'damageReceived', fmt: v => Math.round(v) },
+                { name: 'Curación', key: 'healing', fmt: v => Math.round(v) },
+                { name: 'Tiempo de Supervivencia', key: 'survivalTime', fmt: v => formatSurvivalTime(v) },
+                { name: 'Tiempo Fuera de Zona (min)', key: 'outOfZoneTime', fmt: v => Math.round(v / 60) },
+                { name: 'Bajas con Granada', key: 'grenadeKills', fmt: v => v },
+                { name: 'Total Disparos', key: 'totalShots', fmt: v => v },
+                { name: 'Total Impactos', key: 'customTotalHits', fmt: v => v, p1Val: p1SumHits, p2Val: p2SumHits },
+                { name: 'Accuracy (%)', key: 'accuracy', fmt: v => (typeof v === 'number' ? v.toFixed(2) : '0.00') },
+                { name: 'Partidas', key: 'matches', fmt: v => v },
+                { name: 'Aporte Bajas (%)', key: 'teamKillContribution', fmt: v => v.toFixed(1) },
+                { name: 'Aporte Daño (%)', key: 'teamDamageContribution', fmt: v => v.toFixed(1) }
             ];
-            
+
             metricsContainer.innerHTML = '';
-            
+
             comparisonStats.forEach(stat => {
-                const value1 = team1[stat.key];
-                const value2 = team2[stat.key];
+                const v1 = stat.key === 'customTotalHits' ? stat.p1Val : player1[stat.key];
+                const v2 = stat.key === 'customTotalHits' ? stat.p2Val : player2[stat.key];
                 
                 let winnerClass = '';
                 
-                if (typeof value1 === 'number' && typeof value2 === 'number') {
-                    if (stat.key === 'bestRank' || stat.key === 'lastMatchRank') {
-                        if (value1 < value2) {
+                if (typeof v1 === 'number' && typeof v2 === 'number') {
+                    if (stat.key === 'damageReceived' || stat.key === 'outOfZoneTime') {
+                        if (v1 < v2) {
                             winnerClass = 'winner-left';
-                        } else if (value2 < value1) {
+                        } else if (v2 < v1) {
                             winnerClass = 'winner-right';
                         }
                     } else {
-                        if (value1 > value2) {
+                        if (v1 > v2) {
                             winnerClass = 'winner-left';
-                        } else if (value2 > value1) {
+                        } else if (v2 > v1) {
                             winnerClass = 'winner-right';
                         }
                     }
@@ -1775,299 +2585,27 @@
                 const metricRow = document.createElement('div');
                 metricRow.className = `metric-row ${winnerClass}`;
                 metricRow.innerHTML = `
-                    <div class="metric-value metric-value-left">${stat.formatter(value1)}</div>
+                    <div class="metric-value metric-value-left">${stat.fmt(v1)}</div>
                     <div class="metric-name">${stat.name}</div>
-                    <div class="metric-value metric-value-right">${stat.formatter(value2)}</div>
+                    <div class="metric-value metric-value-right">${stat.fmt(v2)}</div>
                 `;
                 
                 metricsContainer.appendChild(metricRow);
             });
         }
-        
-        function closeComparisonModal() {
-            document.getElementById('comparison-modal').classList.remove('active');
+
+        function closeComparisonModal() { 
+            document.getElementById('comparison-modal').classList.remove('active'); 
         }
-        
-        function showTeamDetailsModal(teamName) {
-            const modal = document.getElementById('team-details-modal');
-            const title = document.getElementById('team-details-title');
-            const content = document.getElementById('team-details-content');
-            
-            const team = allTeamsData[teamName];
-            if (!team) return;
-            
-            title.textContent = `Detalles de ${team.name}`;
-            
-            content.innerHTML = generateTeamDetailsContent(team);
-            
-            modal.classList.add('active');
-        }
-        
-        function generateTeamDetailsContent(team) {
-            const currentPhase = getCurrentPhase();
-            
-            if (currentGroup === 'GENERAL') {
-                return generateGeneralTeamDetails(team);
-            } 
-            else {
-                return generatePhaseSpecificTeamDetails(team, currentPhase);
-            }
-        }
-        
-        function generateGeneralTeamDetails(team) {
-            const groups = Array.from(team.groups).join(', ');
-            
-            const phases = Object.keys(team.phases).join(', ');
-            
-            return `
-                <div class="team-details-section">
-                    <h3 class="section-subtitle">Datos Generales (Acumulados)</h3>
-                    <div class="team-details-grid">
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${team.matchCount}</div>
-                            <div class="team-detail-label">Partidas Jugadas</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${team.points}</div>
-                            <div class="team-detail-label">Puntos</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${team.kills}</div>
-                            <div class="team-detail-label">Bajas</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${Math.round(team.damage)}</div>
-                            <div class="team-detail-label">Daño</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${team.wwcd}</div>
-                            <div class="team-detail-label">WWCD</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${team.bestRank === 99 ? 'N/A' : team.bestRank}</div>
-                            <div class="team-detail-label">Mejor Posición</div>
-                        </div>
-                    </div>
-                    <div style="margin-top: 1rem;">
-                        <p><strong>Fases:</strong> ${phases}</p>
-                        <p><strong>Grupos:</strong> ${groups}</p>
-                    </div>
-                </div>
-                
-                <div class="team-details-section">
-                    <h3 class="section-subtitle">Desempeño por Fase</h3>
-                    <div class="team-details-grid">
-                        ${Object.entries(team.phaseData).map(([phase, phaseStats]) => `
-                            <div class="team-detail-card">
-                                <div class="team-detail-value">${phaseStats.totalPoints}</div>
-                                <div class="team-detail-label">${phase}</div>
-                                <div style="font-size: 0.9rem; margin-top: 0.25rem;">
-                                    ${phaseStats.kills} bajas, ${phaseStats.wwcd} WWCD
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                
-                <div class="team-details-section">
-                    <h3 class="section-subtitle">Desempeño por Mapa</h3>
-                    <div class="team-details-grid">
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${team.bestKillsMap ? team.bestKillsMap.map : 'N/A'}</div>
-                            <div class="team-detail-label">Mejor Mapa por Bajas</div>
-                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${team.bestKillsMap ? team.bestKillsMap.kills + ' bajas' : ''}</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${team.bestDamageMap ? team.bestDamageMap.map : 'N/A'}</div>
-                            <div class="team-detail-label">Mejor Mapa por Daño</div>
-                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${team.bestDamageMap ? Math.round(team.bestDamageMap.damage) + ' daño' : ''}</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="team-details-section">
-                    <h3 class="section-subtitle">Jugadores</h3>
-                    <div class="players-grid">
-                        ${Object.values(team.players).map(player => `
-                            <div class="player-card ${team.mvp && player.name === team.mvp.name ? 'mvp' : ''}">
-                                <div class="player-header">
-                                    <div class="player-name">${player.name}</div>
-                                    ${team.mvp && player.name === team.mvp.name ? '<div class="mvp-badge">MVP</div>' : ''}
-                                </div>
-                                <div class="player-stats">
-                                    <div class="player-stat">
-                                        <div class="player-stat-value">${player.kills}</div>
-                                        <div class="player-stat-label">Bajas</div>
-                                    </div>
-                                    <div class="player-stat">
-                                        <div class="player-stat-value">${Math.round(player.damage)}</div>
-                                        <div class="player-stat-label">Daño</div>
-                                    </div>
-                                    <div class="player-stat">
-                                        <div class="player-stat-value">${player.headshots}</div>
-                                        <div class="player-stat-label">Headshots</div>
-                                    </div>
-                                    <div class="player-stat">
-                                        <div class="player-stat-value">${player.assists}</div>
-                                        <div class="player-stat-label">Asistencias</div>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                
-                ${team.mvp ? `
-                <div class="team-details-section">
-                    <h3 class="section-subtitle">Aporte del MVP</h3>
-                    <div class="team-details-grid">
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${team.mvp.killPercentage}%</div>
-                            <div class="team-detail-label">Porcentaje de Bajas</div>
-                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${team.mvp.kills} de ${team.kills} bajas</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${team.mvp.damagePercentage}%</div>
-                            <div class="team-detail-label">Porcentaje de Daño</div>
-                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${Math.round(team.mvp.damage)} de ${Math.round(team.damage)} daño</div>
-                        </div>
-                    </div>
-                </div>
-                ` : ''}
-            `;
-        }
-        
-        function generatePhaseSpecificTeamDetails(team, phase) {
-            const phaseData = team.phaseData[phase];
-            
-            if (!phaseData) {
-                return `<div class="loading">No hay datos para este equipo en ${phase}</div>`;
-            }
-            
-            const groupsInPhase = Array.from(team.groups).filter(group => {
-                if (phase === 'Clasificatorias') {
-                    return group.startsWith('GRUPO');
-                } else if (phase === 'Semifinal') {
-                    return group.startsWith('SEMIFINAL');
-                } else if (phase === 'Final') {
-                    return group === 'FINAL';
-                }
-                return false;
-            }).join(', ');
-            
-            return `
-                <div class="team-details-section">
-                    <h3 class="section-subtitle">Datos en ${phase}</h3>
-                    <div class="team-details-grid">
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${phaseData.matchCount}</div>
-                            <div class="team-detail-label">Partidas Jugadas</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${phaseData.totalPoints}</div>
-                            <div class="team-detail-label">Puntos</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${phaseData.kills}</div>
-                            <div class="team-detail-label">Bajas</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${Math.round(phaseData.damage)}</div>
-                            <div class="team-detail-label">Daño</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${phaseData.wwcd}</div>
-                            <div class="team-detail-label">WWCD</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${phaseData.bestRank === 99 ? 'N/A' : phaseData.bestRank}</div>
-                            <div class="team-detail-label">Mejor Posición</div>
-                        </div>
-                    </div>
-                    <div style="margin-top: 1rem;">
-                        <p><strong>Grupos en ${phase}:</strong> ${groupsInPhase}</p>
-                    </div>
-                </div>
-                
-                <div class="team-details-section">
-                    <h3 class="section-subtitle">Desempeño por Mapa en ${phase}</h3>
-                    <div class="team-details-grid">
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${phaseData.bestKillsMap ? phaseData.bestKillsMap.map : 'N/A'}</div>
-                            <div class="team-detail-label">Mejor Mapa por Bajas</div>
-                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${phaseData.bestKillsMap ? phaseData.bestKillsMap.kills + ' bajas' : ''}</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${phaseData.bestDamageMap ? phaseData.bestDamageMap.map : 'N/A'}</div>
-                            <div class="team-detail-label">Mejor Mapa por Daño</div>
-                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${phaseData.bestDamageMap ? Math.round(phaseData.bestDamageMap.damage) + ' daño' : ''}</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="team-details-section">
-                    <h3 class="section-subtitle">Jugadores en ${phase}</h3>
-                    <div class="players-grid">
-                        ${Object.values(phaseData.players).map(player => `
-                            <div class="player-card ${phaseData.mvp && player.name === phaseData.mvp.name ? 'mvp' : ''}">
-                                <div class="player-header">
-                                    <div class="player-name">${player.name}</div>
-                                    ${phaseData.mvp && player.name === phaseData.mvp.name ? '<div class="mvp-badge">MVP</div>' : ''}
-                                </div>
-                                <div class="player-stats">
-                                    <div class="player-stat">
-                                        <div class="player-stat-value">${player.kills}</div>
-                                        <div class="player-stat-label">Bajas</div>
-                                    </div>
-                                    <div class="player-stat">
-                                        <div class="player-stat-value">${Math.round(player.damage)}</div>
-                                        <div class="player-stat-label">Daño</div>
-                                    </div>
-                                    <div class="player-stat">
-                                        <div class="player-stat-value">${player.headshots}</div>
-                                        <div class="player-stat-label">Headshots</div>
-                                    </div>
-                                    <div class="player-stat">
-                                        <div class="player-stat-value">${player.assists}</div>
-                                        <div class="player-stat-label">Asistencias</div>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                
-                ${phaseData.mvp ? `
-                <div class="team-details-section">
-                    <h3 class="section-subtitle">Aporte del MVP en ${phase}</h3>
-                    <div class="team-details-grid">
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${phaseData.mvp.killPercentage}%</div>
-                            <div class="team-detail-label">Porcentaje de Bajas</div>
-                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${phaseData.mvp.kills} de ${phaseData.kills} bajas</div>
-                        </div>
-                        <div class="team-detail-card">
-                            <div class="team-detail-value">${phaseData.mvp.damagePercentage}%</div>
-                            <div class="team-detail-label">Porcentaje de Daño</div>
-                            <div style="font-size: 0.9rem; margin-top: 0.25rem;">${Math.round(phaseData.mvp.damage)} de ${Math.round(phaseData.damage)} daño</div>
-                        </div>
-                    </div>
-                </div>
-                ` : ''}
-            `;
-        }
-        
-        function closeTeamDetailsModal() {
-            document.getElementById('team-details-modal').classList.remove('active');
-        }
-        
+
         document.addEventListener('DOMContentLoaded', () => {
-            loadTeamsData();
+            loadPlayersData();
         });
+        
         document.getElementById('hamburger').addEventListener('click', function() {
-    this.classList.toggle('active');
-    document.getElementById('nav-links').classList.toggle('active');
-});
+            this.classList.toggle('active');
+            document.getElementById('nav-links').classList.toggle('active');
+        });
     </script>
 </body>
 </html>
