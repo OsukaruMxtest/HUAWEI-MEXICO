@@ -173,7 +173,6 @@
                 gap: 0.8rem;
             }
             
-            /* Ajustes específicos para tablas en móviles */
             .table-container {
                 padding: 5px;
                 margin-top: 0.5rem;
@@ -217,7 +216,6 @@
                 gap: 0.6rem;
             }
             
-            /* Ajustes adicionales para móviles pequeños */
             .table-container {
                 padding: 3px;
             }
@@ -761,42 +759,66 @@ async function renderMVP(phase){
 }
 
 function computePhaseMvpMvt(phase){
-    const rows = allPlayers.filter(p =>
+    const playerAgg = new Map();
+    const teamAgg = new Map();
+    
+    const filteredPlayers = allPlayers.filter(p =>
         p.phase === phase && (phase !== 'Semifinal' || p.group === `SEMIFINAL ${semifinalGroupSelected}`)
     );
     
-    const playerAgg = {}; 
-    const teamAgg = {};
-    
-    rows.forEach(r=>{
-        if(!playerAgg[r.playerName]) playerAgg[r.playerName] = {
-            name:r.playerName,
-            team:r.teamName,
-            kills:0,
-            damage:0,
-            uid:r.uid
-        }; 
-        playerAgg[r.playerName].kills += r.kills; 
-        playerAgg[r.playerName].damage += r.damage;
+    const batchSize = 1000;
+    for (let i = 0; i < filteredPlayers.length; i += batchSize) {
+        const batch = filteredPlayers.slice(i, i + batchSize);
         
-        if(!teamAgg[r.teamName]) teamAgg[r.teamName] = {
-            name:r.teamName,
-            kills:0,
-            pointsByPos:0,
-            pointsByElim:0,
-            totalPoints:0,
-            wwcd:0
-        };
-        teamAgg[r.teamName].kills += r.kills; 
-        teamAgg[r.teamName].pointsByElim += r.kills; 
-        teamAgg[r.teamName].pointsByPos += calculatePositionPoints(r.rank); 
-        teamAgg[r.teamName].totalPoints = teamAgg[r.teamName].pointsByPos + teamAgg[r.teamName].pointsByElim; 
-        if(r.rank===1) teamAgg[r.teamName].wwcd++;
-    });
+        for (const r of batch) {
+            if (!playerAgg.has(r.playerName)) {
+                playerAgg.set(r.playerName, {
+                    name: r.playerName,
+                    team: r.teamName,
+                    kills: 0,
+                    damage: 0,
+                    uid: r.uid
+                });
+            }
+            const player = playerAgg.get(r.playerName);
+            player.kills += r.kills;
+            player.damage += r.damage;
+            
+            // Procesar equipo
+            if (!teamAgg.has(r.teamName)) {
+                teamAgg.set(r.teamName, {
+                    name: r.teamName,
+                    kills: 0,
+                    pointsByPos: 0,
+                    pointsByElim: 0,
+                    totalPoints: 0,
+                    wwcd: 0
+                });
+            }
+            const team = teamAgg.get(r.teamName);
+            team.kills += r.kills;
+            team.pointsByElim += r.kills;
+            team.pointsByPos += calculatePositionPoints(r.rank);
+            team.totalPoints = team.pointsByPos + team.pointsByElim;
+            if (r.rank === 1) team.wwcd++;
+        }
+    }
     
-    const mvp = Object.values(playerAgg).sort((a,b)=>b.kills - a.kills || b.damage - a.damage)[0] || null;
-    const mvt = Object.values(teamAgg).sort((a,b)=>b.totalPoints - a.totalPoints || b.wwcd - a.wwcd)[0] || null;
-    return {mvp,mvt};
+    let mvp = null;
+    for (const player of playerAgg.values()) {
+        if (!mvp || player.kills > mvp.kills || (player.kills === mvp.kills && player.damage > mvp.damage)) {
+            mvp = player;
+        }
+    }
+    
+    let mvt = null;
+    for (const team of teamAgg.values()) {
+        if (!mvt || team.totalPoints > mvt.totalPoints || (team.totalPoints === mvt.totalPoints && team.wwcd > mvt.wwcd)) {
+            mvt = team;
+        }
+    }
+    
+    return { mvp, mvt };
 }
 
 function setupUI(){
@@ -844,6 +866,7 @@ document.addEventListener('DOMContentLoaded', async()=>{
     setupUI();
     await renderPositions(phaseSelected);
     await renderMVP(phaseSelected);
+    
     const s = computePhaseMvpMvt(phaseSelected);
     document.getElementById('phase-mvp-name').textContent = s.mvp? (s.mvp.name + ' — ' + s.mvp.kills + ' bajas') : '-';
     document.getElementById('phase-mvp-team').textContent = s.mvp? (s.mvp.team || '-') : '';
