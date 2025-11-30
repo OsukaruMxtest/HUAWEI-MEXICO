@@ -482,25 +482,27 @@ async function loadAllData(){
     allPlayers = [];
     teamData = {};
     
-    for(const [phase,conf] of Object.entries(phasesConfig)){
-        for(const group of conf.groups){
-            for(const map of conf.maps){
+    for (const [phase, conf] of Object.entries(phasesConfig)) {
+        for (const group of conf.groups) {
+
+            const tasks = conf.maps.map(async (map) => {
                 const base = `${conf.path}${group}/${map}.csv`;
                 const rows = await fetchCsv(base);
-                if(!rows || rows.length < 2) continue;
+                if (!rows || rows.length < 2) return;
+
                 const header = rows[0];
                 const idx = {};
-                header.forEach((h,i) => {
+                header.forEach((h, i) => {
                     const key = h.trim();
                     if (key) idx[key] = i;
                 });
-                
+
                 const teamMatchData = {};
-                
-                for(let r=1;r<rows.length;r++){
+
+                for (let r = 1; r < rows.length; r++) {
                     const vals = rows[r];
-                    if(!vals || vals.join('').trim()==='') continue;
-                    
+                    if (!vals || vals.join('').trim() === '') continue;
+
                     const getVal = (keys) => {
                         for (const k of keys) {
                             if (idx[k] !== undefined && vals[idx[k]] !== undefined) {
@@ -519,21 +521,31 @@ async function loadAllData(){
                     const totalShots = parseInt(getVal(['TotalShots','Total Disparos']) || '0') || 0;
                     const totalHits = parseInt(getVal(['TotalHits','Total Impactos']) || '0') || 0;
                     const headshots = parseInt(getVal(['Número de Headshots','Headshots']) || '0') || 0;
-                    
-                    const item = { phase, group, map, mapName: mapNames[map]||map, playerName, teamName, uid, kills, damage, rank, totalShots, totalHits, headshots };
+
+                    const item = { phase, group, map, mapName: mapNames[map] || map, playerName, teamName, uid, kills, damage, rank, totalShots, totalHits, headshots };
                     allPlayers.push(item);
-                    
-                    if(!teamMatchData[teamName]) teamMatchData[teamName] = {kills:0, damage:0, rank:rank, totalShots:0, totalHits:0, headshots:0, wwcd:0};
+
+                    if (!teamMatchData[teamName]) teamMatchData[teamName] = {
+                        kills: 0, damage: 0, rank: rank,
+                        totalShots: 0, totalHits: 0,
+                        headshots: 0, wwcd: 0
+                    };
+
                     teamMatchData[teamName].kills += kills;
                     teamMatchData[teamName].damage += damage;
                     teamMatchData[teamName].totalShots += totalShots;
                     teamMatchData[teamName].totalHits += totalHits;
                     teamMatchData[teamName].headshots += headshots;
-                    if(rank === 1) teamMatchData[teamName].wwcd = 1;
+                    if (rank === 1) teamMatchData[teamName].wwcd = 1;
                 }
-                
-                for(const [teamName, data] of Object.entries(teamMatchData)){
-                    if(!teamData[teamName]) teamData[teamName] = { name:teamName, players:{}, kills:0, damage:0, wwcd:0, positionPoints:0, totalShots:0, totalHits:0 };
+
+                for (const [teamName, data] of Object.entries(teamMatchData)) {
+                    if (!teamData[teamName]) teamData[teamName] = {
+                        name: teamName, players: {},
+                        kills: 0, damage: 0, wwcd: 0,
+                        positionPoints: 0, totalShots: 0, totalHits: 0
+                    };
+
                     teamData[teamName].kills += data.kills;
                     teamData[teamName].damage += data.damage;
                     teamData[teamName].wwcd += data.wwcd;
@@ -541,7 +553,9 @@ async function loadAllData(){
                     teamData[teamName].totalShots += data.totalShots;
                     teamData[teamName].totalHits += data.totalHits;
                 }
-            }
+            });
+
+            await Promise.all(tasks);
         }
     }
 }
