@@ -861,6 +861,53 @@
             transition: all 0.3s ease;
         }
 
+        /* Nuevos estilos para la comparación horizontal */
+        .comparison-table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .comparison-table th {
+            background: rgba(0, 0, 0, 0.05);
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .comparison-table .stat-name {
+            background: rgba(0, 0, 0, 0.03);
+            font-weight: 600;
+        }
+        
+        .comparison-table .winner {
+            background: rgba(0, 104, 63, 0.2);
+        }
+        
+        .comparison-table .player-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0;
+        }
+        
+        .comparison-table .player-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
         /* Media Queries para móviles */
         @media (max-width: 768px) {
             header {
@@ -1100,6 +1147,20 @@
                 margin: 0.5rem 0;
             }
             
+            /* Ajustes para la comparación en móviles */
+            .comparison-table-container {
+                font-size: 0.8rem;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.5rem 0.6rem;
+            }
+            
+            .comparison-table .player-name {
+                font-size: 0.9rem;
+            }
+            
             footer {
                 padding: 1rem;
                 font-size: 0.9rem;
@@ -1149,6 +1210,15 @@
             
             .shot-stats-container {
                 grid-template-columns: 1fr;
+            }
+            
+            .comparison-table-container {
+                font-size: 0.75rem;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.4rem 0.5rem;
             }
         }
     </style>
@@ -1255,7 +1325,7 @@
     </div>
 
     <script>
-        // El código JavaScript permanece igual
+        // Variables globales
         let allPlayersData = [];
         let playersStats = {};
         let playersStatsByPhase = {
@@ -1293,13 +1363,26 @@
             { name: 'Final', path: 'data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3', 'M4'] }
         ];
 
-
         const weaponNamesMap = {
             'Arma 101101': 'M416',
             'Arma 107040': 'AKM'
         };
 
+        // Optimización: Función para cargar múltiples archivos CSV en paralelo
+        async function loadCSVFilesInParallel(phase) {
+            const promises = [];
+            
+            for (const group of phase.groups) {
+                for (const map of phase.maps) {
+                    const csvPath = `${phase.path}${group}/${map}.csv`;
+                    promises.push(loadCSVFile(csvPath, phase.name, group, map));
+                }
+            }
+            
+            return Promise.allSettled(promises);
+        }
 
+        // Función parseCSV sin cambios
         function parseCSV(text) {
             const rows = [];
             const lines = text.replace(/\r\n/g, '\n').split('\n');
@@ -1423,16 +1506,18 @@
             return img;
         }
 
-
+        // Optimización: Carga paralela de datos
         async function loadPlayersData() {
             try {
                 allPlayersData = [];
-                for (const phase of phasesStructure) {
-                    for (const group of phase.groups) {
-                        for (const map of phase.maps) {
-                            const csvPath = `${phase.path}${group}/${map}.csv`;
-                            await loadCSVFile(csvPath, phase.name, group, map);
-                        }
+                const phasePromises = phasesStructure.map(phase => loadCSVFilesInParallel(phase));
+                
+                const results = await Promise.allSettled(phasePromises);
+                
+                // Procesar resultados
+                for (const result of results) {
+                    if (result.status === 'rejected') {
+                        console.error('Error cargando fase:', result.reason);
                     }
                 }
 
@@ -1542,7 +1627,6 @@
                 console.warn(`No se pudo cargar ${filePath}:`, error);
             }
         }
-
         
         function processPlayersData() {
             playersStats = {};
@@ -2313,39 +2397,35 @@
             });
 
             container.innerHTML = `
-                <div class="phase-buttons" id="comparison-phase-buttons" style="grid-column: 1 / span 1; justify-content: center; margin-bottom: 1.5rem;">
+                <div class="phase-buttons" id="comparison-phase-buttons" style="justify-content: center; margin-bottom: 1.5rem;">
                     ${comparisonPhaseButtonsHTML}
                 </div>
 
-                <div class="comparison-player">
-                    <div class="comparison-player-header">
-                        <div class="comparison-avatar" id="player1-avatar"></div>
-                        <h3>${p1.name}</h3>
-                    </div>
-                    <div class="comparison-stats" id="player1-stats"></div>
-                </div>
-                <div class="vs-divider">VS</div>
-                <div class="comparison-player">
-                    <div class="comparison-player-header">
-                        <div class="comparison-avatar" id="player2-avatar"></div>
-                        <h3>${p2.name}</h3>
-                    </div>
-                    <div class="comparison-stats" id="player2-stats"></div>
+                <div class="comparison-table-container">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th colspan="2">${p1.name}</th>
+                                <th>Estadística</th>
+                                <th colspan="2">${p2.name}</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparison-table-body">
+                        </tbody>
+                    </table>
                 </div>
             `;
             
             setTimeout(() => {
-                const avatar1 = document.getElementById('player1-avatar');
-                const avatar2 = document.getElementById('player2-avatar');
+                const avatar1 = document.createElement('div');
+                avatar1.className = 'player-avatar';
+                avatar1.appendChild(player1Image);
+                
+                const avatar2 = document.createElement('div');
+                avatar2.className = 'player-avatar';
+                avatar2.appendChild(player2Image);
 
-                if (avatar1) {
-                    avatar1.appendChild(player1Image);
-                }
-                if (avatar2) {
-                    avatar2.appendChild(player2Image);
-                }
-
-                fillComparisonStats(p1, p2);
+                fillComparisonTable(p1, p2);
             }, 0);
             
             document.getElementById('comparison-phase-buttons').addEventListener('click', (e) => {
@@ -2358,22 +2438,15 @@
             modal.classList.add('active');
         }
 
-        function fillComparisonStats(player1, player2) {
-            const stats1 = document.getElementById('player1-stats');
-            const stats2 = document.getElementById('player2-stats');
+        function fillComparisonTable(player1, player2) {
+            const tbody = document.getElementById('comparison-table-body');
+            tbody.innerHTML = '';
 
             const p1HasData = player1 && player1.matches > 0;
             const p2HasData = player2 && player2.matches > 0;
 
-            if (!p1HasData) {
-                stats1.innerHTML = '<div class="comparison-stat" style="justify-content: center; background: rgba(255,0,0,0.1);">Sin datos en esta fase</div>';
-            }
-
-            if (!p2HasData) {
-                stats2.innerHTML = '<div class="comparison-stat" style="justify-content: center; background: rgba(255,0,0,0.1);">Sin datos en esta fase</div>';
-            }
-
             if (!p1HasData || !p2HasData) {
+                tbody.innerHTML = '<tr><td colspan="5" class="loading">No hay datos suficientes para comparar en esta fase</td></tr>';
                 return;
             }
 
@@ -2401,9 +2474,6 @@
                 { name: 'Aporte Daño (%)', key: 'teamDamageContribution', fmt: v => v.toFixed(1) }
             ];
 
-            stats1.innerHTML = '';
-            stats2.innerHTML = '';
-
             comparisonStats.forEach(stat => {
                 const v1 = stat.key === 'customTotalHits' ? stat.p1Val : player1[stat.key];
                 const v2 = stat.key === 'customTotalHits' ? stat.p2Val : player2[stat.key];
@@ -2418,14 +2488,14 @@
                         w2 = v2 > v1;
                     }
                 }
-                const el1 = document.createElement('div');
-                el1.className = `comparison-stat ${w1 ? 'winner' : ''}`;
-                el1.innerHTML = `<span class="stat-name">${stat.name}</span><span class="stat-value">${stat.fmt(v1)}</span>`;
-                const el2 = document.createElement('div');
-                el2.className = `comparison-stat ${w2 ? 'winner' : ''}`;
-                el2.innerHTML = `<span class="stat-name">${stat.name}</span><span class="stat-value">${stat.fmt(v2)}</span>`;
-                stats1.appendChild(el1);
-                stats2.appendChild(el2);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="${w1 ? 'winner' : ''}">${stat.fmt(v1)}</td>
+                    <td class="stat-name">${stat.name}</td>
+                    <td class="${w2 ? 'winner' : ''}">${stat.fmt(v2)}</td>
+                `;
+                tbody.appendChild(row);
             });
         }
 
