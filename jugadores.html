@@ -861,7 +861,7 @@
             transition: all 0.3s ease;
         }
 
-        /* Nuevos estilos para la comparación horizontal */
+        /* Nuevos estilos para la comparación horizontal mejorada */
         .comparison-table-container {
             width: 100%;
             overflow-x: auto;
@@ -889,23 +889,51 @@
         .comparison-table .stat-name {
             background: rgba(0, 0, 0, 0.03);
             font-weight: 600;
+            width: 30%;
         }
         
         .comparison-table .winner {
             background: rgba(0, 104, 63, 0.2);
         }
         
-        .comparison-table .player-header {
+        .comparison-player-header {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 0.5rem;
             margin-bottom: 0;
+            padding: 1rem;
         }
         
-        .comparison-table .player-name {
+        .comparison-player-name {
             font-weight: 600;
             font-size: 1.1rem;
+        }
+        
+        .comparison-player-team {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .comparison-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .comparison-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         /* Media Queries para móviles */
@@ -1157,8 +1185,17 @@
                 padding: 0.5rem 0.6rem;
             }
             
-            .comparison-table .player-name {
+            .comparison-player-name {
                 font-size: 0.9rem;
+            }
+            
+            .comparison-player-team {
+                font-size: 0.8rem;
+            }
+            
+            .comparison-avatar {
+                width: 50px;
+                height: 50px;
             }
             
             footer {
@@ -1219,6 +1256,11 @@
             .comparison-table th,
             .comparison-table td {
                 padding: 0.4rem 0.5rem;
+            }
+            
+            .comparison-avatar {
+                width: 40px;
+                height: 40px;
             }
         }
     </style>
@@ -2405,9 +2447,21 @@
                     <table class="comparison-table">
                         <thead>
                             <tr>
-                                <th colspan="2">${p1.name}</th>
-                                <th>Estadística</th>
-                                <th colspan="2">${p2.name}</th>
+                                <th style="width: 35%;">
+                                    <div class="comparison-player-header">
+                                        <div class="comparison-avatar"></div>
+                                        <div class="comparison-player-name">${p1.name}</div>
+                                        <div class="comparison-player-team">${p1.team}</div>
+                                    </div>
+                                </th>
+                                <th style="width: 30%;" class="stat-name">Estadística</th>
+                                <th style="width: 35%;">
+                                    <div class="comparison-player-header">
+                                        <div class="comparison-avatar"></div>
+                                        <div class="comparison-player-name">${p2.name}</div>
+                                        <div class="comparison-player-team">${p2.team}</div>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="comparison-table-body">
@@ -2416,14 +2470,17 @@
                 </div>
             `;
             
+            // Insertar las imágenes después de que se renderice el HTML
             setTimeout(() => {
-                const avatar1 = document.createElement('div');
-                avatar1.className = 'player-avatar';
-                avatar1.appendChild(player1Image);
+                const avatar1 = container.querySelector('thead tr th:first-child .comparison-avatar');
+                const avatar2 = container.querySelector('thead tr th:last-child .comparison-avatar');
                 
-                const avatar2 = document.createElement('div');
-                avatar2.className = 'player-avatar';
-                avatar2.appendChild(player2Image);
+                if (avatar1) {
+                    avatar1.appendChild(player1Image);
+                }
+                if (avatar2) {
+                    avatar2.appendChild(player2Image);
+                }
 
                 fillComparisonTable(p1, p2);
             }, 0);
@@ -2446,7 +2503,7 @@
             const p2HasData = player2 && player2.matches > 0;
 
             if (!p1HasData || !p2HasData) {
-                tbody.innerHTML = '<tr><td colspan="5" class="loading">No hay datos suficientes para comparar en esta fase</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" class="loading">No hay datos suficientes para comparar en esta fase</td></tr>';
                 return;
             }
 
