@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipos - PUBG MOBILE COPA HUAWEI MEXICO</title>
     <style>
-        /* Importar fuente Poppins */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
-        /* Variables CSS para la nueva paleta de colores */
         :root {
             --primary: #BB0215;
             --primary-bright: #E9072B;
@@ -23,7 +21,6 @@
             --shadow: rgba(0, 0, 0, 0.1);
         }
         
-        /* Estilos base */
         * {
             margin: 0;
             padding: 0;
@@ -40,7 +37,6 @@
             position: relative;
         }
 
-        /* Video de fondo */
         .background-video {
             position: fixed;
             top: 0;
@@ -52,7 +48,6 @@
             opacity: 0.3;
         }
         
-        /* Header fijo */
         header {
             position: fixed;
             top: 0;
@@ -112,13 +107,11 @@
             width: 100%;
         }
         
-        /* Main content */
         main {
             margin-top: 80px;
             padding: 2rem;
         }
         
-        /* Estilo glassmorphism moderno */
         .glass-card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
@@ -134,7 +127,6 @@
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
         }
         
-        /* Animaciones */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -153,7 +145,6 @@
             animation: slideUp 0.8s ease forwards;
         }
         
-        /* Secciones */
         .section {
             margin-bottom: 2rem;
         }
@@ -167,7 +158,6 @@
             padding-left: 0.75rem;
         }
         
-        /* Filtros y búsqueda */
         .filters-container {
             display: flex;
             gap: 1rem;
@@ -219,7 +209,6 @@
             box-shadow: none;
         }
         
-        /* Botones de grupo */
         .group-filters {
             display: flex;
             gap: 0.5rem;
@@ -249,7 +238,6 @@
             color: white;
         }
         
-        /* Grid de equipos */
         .teams-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -398,7 +386,6 @@
             transform: translateY(-1px);
         }
         
-        /* Modal de comparación */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -467,7 +454,6 @@
             background: rgba(0, 0, 0, 0.1);
         }
         
-        /* Modal de detalles del equipo */
         .team-details-content {
             max-height: 80vh;
             overflow-y: auto;
@@ -647,7 +633,6 @@
             color: var(--text-secondary);
         }
         
-        /* Nuevo diseño de comparación central */
         .central-comparison-container {
             display: grid;
             grid-template-columns: 1fr auto 1fr;
@@ -752,7 +737,6 @@
             margin: 1rem 0;
         }
         
-        /* Footer */
         footer {
             background: var(--glass);
             backdrop-filter: blur(10px);
@@ -763,7 +747,6 @@
             margin-top: 2rem;
         }
         
-        /* Scroll personalizado */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -782,7 +765,6 @@
             background: var(--secondary-deep);
         }
         
-        /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -828,7 +810,6 @@
             }
         }
         
-        /* Estados de carga */
         .loading {
             text-align: center;
             padding: 2rem;
@@ -841,7 +822,6 @@
     </style>
 </head>
 <body>
-    <!-- Video de fondo -->
     <video class="background-video" autoplay muted loop playsinline>
         <source src="https://res.cloudinary.com/dxtvsnw3g/video/upload/v1763772374/fondo_g1hfuz.mp4" type="video/mp4">
         Tu navegador no soporta videos HTML5.
@@ -874,19 +854,15 @@
                 <button id="compare-btn" class="compare-btn" disabled>Comparar Equipos (0/2)</button>
             </div>
             
-            <!-- Filtros por grupos -->
             <div class="group-filters" id="group-filters">
-                <!-- Los botones de grupo se cargarán dinámicamente aquí -->
             </div>
             
             <div class="teams-grid" id="teams-grid">
-                <!-- Las tarjetas de equipo se cargarán dinámicamente aquí -->
                 <div class="loading">Cargando equipos...</div>
             </div>
         </div>
     </main>
     
-    <!-- Modal de Comparación -->
     <div class="modal-overlay" id="comparison-modal">
         <div class="modal">
             <div class="modal-header">
@@ -895,12 +871,10 @@
             </div>
             
             <div class="central-comparison-container" id="comparison-container">
-                <!-- El contenido de comparación se cargará dinámicamente aquí -->
             </div>
         </div>
     </div>
     
-    <!-- Modal de Detalles del Equipo -->
     <div class="modal-overlay" id="team-details-modal">
         <div class="modal">
             <div class="modal-header">
@@ -909,27 +883,23 @@
             </div>
             
             <div class="team-details-content" id="team-details-content">
-                <!-- El contenido de detalles se cargará dinámicamente aquí -->
             </div>
         </div>
     </div>
     
 
     <script>
-        // Variables globales para almacenar datos
         let allTeamsData = {};
         let selectedTeams = [];
         let currentGroup = null;
         let teamGroups = {};
         
-        // Estructura de fases actualizada
         const phasesStructure = [
             { name: 'Clasificatorias', path: 'data/clasificatorias/', groups: ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'], maps: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'] },
             { name: 'Semifinal', path: 'data/semifinal/', groups: ['SEMIFINAL 1', 'SEMIFINAL 2'], maps: ['M1', 'M2', 'M3'] },
             { name: 'Final', path: 'data/final/', groups: ['FINAL'], maps: ['M1', 'M2', 'M3'] }
         ];
         
-        // Mapeo de mapas
         const mapNames = {
             'M1': 'Erangel',
             'M2': 'Miramar', 
@@ -942,33 +912,26 @@
             'M9': 'Sanhok'
         };
         
-        // Función para calcular puntos por posición
         function calculatePositionPoints(rank) {
             const pointsMap = { 1: 10, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 2, 8: 1 };
             return pointsMap[rank] || 0;
         }
         
-        // Función para obtener la URL del logo del equipo
         function getTeamLogoUrl(teamName) {
             const basePath = 'data/logos/equipos/';
             const extensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp'];
             const normalizedTeamName = teamName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
             
-            // Probar cada extensión
             for (const ext of extensions) {
                 const logoPath = `${basePath}${normalizedTeamName}${ext}`;
-                // En una implementación real, podríamos verificar si el archivo existe
-                // Por ahora, asumimos que existe si el equipo tiene datos
                 if (allTeamsData[teamName]) {
                     return logoPath;
                 }
             }
             
-            // Si no se encuentra, usar logo por defecto
             return `${basePath}default.png`;
         }
         
-        // Función para obtener la fase actual basada en el grupo
         function getCurrentPhase() {
             if (currentGroup.startsWith('GRUPO')) {
                 return 'Clasificatorias';
@@ -980,10 +943,8 @@
             return 'GENERAL';
         }
         
-        // Función para cargar y procesar datos CSV
         async function loadTeamsData() {
             try {
-                // Cargar datos de todas las fases
                 for (const phase of phasesStructure) {
                     for (const group of phase.groups) {
                         for (const map of phase.maps) {
@@ -993,14 +954,11 @@
                     }
                 }
                 
-                // Procesar datos acumulados
                 processTeamsData();
                 
-                // Actualizar la UI
                 updateGroupFilters();
                 updateTeamsGrid();
                 
-                // Configurar event listeners
                 setupEventListeners();
                 
             } catch (error) {
@@ -1009,38 +967,31 @@
             }
         }
         
-        // Función para cargar un archivo CSV individual
         async function loadCSVFile(filePath, phase, group, map) {
             try {
                 const response = await fetch(filePath + "?nocache=" + Date.now());
                 if (!response.ok) {
-                    // Si el archivo no existe, simplemente continuamos
                     return;
                 }
                 
                 const csvText = await response.text();
                 const lines = csvText.split('\n');
                 
-                // Obtener encabezados (primera línea)
                 const headers = lines[0].split(',');
 
-                // Crear un mapa para rastrear la mejor posición por equipo en esta partida
                 const teamBestRank = {};
                 const teamWWCD = {};
                 
-                // Procesar cada línea de datos
                 for (let i = 1; i < lines.length; i++) {
                     if (lines[i].trim() === '') continue;
                     
                     const values = lines[i].split(',');
                     const playerData = {};
                     
-                    // Mapear valores a encabezados
                     headers.forEach((header, index) => {
                         playerData[header.trim()] = values[index] ? values[index].trim() : '';
                     });
                     
-                    // Convertir valores numéricos
                     playerData.kills = parseInt(playerData['Número de Bajas']) || 0;
                     playerData.damage = parseFloat(playerData['Daño']) || 0;
                     playerData.headshots = parseInt(playerData['Número de Headshots']) || 0;
@@ -1058,13 +1009,11 @@
                     playerData.limbsHits = parseInt(playerData['LimbsHits']) || 0;
                     playerData.weaponKills = parseInt(playerData['WeaponKills']) || 0;
                     
-                    // Agregar información de fase, grupo y mapa
                     playerData.phase = phase;
                     playerData.group = group;
                     playerData.map = map;
                     playerData.mapName = mapNames[map] || map;
                     
-                    // Procesar datos del equipo
                     const teamName = playerData['Nombre del Equipo'];
                     if (!allTeamsData[teamName]) {
                         allTeamsData[teamName] = {
@@ -1087,15 +1036,12 @@
                             totalDistanceTraveled: 0,
                             totalRevives: 0,
                             groups: new Set(),
-                            // Nuevos campos para manejar posición y puntos por partida
                             matchPoints: 0,
                             matchPositions: {},
-                            // Datos por fase
                             phaseData: {}
                         };
                     }
                     
-                    // Inicializar datos de fase si no existen
                     if (!allTeamsData[teamName].phaseData[phase]) {
                         allTeamsData[teamName].phaseData[phase] = {
                             kills: 0,
@@ -1117,7 +1063,6 @@
                         };
                     }
                     
-                    // Actualizar estadísticas del equipo (siempre sumar kills, daño, etc.)
                     allTeamsData[teamName].kills += playerData.kills;
                     allTeamsData[teamName].damage += playerData.damage;
                     allTeamsData[teamName].headshots += playerData.headshots;
@@ -1132,7 +1077,6 @@
                     allTeamsData[teamName].totalDistanceTraveled += parseFloat(playerData['Distancia Recorrida']) || 0;
                     allTeamsData[teamName].totalRevives += parseInt(playerData['Rescates']) || 0;
                     
-                    // Actualizar estadísticas por fase
                     allTeamsData[teamName].phaseData[phase].kills += playerData.kills;
                     allTeamsData[teamName].phaseData[phase].damage += playerData.damage;
                     allTeamsData[teamName].phaseData[phase].headshots += playerData.headshots;
@@ -1147,37 +1091,30 @@
                     allTeamsData[teamName].phaseData[phase].totalDistanceTraveled += parseFloat(playerData['Distancia Recorrida']) || 0;
                     allTeamsData[teamName].phaseData[phase].totalRevives += parseInt(playerData['Rescates']) || 0;
                     
-                    // Registrar el grupo del equipo
                     allTeamsData[teamName].groups.add(group);
                     
                     const matchId = `${phase}-${group}-${map}`;
                     allTeamsData[teamName].matches.add(matchId);
                     allTeamsData[teamName].phaseData[phase].matches.add(matchId);
                     
-                    // Rastrear la mejor posición del equipo en esta partida
                     if (!teamBestRank[teamName] || playerData.rank < teamBestRank[teamName]) {
                         teamBestRank[teamName] = playerData.rank;
                     }
                     
-                    // Rastrear si el equipo ganó esta partida
                     if (playerData.rank === 1) {
                         teamWWCD[teamName] = true;
                     }
                     
-                    // Mejor posición global
                     if (playerData.rank < allTeamsData[teamName].bestRank) {
                         allTeamsData[teamName].bestRank = playerData.rank;
                     }
                     
-                    // Mejor posición por fase
                     if (playerData.rank < allTeamsData[teamName].phaseData[phase].bestRank) {
                         allTeamsData[teamName].phaseData[phase].bestRank = playerData.rank;
                     }
                     
-                    // Última posición (asumimos que el último CSV es la última partida)
                     allTeamsData[teamName].lastMatchRank = playerData.rank;
                     
-                    // Actualizar datos por mapa
                     if (!allTeamsData[teamName].maps[playerData.mapName]) {
                         allTeamsData[teamName].maps[playerData.mapName] = {
                             kills: 0,
@@ -1187,7 +1124,6 @@
                     allTeamsData[teamName].maps[playerData.mapName].kills += playerData.kills;
                     allTeamsData[teamName].maps[playerData.mapName].damage += playerData.damage;
                     
-                    // Actualizar datos por mapa en la fase
                     if (!allTeamsData[teamName].phaseData[phase].maps[playerData.mapName]) {
                         allTeamsData[teamName].phaseData[phase].maps[playerData.mapName] = {
                             kills: 0,
@@ -1197,7 +1133,6 @@
                     allTeamsData[teamName].phaseData[phase].maps[playerData.mapName].kills += playerData.kills;
                     allTeamsData[teamName].phaseData[phase].maps[playerData.mapName].damage += playerData.damage;
                     
-                    // Actualizar datos por fase
                     if (!allTeamsData[teamName].phases[phase]) {
                         allTeamsData[teamName].phases[phase] = {
                             kills: 0,
@@ -1207,7 +1142,6 @@
                     allTeamsData[teamName].phases[phase].kills += playerData.kills;
                     allTeamsData[teamName].phases[phase].damage += playerData.damage;
                     
-                    // Agrupar datos por jugador en el equipo
                     const playerName = playerData['Nombre del Jugador'];
                     if (!allTeamsData[teamName].players[playerName]) {
                         allTeamsData[teamName].players[playerName] = {
@@ -1223,7 +1157,6 @@
                     allTeamsData[teamName].players[playerName].headshots += playerData.headshots;
                     allTeamsData[teamName].players[playerName].assists += playerData.assists;
                     
-                    // Agrupar datos por jugador en la fase
                     if (!allTeamsData[teamName].phaseData[phase].players[playerName]) {
                         allTeamsData[teamName].phaseData[phase].players[playerName] = {
                             name: playerName,
@@ -1239,20 +1172,16 @@
                     allTeamsData[teamName].phaseData[phase].players[playerName].assists += playerData.assists;
                 }
                 
-                // Después de procesar toda la partida, asignar WWCD y puntos de posición
                 Object.keys(teamBestRank).forEach(teamName => {
-                    // Asignar WWCD si el equipo ganó esta partida
                     if (teamWWCD[teamName]) {
                         allTeamsData[teamName].wwcd += 1;
                         allTeamsData[teamName].phaseData[phase].wwcd += 1;
                     }
                     
-                    // Calcular y asignar puntos por posición
                     const positionPoints = calculatePositionPoints(teamBestRank[teamName]);
                     allTeamsData[teamName].matchPoints += positionPoints;
                     allTeamsData[teamName].phaseData[phase].points += positionPoints;
                     
-                    // Guardar posición para esta partida
                     const matchId = `${phase}-${group}-${map}`;
                     if (!allTeamsData[teamName].matchPositions[matchId]) {
                         allTeamsData[teamName].matchPositions[matchId] = teamBestRank[teamName];
@@ -1264,30 +1193,24 @@
             }
         }
         
-        // Procesar datos de equipos
         function processTeamsData() {
-            // Calcular puntos para cada equipo (puntos por posición + 1 punto por kill)
             Object.values(allTeamsData).forEach(team => {
                 team.points = team.matchPoints + team.kills;
                 team.matchCount = team.matches.size;
                 
-                // Calcular puntos por fase
                 Object.keys(team.phaseData).forEach(phase => {
                     team.phaseData[phase].totalPoints = team.phaseData[phase].points + team.phaseData[phase].kills;
                     team.phaseData[phase].matchCount = team.phaseData[phase].matches.size;
                     
-                    // Encontrar MVP del equipo por fase
                     team.phaseData[phase].mvp = Object.values(team.phaseData[phase].players).reduce((best, player) => {
                         return !best || player.kills > best.kills ? player : best;
                     }, null);
                     
-                    // Calcular porcentajes del MVP por fase
                     if (team.phaseData[phase].mvp) {
                         team.phaseData[phase].mvp.killPercentage = (team.phaseData[phase].mvp.kills / team.phaseData[phase].kills * 100).toFixed(1);
                         team.phaseData[phase].mvp.damagePercentage = (team.phaseData[phase].mvp.damage / team.phaseData[phase].damage * 100).toFixed(1);
                     }
                     
-                    // Encontrar mapa con más kills y daño por fase
                     team.phaseData[phase].bestKillsMap = Object.entries(team.phaseData[phase].maps).reduce((best, [map, stats]) => {
                         return !best || stats.kills > best.kills ? { map, ...stats } : best;
                     }, null);
@@ -1297,7 +1220,6 @@
                     }, null);
                 });
                 
-                // Encontrar mapa con más kills y daño global
                 team.bestKillsMap = Object.entries(team.maps).reduce((best, [map, stats]) => {
                     return !best || stats.kills > best.kills ? { map, ...stats } : best;
                 }, null);
@@ -1306,33 +1228,26 @@
                     return !best || stats.damage > best.damage ? { map, ...stats } : best;
                 }, null);
                 
-                // Encontrar MVP del equipo global
                 team.mvp = Object.values(team.players).reduce((best, player) => {
                     return !best || player.kills > best.kills ? player : best;
                 }, null);
                 
-                // Calcular porcentajes del MVP global
                 if (team.mvp) {
                     team.mvp.killPercentage = (team.mvp.kills / team.kills * 100).toFixed(1);
                     team.mvp.damagePercentage = (team.mvp.damage / team.damage * 100).toFixed(1);
                 }
             });
             
-            // Preparar grupos para filtrado
             prepareTeamGroups();
         }
         
-        // Preparar datos de grupos para filtrado
         function prepareTeamGroups() {
             teamGroups = {};
             
-            // Recopilar todos los grupos únicos en el orden especificado
             const groupOrder = ['GENERAL', 'GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D', 'SEMIFINAL 1', 'SEMIFINAL 2', 'FINAL'];
             
-            // Para GENERAL, incluir todos los equipos
             teamGroups['GENERAL'] = Object.keys(allTeamsData);
             
-            // Para cada grupo específico, incluir solo equipos de ese grupo
             groupOrder.forEach(group => {
                 if (group !== 'GENERAL') {
                     teamGroups[group] = Object.keys(allTeamsData).filter(teamName => 
@@ -1341,18 +1256,14 @@
                 }
             });
             
-            // Establecer el grupo actual como GENERAL
             currentGroup = 'GENERAL';
         }
         
-        // Actualizar filtros de grupo
         function updateGroupFilters() {
             const groupFilters = document.getElementById('group-filters');
             
-            // Orden de grupos especificado
             const groupOrder = ['GENERAL', 'GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D', 'SEMIFINAL 1', 'SEMIFINAL 2', 'FINAL'];
             
-            // Filtrar solo grupos que tienen equipos
             const availableGroups = groupOrder.filter(group => 
                 teamGroups[group] && teamGroups[group].length > 0
             );
@@ -1370,13 +1281,11 @@
                 groupBtn.dataset.group = group;
                 
                 groupBtn.addEventListener('click', () => {
-                    // Actualizar grupo activo
                     document.querySelectorAll('.group-btn').forEach(btn => {
                         btn.classList.remove('active');
                     });
                     groupBtn.classList.add('active');
                     
-                    // Filtrar equipos
                     currentGroup = group;
                     updateTeamsGrid();
                 });
@@ -1385,7 +1294,6 @@
             });
         }
         
-        // Actualizar grid de equipos
         function updateTeamsGrid() {
             const teamsGrid = document.getElementById('teams-grid');
             
@@ -1394,15 +1302,12 @@
                 return;
             }
             
-            // Filtrar equipos por grupo actual
             let teamsToShow;
             if (currentGroup && teamGroups[currentGroup]) {
                 teamsToShow = teamGroups[currentGroup].map(teamName => {
                     const team = allTeamsData[teamName];
                     
-                    // Si no es GENERAL, usar datos específicos de la fase
                     if (currentGroup !== 'GENERAL') {
-                        // Encontrar la fase correspondiente al grupo actual
                         let phaseForGroup = '';
                         if (currentGroup.startsWith('GRUPO')) {
                             phaseForGroup = 'Clasificatorias';
@@ -1412,12 +1317,10 @@
                             phaseForGroup = 'Final';
                         }
                         
-                        // Si tenemos datos para esta fase, crear un objeto temporal con esos datos
                         if (phaseForGroup && team.phaseData[phaseForGroup]) {
                             const phaseData = team.phaseData[phaseForGroup];
                             return {
                                 ...team,
-                                // Sobrescribir con datos de la fase específica
                                 kills: phaseData.kills,
                                 damage: phaseData.damage,
                                 headshots: phaseData.headshots,
@@ -1425,14 +1328,12 @@
                                 points: phaseData.totalPoints,
                                 matchCount: phaseData.matchCount,
                                 bestRank: phaseData.bestRank,
-                                // Marcador para saber que estamos en modo fase específica
                                 isPhaseSpecific: true,
                                 phaseName: phaseForGroup
                             };
                         }
                     }
                     
-                    // Para GENERAL o si no hay datos específicos, usar datos globales
                     return {
                         ...team,
                         isPhaseSpecific: false
@@ -1445,7 +1346,6 @@
                 }));
             }
             
-            // Ordenar por puntos (descendente)
             teamsToShow.sort((a, b) => b.points - a.points);
             
             teamsGrid.innerHTML = '';
@@ -1495,19 +1395,14 @@
             });
         }
         
-        // Configurar event listeners
         function setupEventListeners() {
-            // Búsqueda de equipos
             document.getElementById('team-search').addEventListener('input', filterTeams);
             
-            // Botón de comparar
             document.getElementById('compare-btn').addEventListener('click', showComparisonModal);
             
-            // Cerrar modales
             document.getElementById('close-modal').addEventListener('click', closeComparisonModal);
             document.getElementById('close-details-modal').addEventListener('click', closeTeamDetailsModal);
             
-            // Cerrar modales al hacer clic fuera
             document.getElementById('comparison-modal').addEventListener('click', (e) => {
                 if (e.target === e.currentTarget) {
                     closeComparisonModal();
@@ -1520,7 +1415,6 @@
                 }
             });
             
-            // Event delegation para las tarjetas de equipo
             document.getElementById('teams-grid').addEventListener('click', (e) => {
                 const teamCard = e.target.closest('.team-card');
                 if (!teamCard) return;
@@ -1536,7 +1430,6 @@
             });
         }
         
-        // Filtrar equipos
         function filterTeams() {
             const searchTerm = document.getElementById('team-search').value.toLowerCase();
             
@@ -1546,12 +1439,10 @@
             });
         }
         
-        // Alternar selección de equipo
         function toggleTeamSelection(teamName, teamCard) {
             const index = selectedTeams.indexOf(teamName);
             
             if (index === -1) {
-                // Si ya hay 2 equipos seleccionados, quitar el primero
                 if (selectedTeams.length >= 2) {
                     const firstTeam = selectedTeams[0];
                     const firstCard = document.querySelector(`[data-team="${firstTeam}"]`);
@@ -1561,20 +1452,16 @@
                     selectedTeams.shift();
                 }
                 
-                // Agregar el nuevo equipo
                 selectedTeams.push(teamName);
                 teamCard.classList.add('selected');
             } else {
-                // Quitar el equipo
                 selectedTeams.splice(index, 1);
                 teamCard.classList.remove('selected');
             }
             
-            // Actualizar botón de comparar
             updateCompareButton();
         }
         
-        // Actualizar botón de comparar
         function updateCompareButton() {
             const compareBtn = document.getElementById('compare-btn');
             const count = selectedTeams.length;
@@ -1583,18 +1470,15 @@
             compareBtn.disabled = count !== 2;
         }
         
-        // Mostrar modal de comparación
         function showComparisonModal() {
             if (selectedTeams.length !== 2) return;
             
             const modal = document.getElementById('comparison-modal');
             const container = document.getElementById('comparison-container');
             
-            // Obtener datos de los equipos seleccionados
             const team1 = allTeamsData[selectedTeams[0]];
             const team2 = allTeamsData[selectedTeams[1]];
             
-            // Generar contenido de comparación con nueva estructura
             container.innerHTML = `
                 <div class="comparison-team">
                     <div class="comparison-team-header">
@@ -1619,18 +1503,15 @@
                 </div>
             `;
             
-            // Llenar estadísticas de comparación
             fillComparisonStats(team1, team2);
             
             // Mostrar modal
             modal.classList.add('active');
         }
         
-        // Llenar estadísticas de comparación con nuevo diseño
         function fillComparisonStats(team1, team2) {
             const metricsContainer = document.getElementById('comparison-metrics');
             
-            // Definir estadísticas a comparar (sin Tiempo de Supervivencia)
             const comparisonStats = [
                 { name: 'Puntos Totales', key: 'points', formatter: (v) => v },
                 { name: 'WWCD', key: 'wwcd', formatter: (v) => v },
@@ -1654,13 +1535,10 @@
                 const value1 = team1[stat.key];
                 const value2 = team2[stat.key];
                 
-                // Determinar qué equipo gana en esta estadística
                 let winnerClass = '';
                 
                 if (typeof value1 === 'number' && typeof value2 === 'number') {
-                    // Para la mayoría de estadísticas, mayor es mejor
                     if (stat.key === 'bestRank' || stat.key === 'lastMatchRank') {
-                        // Para posiciones, menor es mejor
                         if (value1 < value2) {
                             winnerClass = 'winner-left';
                         } else if (value2 < value1) {
@@ -1687,12 +1565,10 @@
             });
         }
         
-        // Cerrar modal de comparación
         function closeComparisonModal() {
             document.getElementById('comparison-modal').classList.remove('active');
         }
         
-        // Mostrar modal de detalles del equipo
         function showTeamDetailsModal(teamName) {
             const modal = document.getElementById('team-details-modal');
             const title = document.getElementById('team-details-title');
@@ -1701,36 +1577,28 @@
             const team = allTeamsData[teamName];
             if (!team) return;
             
-            // Actualizar título
             title.textContent = `Detalles de ${team.name}`;
             
-            // Generar contenido del modal basado en la fase actual
             content.innerHTML = generateTeamDetailsContent(team);
             
             // Mostrar modal
             modal.classList.add('active');
         }
         
-        // Generar contenido de detalles del equipo basado en la fase actual
         function generateTeamDetailsContent(team) {
             const currentPhase = getCurrentPhase();
             
-            // Si estamos en GENERAL, mostrar datos acumulados
             if (currentGroup === 'GENERAL') {
                 return generateGeneralTeamDetails(team);
             } 
-            // Si estamos en una fase específica, mostrar datos de esa fase
             else {
                 return generatePhaseSpecificTeamDetails(team, currentPhase);
             }
         }
         
-        // Generar detalles del equipo para GENERAL (datos acumulados)
         function generateGeneralTeamDetails(team) {
-            // Obtener grupos como string
             const groups = Array.from(team.groups).join(', ');
             
-            // Obtener fases como string
             const phases = Object.keys(team.phases).join(', ');
             
             return `
@@ -1851,7 +1719,6 @@
             `;
         }
         
-        // Generar detalles del equipo para una fase específica
         function generatePhaseSpecificTeamDetails(team, phase) {
             const phaseData = team.phaseData[phase];
             
@@ -1859,7 +1726,6 @@
                 return `<div class="loading">No hay datos para este equipo en ${phase}</div>`;
             }
             
-            // Obtener grupos en esta fase específica
             const groupsInPhase = Array.from(team.groups).filter(group => {
                 if (phase === 'Clasificatorias') {
                     return group.startsWith('GRUPO');
@@ -1973,14 +1839,11 @@
             `;
         }
         
-        // Cerrar modal de detalles del equipo
         function closeTeamDetailsModal() {
             document.getElementById('team-details-modal').classList.remove('active');
         }
         
-        // Inicializar cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', () => {
-            // Cargar datos
             loadTeamsData();
         });
     </script>
